@@ -1,14 +1,7 @@
-//
-//  Pinbot2Tests.swift
-//  Pinbot2Tests
-//
-//  Created by Dan Brown on 2021-12-03.
-//
-
 import XCTest
-@testable import Pinbot2
+@testable import Stacks
 
-class Pinbot2Tests: XCTestCase {
+class StacksTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

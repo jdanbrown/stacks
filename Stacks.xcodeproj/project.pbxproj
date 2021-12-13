@@ -7,13 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B75B469F275B3FC700923DE1 /* Pinbot2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* Pinbot2App.swift */; };
-		B75B46A1275B3FC700923DE1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* ContentView.swift */; };
+		B72509AC275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
+		B72509AD275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
+		B72509AE275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
+		B72509B0275DE68B00858384 /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AF275DE68B00858384 /* PinsModel.swift */; };
+		B72509B1275DE68B00858384 /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AF275DE68B00858384 /* PinsModel.swift */; };
+		B72509B2275DE68B00858384 /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AF275DE68B00858384 /* PinsModel.swift */; };
+		B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B72509B4275DF43C00858384 /* GoogleSignIn */; };
+		B72509B7275F2E0800858384 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509B6275F2E0800858384 /* AuthService.swift */; };
+		B72509B8275F2E0800858384 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509B6275F2E0800858384 /* AuthService.swift */; };
+		B72509B9275F2E0800858384 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509B6275F2E0800858384 /* AuthService.swift */; };
+		B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BA275F2E3900858384 /* FirestoreService.swift */; };
+		B72509BC275F2E3900858384 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BA275F2E3900858384 /* FirestoreService.swift */; };
+		B72509BD275F2E3900858384 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BA275F2E3900858384 /* FirestoreService.swift */; };
+		B72509BF275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
+		B72509C0275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
+		B72509C1275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
+		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
+		B72509C4275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
+		B72509C5275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
+		B72509C827606F8C00858384 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = B72509C727606F8C00858384 /* Logging */; };
+		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
+		B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
 		B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A2275B3FC900923DE1 /* Assets.xcassets */; };
 		B75B46A6275B3FC900923DE1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */; };
-		B75B46B0275B3FC900923DE1 /* Pinbot2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46AF275B3FC900923DE1 /* Pinbot2Tests.swift */; };
-		B75B46BA275B3FC900923DE1 /* Pinbot2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46B9275B3FC900923DE1 /* Pinbot2UITests.swift */; };
-		B75B46BC275B3FC900923DE1 /* Pinbot2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46BB275B3FC900923DE1 /* Pinbot2UITestsLaunchTests.swift */; };
+		B75B46B0275B3FC900923DE1 /* StacksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46AF275B3FC900923DE1 /* StacksTests.swift */; };
+		B75B46BA275B3FC900923DE1 /* StacksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46B9275B3FC900923DE1 /* StacksUITests.swift */; };
+		B75B46BC275B3FC900923DE1 /* StacksUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46BB275B3FC900923DE1 /* StacksUITestsLaunchTests.swift */; };
+		B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46C9275B493D00923DE1 /* FirebaseAnalytics */; };
+		B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CB275B493D00923DE1 /* FirebaseAuth */; };
+		B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CD275B493D00923DE1 /* FirebaseFirestore */; };
+		B77305562767184500BA1EE4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B77305552767184500BA1EE4 /* GoogleService-Info.plist */; };
+		B77305572767184500BA1EE4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B77305552767184500BA1EE4 /* GoogleService-Info.plist */; };
+		B77305582767184500BA1EE4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B77305552767184500BA1EE4 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -22,28 +48,36 @@
 			containerPortal = B75B4693275B3FC700923DE1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B75B469A275B3FC700923DE1;
-			remoteInfo = Pinbot2;
+			remoteInfo = Stacks;
 		};
 		B75B46B6275B3FC900923DE1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B75B4693275B3FC700923DE1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B75B469A275B3FC700923DE1;
-			remoteInfo = Pinbot2;
+			remoteInfo = Stacks;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B75B469B275B3FC700923DE1 /* Pinbot2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pinbot2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B75B469E275B3FC700923DE1 /* Pinbot2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinbot2App.swift; sourceTree = "<group>"; };
-		B75B46A0275B3FC700923DE1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B72509AB275DE50D00858384 /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		B72509AF275DE68B00858384 /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
+		B72509B6275F2E0800858384 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		B72509BA275F2E3900858384 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
+		B72509BE275F2E4200858384 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B72509C2275F2E8E00858384 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B72509C927607F0E00858384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B75B469B275B3FC700923DE1 /* Stacks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stacks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B75B469E275B3FC700923DE1 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
+		B75B46A0275B3FC700923DE1 /* PinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinListView.swift; sourceTree = "<group>"; };
 		B75B46A2275B3FC900923DE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B75B46AB275B3FC900923DE1 /* Pinbot2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Pinbot2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B75B46AF275B3FC900923DE1 /* Pinbot2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinbot2Tests.swift; sourceTree = "<group>"; };
-		B75B46B5275B3FC900923DE1 /* Pinbot2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Pinbot2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B75B46B9275B3FC900923DE1 /* Pinbot2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinbot2UITests.swift; sourceTree = "<group>"; };
-		B75B46BB275B3FC900923DE1 /* Pinbot2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinbot2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B75B46AB275B3FC900923DE1 /* StacksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StacksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B75B46AF275B3FC900923DE1 /* StacksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StacksTests.swift; sourceTree = "<group>"; };
+		B75B46B5275B3FC900923DE1 /* StacksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StacksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B75B46B9275B3FC900923DE1 /* StacksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StacksUITests.swift; sourceTree = "<group>"; };
+		B75B46BB275B3FC900923DE1 /* StacksUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StacksUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B77305552767184500BA1EE4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +85,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */,
+				B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */,
+				B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */,
+				B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */,
+				B72509C827606F8C00858384 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,9 +113,10 @@
 		B75B4692275B3FC700923DE1 = {
 			isa = PBXGroup;
 			children = (
-				B75B469D275B3FC700923DE1 /* Pinbot2 */,
-				B75B46AE275B3FC900923DE1 /* Pinbot2Tests */,
-				B75B46B8275B3FC900923DE1 /* Pinbot2UITests */,
+				B77305552767184500BA1EE4 /* GoogleService-Info.plist */,
+				B75B469D275B3FC700923DE1 /* Stacks */,
+				B75B46AE275B3FC900923DE1 /* StacksTests */,
+				B75B46B8275B3FC900923DE1 /* StacksUITests */,
 				B75B469C275B3FC700923DE1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -84,22 +124,29 @@
 		B75B469C275B3FC700923DE1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B75B469B275B3FC700923DE1 /* Pinbot2.app */,
-				B75B46AB275B3FC900923DE1 /* Pinbot2Tests.xctest */,
-				B75B46B5275B3FC900923DE1 /* Pinbot2UITests.xctest */,
+				B75B469B275B3FC700923DE1 /* Stacks.app */,
+				B75B46AB275B3FC900923DE1 /* StacksTests.xctest */,
+				B75B46B5275B3FC900923DE1 /* StacksUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B75B469D275B3FC700923DE1 /* Pinbot2 */ = {
+		B75B469D275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXGroup;
 			children = (
-				B75B469E275B3FC700923DE1 /* Pinbot2App.swift */,
-				B75B46A0275B3FC700923DE1 /* ContentView.swift */,
+				B72509C927607F0E00858384 /* Info.plist */,
+				B75B469E275B3FC700923DE1 /* AppMain.swift */,
+				B72509AB275DE50D00858384 /* Pin.swift */,
+				B72509AF275DE68B00858384 /* PinsModel.swift */,
+				B72509B6275F2E0800858384 /* AuthService.swift */,
+				B72509BA275F2E3900858384 /* FirestoreService.swift */,
+				B72509BE275F2E4200858384 /* RootView.swift */,
+				B72509C2275F2E8E00858384 /* LoginView.swift */,
+				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
-			path = Pinbot2;
+			path = Stacks;
 			sourceTree = "<group>";
 		};
 		B75B46A4275B3FC900923DE1 /* Preview Content */ = {
@@ -110,29 +157,29 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		B75B46AE275B3FC900923DE1 /* Pinbot2Tests */ = {
+		B75B46AE275B3FC900923DE1 /* StacksTests */ = {
 			isa = PBXGroup;
 			children = (
-				B75B46AF275B3FC900923DE1 /* Pinbot2Tests.swift */,
+				B75B46AF275B3FC900923DE1 /* StacksTests.swift */,
 			);
-			path = Pinbot2Tests;
+			path = StacksTests;
 			sourceTree = "<group>";
 		};
-		B75B46B8275B3FC900923DE1 /* Pinbot2UITests */ = {
+		B75B46B8275B3FC900923DE1 /* StacksUITests */ = {
 			isa = PBXGroup;
 			children = (
-				B75B46B9275B3FC900923DE1 /* Pinbot2UITests.swift */,
-				B75B46BB275B3FC900923DE1 /* Pinbot2UITestsLaunchTests.swift */,
+				B75B46B9275B3FC900923DE1 /* StacksUITests.swift */,
+				B75B46BB275B3FC900923DE1 /* StacksUITestsLaunchTests.swift */,
 			);
-			path = Pinbot2UITests;
+			path = StacksUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B75B469A275B3FC700923DE1 /* Pinbot2 */ = {
+		B75B469A275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B75B46BF275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2" */;
+			buildConfigurationList = B75B46BF275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Stacks" */;
 			buildPhases = (
 				B75B4697275B3FC700923DE1 /* Sources */,
 				B75B4698275B3FC700923DE1 /* Frameworks */,
@@ -142,14 +189,21 @@
 			);
 			dependencies = (
 			);
-			name = Pinbot2;
-			productName = Pinbot2;
-			productReference = B75B469B275B3FC700923DE1 /* Pinbot2.app */;
+			name = Stacks;
+			packageProductDependencies = (
+				B75B46C9275B493D00923DE1 /* FirebaseAnalytics */,
+				B75B46CB275B493D00923DE1 /* FirebaseAuth */,
+				B75B46CD275B493D00923DE1 /* FirebaseFirestore */,
+				B72509B4275DF43C00858384 /* GoogleSignIn */,
+				B72509C727606F8C00858384 /* Logging */,
+			);
+			productName = Stacks;
+			productReference = B75B469B275B3FC700923DE1 /* Stacks.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B75B46AA275B3FC900923DE1 /* Pinbot2Tests */ = {
+		B75B46AA275B3FC900923DE1 /* StacksTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B75B46C2275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2Tests" */;
+			buildConfigurationList = B75B46C2275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "StacksTests" */;
 			buildPhases = (
 				B75B46A7275B3FC900923DE1 /* Sources */,
 				B75B46A8275B3FC900923DE1 /* Frameworks */,
@@ -160,14 +214,14 @@
 			dependencies = (
 				B75B46AD275B3FC900923DE1 /* PBXTargetDependency */,
 			);
-			name = Pinbot2Tests;
-			productName = Pinbot2Tests;
-			productReference = B75B46AB275B3FC900923DE1 /* Pinbot2Tests.xctest */;
+			name = StacksTests;
+			productName = StacksTests;
+			productReference = B75B46AB275B3FC900923DE1 /* StacksTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B75B46B4275B3FC900923DE1 /* Pinbot2UITests */ = {
+		B75B46B4275B3FC900923DE1 /* StacksUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B75B46C5275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2UITests" */;
+			buildConfigurationList = B75B46C5275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "StacksUITests" */;
 			buildPhases = (
 				B75B46B1275B3FC900923DE1 /* Sources */,
 				B75B46B2275B3FC900923DE1 /* Frameworks */,
@@ -178,9 +232,9 @@
 			dependencies = (
 				B75B46B7275B3FC900923DE1 /* PBXTargetDependency */,
 			);
-			name = Pinbot2UITests;
-			productName = Pinbot2UITests;
-			productReference = B75B46B5275B3FC900923DE1 /* Pinbot2UITests.xctest */;
+			name = StacksUITests;
+			productName = StacksUITests;
+			productReference = B75B46B5275B3FC900923DE1 /* StacksUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -206,7 +260,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B75B4696275B3FC700923DE1 /* Build configuration list for PBXProject "Pinbot2" */;
+			buildConfigurationList = B75B4696275B3FC700923DE1 /* Build configuration list for PBXProject "Stacks" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -215,13 +269,18 @@
 				Base,
 			);
 			mainGroup = B75B4692275B3FC700923DE1;
+			packageReferences = (
+				B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B75B469A275B3FC700923DE1 /* Pinbot2 */,
-				B75B46AA275B3FC900923DE1 /* Pinbot2Tests */,
-				B75B46B4275B3FC900923DE1 /* Pinbot2UITests */,
+				B75B469A275B3FC700923DE1 /* Stacks */,
+				B75B46AA275B3FC900923DE1 /* StacksTests */,
+				B75B46B4275B3FC900923DE1 /* StacksUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -233,6 +292,7 @@
 			files = (
 				B75B46A6275B3FC900923DE1 /* Preview Assets.xcassets in Resources */,
 				B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */,
+				B77305562767184500BA1EE4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +300,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B77305572767184500BA1EE4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +308,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B77305582767184500BA1EE4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,8 +319,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B75B46A1275B3FC700923DE1 /* ContentView.swift in Sources */,
-				B75B469F275B3FC700923DE1 /* Pinbot2App.swift in Sources */,
+				B72509B7275F2E0800858384 /* AuthService.swift in Sources */,
+				B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */,
+				B72509B0275DE68B00858384 /* PinsModel.swift in Sources */,
+				B72509AC275DE50D00858384 /* Pin.swift in Sources */,
+				B72509BF275F2E4200858384 /* RootView.swift in Sources */,
+				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
+				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
+				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +334,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B75B46B0275B3FC900923DE1 /* Pinbot2Tests.swift in Sources */,
+				B75B46B0275B3FC900923DE1 /* StacksTests.swift in Sources */,
+				B72509C4275F2E8E00858384 /* LoginView.swift in Sources */,
+				B72509BC275F2E3900858384 /* FirestoreService.swift in Sources */,
+				B72509C0275F2E4200858384 /* RootView.swift in Sources */,
+				B72509AD275DE50D00858384 /* Pin.swift in Sources */,
+				B72509B1275DE68B00858384 /* PinsModel.swift in Sources */,
+				B72509B8275F2E0800858384 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,8 +348,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B75B46BA275B3FC900923DE1 /* Pinbot2UITests.swift in Sources */,
-				B75B46BC275B3FC900923DE1 /* Pinbot2UITestsLaunchTests.swift in Sources */,
+				B72509B9275F2E0800858384 /* AuthService.swift in Sources */,
+				B72509BD275F2E3900858384 /* FirestoreService.swift in Sources */,
+				B72509B2275DE68B00858384 /* PinsModel.swift in Sources */,
+				B72509AE275DE50D00858384 /* Pin.swift in Sources */,
+				B72509C1275F2E4200858384 /* RootView.swift in Sources */,
+				B75B46BA275B3FC900923DE1 /* StacksUITests.swift in Sources */,
+				B72509C5275F2E8E00858384 /* LoginView.swift in Sources */,
+				B75B46BC275B3FC900923DE1 /* StacksUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,12 +364,12 @@
 /* Begin PBXTargetDependency section */
 		B75B46AD275B3FC900923DE1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B75B469A275B3FC700923DE1 /* Pinbot2 */;
+			target = B75B469A275B3FC700923DE1 /* Stacks */;
 			targetProxy = B75B46AC275B3FC900923DE1 /* PBXContainerItemProxy */;
 		};
 		B75B46B7275B3FC900923DE1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B75B469A275B3FC700923DE1 /* Pinbot2 */;
+			target = B75B469A275B3FC700923DE1 /* Stacks */;
 			targetProxy = B75B46B6275B3FC900923DE1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -418,10 +498,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Pinbot2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stacks/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,7 +513,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Stacks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -447,10 +528,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Pinbot2/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stacks/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -461,7 +543,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Stacks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -485,12 +567,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pinbot2.app/Pinbot2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stacks.app/Stacks";
 			};
 			name = Debug;
 		};
@@ -510,12 +592,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pinbot2.app/Pinbot2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stacks.app/Stacks";
 			};
 			name = Release;
 		};
@@ -533,12 +615,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2UITests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Pinbot2;
+				TEST_TARGET_NAME = Stacks;
 			};
 			name = Debug;
 		};
@@ -556,19 +638,19 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.Pinbot2UITests;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Pinbot2;
+				TEST_TARGET_NAME = Stacks;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B75B4696275B3FC700923DE1 /* Build configuration list for PBXProject "Pinbot2" */ = {
+		B75B4696275B3FC700923DE1 /* Build configuration list for PBXProject "Stacks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B75B46BD275B3FC900923DE1 /* Debug */,
@@ -577,7 +659,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B75B46BF275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2" */ = {
+		B75B46BF275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Stacks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B75B46C0275B3FC900923DE1 /* Debug */,
@@ -586,7 +668,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B75B46C2275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2Tests" */ = {
+		B75B46C2275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "StacksTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B75B46C3275B3FC900923DE1 /* Debug */,
@@ -595,7 +677,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B75B46C5275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Pinbot2UITests" */ = {
+		B75B46C5275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "StacksUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B75B46C6275B3FC900923DE1 /* Debug */,
@@ -605,6 +687,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+		B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B72509B4275DF43C00858384 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		B72509C727606F8C00858384 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+		B75B46C9275B493D00923DE1 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		B75B46CB275B493D00923DE1 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B75B46CD275B493D00923DE1 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B75B4693275B3FC700923DE1 /* Project object */;
 }

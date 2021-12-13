@@ -1,13 +1,6 @@
-//
-//  Pinbot2UITestsLaunchTests.swift
-//  Pinbot2UITests
-//
-//  Created by Dan Brown on 2021-12-03.
-//
-
 import XCTest
 
-class Pinbot2UITestsLaunchTests: XCTestCase {
+class StacksUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
