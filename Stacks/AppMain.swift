@@ -27,8 +27,6 @@ struct AppMain: App {
     self.firestore = firestore
     self.pinsModel = pinsModel
 
-    auth.restoreLogin()
-
     // TODO
     // pinsModel.fetchPins()
 

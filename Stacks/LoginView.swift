@@ -10,7 +10,7 @@ struct LoginView: View {
       if auth.loading {
         ProgressView()
       } else {
-        Button(action: { auth.login() }) {
+        Button { Task { await auth.login() }} label: {
           Text("Login with Google")
         }
       }
