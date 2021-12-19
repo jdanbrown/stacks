@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B711EC6027686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
+		B711EC6127686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
+		B711EC6227686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
+		B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B711EC642769BD7E005223A2 /* XCGLogger */; };
+		B711EC66276DBFF2005223A2 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
+		B711EC67276DBFF2005223A2 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
+		B711EC69276EF1E8005223A2 /* PinListView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC68276EF1E8005223A2 /* PinListView2.swift */; };
+		B711EC6A276EF1E8005223A2 /* PinListView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC68276EF1E8005223A2 /* PinListView2.swift */; };
+		B711EC6B276EF1E8005223A2 /* PinListView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC68276EF1E8005223A2 /* PinListView2.swift */; };
 		B72509AC275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
 		B72509AD275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
 		B72509AE275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
@@ -26,7 +35,6 @@
 		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
 		B72509C4275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
 		B72509C5275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
-		B72509C827606F8C00858384 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = B72509C727606F8C00858384 /* Logging */; };
 		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
 		B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
 		B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A2275B3FC900923DE1 /* Assets.xcassets */; };
@@ -60,6 +68,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B711EC5F27686C86005223A2 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		B711EC68276EF1E8005223A2 /* PinListView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinListView2.swift; sourceTree = "<group>"; };
 		B72509AB275DE50D00858384 /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		B72509AF275DE68B00858384 /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
 		B72509B6275F2E0800858384 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -89,7 +99,7 @@
 				B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */,
 				B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */,
 				B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */,
-				B72509C827606F8C00858384 /* Logging in Frameworks */,
+				B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,10 +149,12 @@
 				B72509AB275DE50D00858384 /* Pin.swift */,
 				B72509AF275DE68B00858384 /* PinsModel.swift */,
 				B72509B6275F2E0800858384 /* AuthService.swift */,
+				B711EC5F27686C86005223A2 /* Util.swift */,
 				B72509BA275F2E3900858384 /* FirestoreService.swift */,
 				B72509BE275F2E4200858384 /* RootView.swift */,
 				B72509C2275F2E8E00858384 /* LoginView.swift */,
 				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
+				B711EC68276EF1E8005223A2 /* PinListView2.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
@@ -195,7 +207,7 @@
 				B75B46CB275B493D00923DE1 /* FirebaseAuth */,
 				B75B46CD275B493D00923DE1 /* FirebaseFirestore */,
 				B72509B4275DF43C00858384 /* GoogleSignIn */,
-				B72509C727606F8C00858384 /* Logging */,
+				B711EC642769BD7E005223A2 /* XCGLogger */,
 			);
 			productName = Stacks;
 			productReference = B75B469B275B3FC700923DE1 /* Stacks.app */;
@@ -272,7 +284,7 @@
 			packageReferences = (
 				B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */,
+				B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -320,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B72509B7275F2E0800858384 /* AuthService.swift in Sources */,
+				B711EC6027686C86005223A2 /* Util.swift in Sources */,
 				B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */,
 				B72509B0275DE68B00858384 /* PinsModel.swift in Sources */,
 				B72509AC275DE50D00858384 /* Pin.swift in Sources */,
@@ -327,6 +340,7 @@
 				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
 				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
+				B711EC69276EF1E8005223A2 /* PinListView2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,10 +351,13 @@
 				B75B46B0275B3FC900923DE1 /* StacksTests.swift in Sources */,
 				B72509C4275F2E8E00858384 /* LoginView.swift in Sources */,
 				B72509BC275F2E3900858384 /* FirestoreService.swift in Sources */,
+				B711EC6127686C86005223A2 /* Util.swift in Sources */,
 				B72509C0275F2E4200858384 /* RootView.swift in Sources */,
+				B711EC66276DBFF2005223A2 /* PinListView.swift in Sources */,
 				B72509AD275DE50D00858384 /* Pin.swift in Sources */,
 				B72509B1275DE68B00858384 /* PinsModel.swift in Sources */,
 				B72509B8275F2E0800858384 /* AuthService.swift in Sources */,
+				B711EC6A276EF1E8005223A2 /* PinListView2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,11 +365,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B711EC67276DBFF2005223A2 /* PinListView.swift in Sources */,
 				B72509B9275F2E0800858384 /* AuthService.swift in Sources */,
+				B711EC6227686C86005223A2 /* Util.swift in Sources */,
 				B72509BD275F2E3900858384 /* FirestoreService.swift in Sources */,
 				B72509B2275DE68B00858384 /* PinsModel.swift in Sources */,
 				B72509AE275DE50D00858384 /* Pin.swift in Sources */,
 				B72509C1275F2E4200858384 /* RootView.swift in Sources */,
+				B711EC6B276EF1E8005223A2 /* PinListView2.swift in Sources */,
 				B75B46BA275B3FC900923DE1 /* StacksUITests.swift in Sources */,
 				B72509C5275F2E8E00858384 /* LoginView.swift in Sources */,
 				B75B46BC275B3FC900923DE1 /* StacksUITestsLaunchTests.swift in Sources */,
@@ -689,20 +709,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
-			};
-		};
-		B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-log.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.4.0;
 			};
 		};
 		B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -716,15 +736,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B711EC642769BD7E005223A2 /* XCGLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = XCGLogger;
+		};
 		B72509B4275DF43C00858384 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
-		};
-		B72509C727606F8C00858384 /* Logging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B72509C627606F8C00858384 /* XCRemoteSwiftPackageReference "swift-log" */;
-			productName = Logging;
 		};
 		B75B46C9275B493D00923DE1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

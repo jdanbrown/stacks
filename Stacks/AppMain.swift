@@ -1,11 +1,12 @@
 import Firebase
 import SwiftUI
+import XCGLogger
 
 @main
 struct AppMain: App {
 
+  var firestore: FirestoreService
   @State var auth: AuthService
-  @State var firestore: FirestoreService
   @State var pinsModel: PinsModel
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
@@ -13,22 +14,31 @@ struct AppMain: App {
   //  - https://developer.apple.com/forums/thread/653737 -- if you need an AppDelegate
   init() {
 
+    // Logging
+    //  - https://github.com/DaveWoodCom/XCGLogger
+    log.setup(
+      level: .debug,
+      showThreadName: true,
+      showLevel: true,
+      showFileNames: true,
+      showLineNumbers: true
+    )
+    log.formatters = [CustomLogFormatter()]
+    log.logAppDetails()
+
     // Before AuthService()
     //  - https://peterfriese.dev/swiftui-new-app-lifecycle-firebase/
     //  - https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/
     FirebaseApp.configure()
 
     // After FirebaseApp.configure()
+    let firestore = FirestoreService()
     let auth = AuthService()
-    let firestore = FirestoreService(auth: auth)
-    let pinsModel = PinsModel(firestore: firestore)
+    let pinsModel = PinsModel(auth: auth, firestore: firestore)
 
     self.auth = auth
     self.firestore = firestore
     self.pinsModel = pinsModel
-
-    // TODO
-    // pinsModel.fetchPins()
 
   }
 
@@ -36,16 +46,11 @@ struct AppMain: App {
   var body: some Scene {
     WindowGroup {
       Group {
-        if auth.loading || auth.user == nil {
-          LoginView()
-        } else {
-          RootView()
-        }
+        RootView()
       }
         .environmentObject(auth)
-        .environmentObject(firestore)
         .environmentObject(pinsModel)
-        .onOpenURL { AuthService.onOpenURL($0) }
+        .onOpenURL { auth.onOpenURL($0) }
     }
   }
 

@@ -7,12 +7,8 @@ struct LoginView: View {
   var body: some View {
     VStack {
       Text("Login")
-      if auth.loading {
-        ProgressView()
-      } else {
-        Button { Task { await auth.login() }} label: {
-          Text("Login with Google")
-        }
+      Button { Task { await auth.login() }} label: {
+        Text("Login with Google")
       }
     }
   }

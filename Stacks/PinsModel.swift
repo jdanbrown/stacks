@@ -1,40 +1,77 @@
+import Combine
+import Firebase
 import FirebaseFirestore
-import Logging
+import GoogleSignIn
 import SwiftUI
+import XCGLogger
 
 class PinsModel: ObservableObject {
 
-  let log = Logger(label: "Stacks.PinsModel")
-
-  @ObservedObject var firestore: FirestoreService
+  var auth: AuthService
+  var firestore: FirestoreService
 
   @Published var pins = [Pin]()
 
-  init(firestore: FirestoreService) {
+  private var listeners: [ListenerRegistration] = []
+  private var cancellables: [Cancellable] = [] // NOTE Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
+
+  init(auth: AuthService, firestore: FirestoreService) {
+    self.auth = auth
     self.firestore = firestore
-    listenToPins()
+
+    // TODO(zero_pins)
+    cancellables += [
+      self.auth.userDidChange_.sink { (oldUser, newUser) in self.onUserChange(oldUser: oldUser, newUser: newUser) },
+      // self.auth.userDidChange_.sink { (oldUser, newUser) in log.warning("XXX userDidChange_: auth.user[\(opt: auth.user)], oldUser[\(opt: oldUser)], newUser[\(opt: newUser)]") },
+      // self.auth.$user.sink { user in log.warning("XXX $user: auth.user[\(opt: auth.user)], user[\(opt: user)]") },
+    ]
+
   }
 
-  var pinsCollection: CollectionReference {
-    return firestore.db.collection("/users/\(firestore.user.uid)/pins")
+  // TODO(zero_pins): Why does this not log?
+  func onUserChange(oldUser: User?, newUser: User?) {
+    log.info("oldUser[\(opt: oldUser)] -> newUser[\(opt: newUser)]")
+    unlistenToAll()
+    if let user = newUser {
+      listenToPins(user: user)
+    }
+  }
+
+  func unlistenToAll() {
+    log.info("listeners[\(listeners.count)]")
+    for listener in listeners {
+      listener.remove()
+    }
+    listeners = []
+  }
+
+  func pinsCollection(user: User) -> CollectionReference {
+    return firestore.db.collection("/users/\(user.uid)/pins")
   }
 
   // https://firebase.google.com/docs/firestore/query-data/listen
   // https://firebase.google.com/docs/firestore/query-data/listen#listen_to_multiple_documents_in_a_collection
-  func listenToPins() {
-    pinsCollection.addSnapshotListener { querySnapshot, error in
-      guard let documents = querySnapshot?.documents else {
-        print("ERROR: fetchPins failed to fetch: \(error!)")
-        return
+  func listenToPins(user: User) {
+    let c = pinsCollection(user: user)
+    log.info("Listening to collection[\(c)]")
+    listeners.append(
+      c.addSnapshotListener { querySnapshot, error in
+        guard let documents = querySnapshot?.documents else {
+          log.error("Error in snapshot: \(opt: error)")
+          return
+        }
+        log.info("Got snapshot: documents[\(documents.count)]")
+        self.pins = documents.map { queryDocumentSnapshot -> Pin in
+          return Pin.parseMap(
+            ref: queryDocumentSnapshot.reference,
+            map: queryDocumentSnapshot.data()
+          )
+        }
       }
-      self.pins = documents.map { (queryDocumentSnapshot) -> Pin in
-        let map = queryDocumentSnapshot.data()
-        return Pin.parseMap(map: map)
-      }
-    }
+    )
   }
 
-  // TODO Pins stuff from firestore.dart
+  // TODO Add pins stuff from firestore.dart
   //  - pinFromUrl
   //  - pinFromId
   //  - pinFromDoc
