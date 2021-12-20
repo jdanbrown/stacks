@@ -24,7 +24,7 @@ class AuthService: ObservableObject {
     // https://firebase.google.com/docs/auth/ios/start
     // https://firebase.google.com/docs/auth/ios/manage-users
     Auth.auth().addStateDidChangeListener { auth, user in
-      self.userDidChange(user: user)
+      self.userDidChange(user: user.map { User($0) })
     }
     Task {
       await restoreLogin()
@@ -38,14 +38,6 @@ class AuthService: ObservableObject {
       self.loading = false
     }
   }
-
-  // Howto get user properties, here whenever we want them
-  //  - https://developers.google.com/identity/sign-in/ios/people
-  //      emailAddress  = user.profile?.email
-  //      fullName      = user.profile?.name
-  //      givenName     = user.profile?.givenName
-  //      familyName    = user.profile?.familyName
-  //      profilePicUrl = user.profile?.imageURL(withDimension: 320)
 
   // https://developers.google.com/identity/sign-in/ios/sign-in
   //  - "2. Attempt to restore the user's sign-in state"

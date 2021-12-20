@@ -10,7 +10,7 @@ class PinsModel: ObservableObject {
   var auth: AuthService
   var firestore: FirestoreService
 
-  @Published var pins = [Pin]()
+  @Published var pins = Obs([Pin]())
 
   private var listeners: [ListenerRegistration] = []
   private var cancellables: [Cancellable] = [] // NOTE Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
@@ -18,17 +18,11 @@ class PinsModel: ObservableObject {
   init(auth: AuthService, firestore: FirestoreService) {
     self.auth = auth
     self.firestore = firestore
-
-    // TODO(zero_pins)
     cancellables += [
       self.auth.userDidChange_.sink { (oldUser, newUser) in self.onUserChange(oldUser: oldUser, newUser: newUser) },
-      // self.auth.userDidChange_.sink { (oldUser, newUser) in log.warning("XXX userDidChange_: auth.user[\(opt: auth.user)], oldUser[\(opt: oldUser)], newUser[\(opt: newUser)]") },
-      // self.auth.$user.sink { user in log.warning("XXX $user: auth.user[\(opt: auth.user)], user[\(opt: user)]") },
     ]
-
   }
 
-  // TODO(zero_pins): Why does this not log?
   func onUserChange(oldUser: User?, newUser: User?) {
     log.info("oldUser[\(opt: oldUser)] -> newUser[\(opt: newUser)]")
     unlistenToAll()
@@ -61,7 +55,7 @@ class PinsModel: ObservableObject {
           return
         }
         log.info("Got snapshot: documents[\(documents.count)]")
-        self.pins = documents.map { queryDocumentSnapshot -> Pin in
+        self.pins.value = documents.map { queryDocumentSnapshot -> Pin in
           return Pin.parseMap(
             ref: queryDocumentSnapshot.reference,
             map: queryDocumentSnapshot.data()

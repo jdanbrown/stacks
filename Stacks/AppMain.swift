@@ -50,6 +50,7 @@ struct AppMain: App {
       }
         .environmentObject(auth)
         .environmentObject(pinsModel)
+        .environmentObject(pinsModel.pins)
         .onOpenURL { auth.onOpenURL($0) }
     }
   }

@@ -65,3 +65,12 @@ func toJson<X: Codable>(x: X) throws -> String {
   let data: Data = try JSONEncoder().encode(x)
   return String(decoding: data, as: UTF8.self)
 }
+
+// Wrap types that aren't already ObservableObject
+//  - e.g. Optional/Array for .environmentObject
+class Obs<X>: ObservableObject {
+  @Published var value: X
+  init(_ value: X) {
+    self.value = value
+  }
+}

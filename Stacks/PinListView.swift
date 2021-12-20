@@ -2,26 +2,26 @@ import SwiftUI
 
 struct PinListView: View {
 
-  @EnvironmentObject var auth: AuthService
-  @EnvironmentObject var pinsModel: PinsModel
+  @EnvironmentObject var user: User
+  @EnvironmentObject var pins: Obs<[Pin]>
 
   var body: some View {
     VStack {
-      Text("PinList (\(pinsModel.pins.count) pins)")
-
-      Button { Task { await auth.logout() }} label: {
-        let email: String = auth.user?.email ?? "[no user/email]"
-        Text("Logout: \(email)")
-      }
-
-      List(pinsModel.pins) { pin in
+      Text("PinList (\(pins.value.count) pins)")
+      List(pins.value) { pin in
         VStack(alignment: .leading) {
+          Text(pin.title)
           Text(pin.url)
-            // .font(.title)
-            .font(.body)
+            .font(.caption)
+          HStack {
+            ForEach(pin.tags, id: \.self) {
+              Text($0)
+                .font(.caption)
+            }
+          }
+          Text(pin.notes)
         }
       }
-
     }
   }
 
@@ -29,8 +29,30 @@ struct PinListView: View {
 
 struct PinListView_Previews: PreviewProvider {
   static var previews: some View {
-    // TODO Put mock [Pin] data here
-    //  - How to mock out pinsModel in a sustainable way?
+    let user = User(
+      uid: "user_0",
+      displayName: "Bob",
+      email: "bob@gmail.com",
+      photoURL: nil
+    )
+    let pins = Obs([
+      Pin(
+        id: "pin_0",
+        url: "url_0",
+        title: "title_0",
+        tags: ["tag-0a", "tag-0b"],
+        notes: "notes_0"
+      ),
+      Pin(
+        id: "pin_1",
+        url: "url_1",
+        title: "title_1",
+        tags: ["tag-1a", "tag-1b"],
+        notes: "notes_1"
+      ),
+    ])
     PinListView()
+      .environmentObject(user)
+      .environmentObject(pins)
   }
 }

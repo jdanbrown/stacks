@@ -4,6 +4,14 @@
 - https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app
   - Project: Stacks -> Targets: Stacks -> General -> Frameworks, Libraries
 
+## Xcode: SwiftUI Previews
+- https://www.wwdcnotes.com/notes/wwdc20/10149/ — Structure your app for SwiftUI previews
+- https://www.avanderlee.com/swiftui/previews-different-states/
+- https://www.swiftbysundell.com/articles/getting-the-most-out-of-xcode-previews/
+- https://swiftwithmajid.com/2021/03/10/mastering-swiftui-previews/
+- https://useyourloaf.com/blog/swiftui-preview-data/
+- https://www.avanderlee.com/xcode/development-assets-preview-catalog/
+
 ## Project
 - https://paper.dropbox.com/doc/A-Pinboard-App--BXJKXToyBC9Vp46eYJRpvBhGAg-PJzwB3vc6xc0UpxsYn8rb
 - https://pinboard.in/u:jdanbrown/
@@ -34,3 +42,12 @@
 
 ## SwiftUI books
 - https://www.objc.io/books/thinking-in-swiftui/
+
+# Troubleshooting
+- 100% cpu from Simulator/Spotlight when rendering Previews / running Simulator
+  - https://developer.apple.com/forums/thread/682253
+  - Bug in Xcode 13.1, claims to be fixed in 13.2 beta
+- `No such module 'Firebase'` when showing Previews / when building target StacksUITests
+  - Targets Stacks and StacksTests built fine, but StacksUITests failed with that error
+  - I didn't find a solution with ~1 page of googling
+  - Hacky workaround: I simply deleted the StacksUITests target, because I'll ~never use it

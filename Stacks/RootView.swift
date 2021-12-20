@@ -11,7 +11,13 @@ struct RootView: View {
       } else if auth.user == nil {
         LoginView()
       } else {
-        PinListView()
+        VStack {
+          Button { Task { await auth.logout() }} label: {
+            Text("Logout: \(auth.user!.email ?? "[no email]")")
+          }
+          PinListView()
+            .environmentObject(auth.user!)
+        }
       }
     }
   }
