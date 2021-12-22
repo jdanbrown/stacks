@@ -7,10 +7,10 @@ import XCGLogger
 
 class PinsModel: ObservableObject {
 
+  @Published var pins = [Pin]()
+
   var auth: AuthService
   var firestore: FirestoreService
-
-  @Published var pins = Obs([Pin]())
 
   private var listeners: [ListenerRegistration] = []
   private var cancellables: [Cancellable] = [] // NOTE Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
@@ -19,14 +19,16 @@ class PinsModel: ObservableObject {
     self.auth = auth
     self.firestore = firestore
     cancellables += [
-      self.auth.userDidChange_.sink { (oldUser, newUser) in self.onUserChange(oldUser: oldUser, newUser: newUser) },
+      self.auth.userDidChange_.sink { (oldAuthState, newAuthState) in
+        self.onUserChange(oldAuthState: oldAuthState, newAuthState: newAuthState)
+      },
     ]
   }
 
-  func onUserChange(oldUser: User?, newUser: User?) {
-    log.info("oldUser[\(opt: oldUser)] -> newUser[\(opt: newUser)]")
+  func onUserChange(oldAuthState: AuthState, newAuthState: AuthState) {
+    log.info("oldAuthState[\(opt: oldAuthState)] -> newAuthState[\(opt: newAuthState)]")
     unlistenToAll()
-    if let user = newUser {
+    if let user = newAuthState.user {
       listenToPins(user: user)
     }
   }
@@ -55,7 +57,7 @@ class PinsModel: ObservableObject {
           return
         }
         log.info("Got snapshot: documents[\(documents.count)]")
-        self.pins.value = documents.map { queryDocumentSnapshot -> Pin in
+        self.pins = documents.map { queryDocumentSnapshot -> Pin in
           return Pin.parseMap(
             ref: queryDocumentSnapshot.reference,
             map: queryDocumentSnapshot.data()

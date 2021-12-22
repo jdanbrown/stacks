@@ -3,24 +3,40 @@ import Firebase
 import GoogleSignIn
 import XCGLogger
 
+enum AuthState {
+
+  case Loading
+  case LoggedOut
+  case LoggedIn(User)
+
+  var user: User? {
+    get {
+      switch self {
+        case .Loading:            return nil
+        case .LoggedOut:          return nil
+        case .LoggedIn(let user): return user
+      }
+    }
+  }
+
+}
+
 class AuthService: ObservableObject {
 
   // Must use DispatchQueue.main to set these
   //  - So that state publishes come from main thread (else runtime warning + no effect)
-  @Published var loading: Bool
-  @Published var user: User?  {
-    didSet { userDidChange_.send((oldValue, user)) }
+  @Published var authState: AuthState {
+    didSet { userDidChange_.send((oldValue, authState)) }
   }
 
   // Trigger this manually via didSet because $user.sink fires with the new value _before_ auth.user is updated
   //  - didSet triggers _after_ auth.user is updated, and provides old and new values
   //  - $user.sink triggers _before_ auth.user is updated, and provides the new value (read auth.user for the old value)
-  var userDidChange_ = PassthroughSubject<(User?, User?), Never>()
+  var userDidChange_ = PassthroughSubject<(AuthState, AuthState), Never>()
 
   // NOTE This can't be async (for restoreLogin) because AppMain.init can't be async
   init() {
-    loading = true
-    user = nil
+    authState = AuthState.Loading
     // https://firebase.google.com/docs/auth/ios/start
     // https://firebase.google.com/docs/auth/ios/manage-users
     Auth.auth().addStateDidChangeListener { auth, user in
@@ -34,8 +50,7 @@ class AuthService: ObservableObject {
   func userDidChange(user: User?) {
     log.info("user[\(opt: user)]")
     DispatchQueue.main.async {
-      self.user = user
-      self.loading = false
+      self.authState = user == nil ? .LoggedOut : .LoggedIn(user!)
     }
   }
 
@@ -43,17 +58,17 @@ class AuthService: ObservableObject {
   //  - "2. Attempt to restore the user's sign-in state"
   func restoreLogin() async -> () {
     log.info("Start")
-    return await withLoading { () -> () in
-      return await withCheckedContinuation { k in
-        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-          if let error = error {
-            log.error("Failed: user[\(opt: user)], error[\(error)]")
-          } else {
-            log.info("Done: user[\(opt: user)]")
-          }
-          k.resume()
-          // self.user is updated by addStateDidChangeListener (above)
+    authState = .Loading
+    return await withCheckedContinuation { k in
+      GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+        if let error = error {
+          log.error("Failed: user[\(opt: user)], error[\(error)]")
+          self.authState = .LoggedOut
+        } else {
+          log.info("Done: user[\(opt: user)]")
+          // self.authState = .LoggedIn(...) // Handled by userDidChange
         }
+        k.resume()
       }
     }
   }
@@ -70,26 +85,23 @@ class AuthService: ObservableObject {
     //  - https://developer.apple.com/forums/thread/682621
     //  - https://stackoverflow.com/questions/68387187/how-to-use-uiwindowscene-windows-on-ios-15
     let viewController: UIViewController = await (UIApplication.shared.windows.first?.rootViewController)!
-    return await withLoading { () -> AuthCredential? in
-      return await withCheckedContinuation { k in
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { user, error in
-          if error != nil || user == nil {
-            log.error("Failed to signIn: config[\(config)] -> user[\(opt: user)], error[\(opt: error)]")
+    return await withCheckedContinuation { k in
+      GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { user, error in
+        if error != nil || user == nil {
+          log.error("Failed to signIn: config[\(config)] -> user[\(opt: user)], error[\(opt: error)]")
+          k.resume(returning: nil)
+        } else {
+          let user = user!
+          if user.authentication.idToken == nil {
+            log.error("Null idToken for user[\(user)], user.authentication[\(user.authentication)]")
             k.resume(returning: nil)
           } else {
-            let user = user!
-            if user.authentication.idToken == nil {
-              log.error("Null idToken for user[\(user)], user.authentication[\(user.authentication)]")
-              k.resume(returning: nil)
-            } else {
-              let credential = GoogleAuthProvider.credential(
-                withIDToken: user.authentication.idToken!,
-                accessToken: user.authentication.accessToken
-              )
-              log.info("Done: user[\(user)] -> credential[\(credential)]")
-              k.resume(returning: credential)
-              // self.user is updated by addStateDidChangeListener (above)
-            }
+            let credential = GoogleAuthProvider.credential(
+              withIDToken: user.authentication.idToken!,
+              accessToken: user.authentication.accessToken
+            )
+            log.info("Done: user[\(user)] -> credential[\(credential)]")
+            k.resume(returning: credential)
           }
         }
       }
@@ -117,35 +129,46 @@ class AuthService: ObservableObject {
 
   func login(_ loginWith: () async -> AuthCredential?) async {
     log.info("Start")
-    if user != nil {
-      log.info("Skipping, already logged in: user[\(opt: user)]")
-    } else {
-      log.info("Logging in...")
-      await withLoading {
+    switch authState {
+      case .Loading:
+        log.info("Skipped, unexpected state: authState[\(authState)]")
+      case .LoggedIn(let user):
+        log.info("Skipping, already logged in: user[\(user)]")
+      case .LoggedOut:
+        log.info("Logging in...")
+        authState = .Loading
         guard let credential = await loginWith() else {
           log.info("Login failed/canceled")
+          authState = .LoggedOut
           return
         }
-        // https://firebase.google.com/docs/auth/ios/google-signin
-        //  - "3. Authenticate with Firebase"
-        let _ = Auth.auth().signIn(with: credential) { authResult, error in
-          if let error = error {
-            log.error("Failed to Auth.signIn: credential[\(credential)] -> authResult[\(opt: authResult)], error[\(error)]")
-          } else {
-            log.info("Logged in: user[\(opt: authResult?.user)]")
+        return await withCheckedContinuation { k in
+          // https://firebase.google.com/docs/auth/ios/google-signin
+          //  - "3. Authenticate with Firebase"
+          let _ = Auth.auth().signIn(with: credential) { authResult, error in
+            if let error = error {
+              log.error("Failed to Auth.signIn: credential[\(credential)] -> authResult[\(opt: authResult)], error[\(error)]")
+              self.authState = .LoggedOut
+            } else {
+              log.info("Logged in: user[\(opt: authResult?.user)]")
+              // self.authState = .LoggedIn(...) // Handled by userDidChange
+            }
+            k.resume()
           }
         }
       }
-    }
   }
 
   func logout() async {
     log.info("Start")
-    if user == nil {
-      log.info("Skipping, not logged in: user[\(opt: user)]")
-    } else {
-      log.info("Logging out user[\(opt: user)]...")
-      await withLoading {
+    switch authState {
+      case .Loading:
+        log.info("Skipped, unexpected state: authState[\(authState)]")
+      case .LoggedOut:
+        log.info("Skipping, not logged in: authState[\(authState)]")
+      case .LoggedIn(let user):
+        log.info("Logging out user[\(user)]...")
+        authState = .Loading
         // https://firebase.google.com/docs/auth/ios/custom-auth
         do {
           try Auth.auth().signOut()
@@ -153,22 +176,9 @@ class AuthService: ObservableObject {
         } catch {
           log.error("Logout failed: \(error)")
         }
-      }
-      // Always set user to nil, whether logout succeeds or fails
-      user = nil
+        // Always reset to .LoggedOut, even if .signOut() failed
+        authState = .LoggedOut
     }
-  }
-
-  func withLoading<X>(f: () async -> X) async -> X {
-    DispatchQueue.main.async {
-      self.loading = true
-    }
-    defer {
-      DispatchQueue.main.async {
-        self.loading = false
-      }
-    }
-    return await f()
   }
 
 }

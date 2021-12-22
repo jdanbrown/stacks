@@ -1,6 +1,6 @@
 import Firebase
 
-class User: ObservableObject {
+struct User: Equatable {
 
   let uid: String
   let displayName: String?
@@ -19,7 +19,7 @@ class User: ObservableObject {
     self.photoURL = photoURL
   }
 
-  convenience init(_ user: Firebase.User) {
+  init(_ user: Firebase.User) {
     // Docs:
     //  - https://firebase.google.com/docs/reference/swift/firebaseauth/api/reference/Classes/User
     //  - https://firebase.google.com/docs/reference/swift/firebaseauth/api/reference/Protocols/UserInfo.html
@@ -30,5 +30,12 @@ class User: ObservableObject {
       photoURL: user.photoURL
     )
   }
+
+  static let example0 = User(
+    uid: "uid_0",
+    displayName: "name_0",
+    email: "email_0",
+    photoURL: URL(string: "https://user-images.githubusercontent.com/627486/147042558-4adef573-f220-483b-9abe-d9b3a4f7bb70.png")
+  )
 
 }

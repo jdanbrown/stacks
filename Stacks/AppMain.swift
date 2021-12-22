@@ -6,8 +6,8 @@ import XCGLogger
 struct AppMain: App {
 
   var firestore: FirestoreService
-  @State var auth: AuthService
-  @State var pinsModel: PinsModel
+  var auth: AuthService
+  var pinsModel: PinsModel
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
@@ -44,13 +44,30 @@ struct AppMain: App {
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
+    AppScene(
+      auth: auth,
+      pinsModel: pinsModel
+    )
+  }
+
+}
+
+struct AppScene: Scene {
+
+  @ObservedObject var auth: AuthService
+  @ObservedObject var pinsModel: PinsModel
+
+  // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
+  var body: some Scene {
     WindowGroup {
       Group {
-        RootView()
+        RootView(
+          authState: auth.authState,
+          login: auth.login,
+          logout: auth.logout,
+          pins: pinsModel.pins
+        )
       }
-        .environmentObject(auth)
-        .environmentObject(pinsModel)
-        .environmentObject(pinsModel.pins)
         .onOpenURL { auth.onOpenURL($0) }
     }
   }

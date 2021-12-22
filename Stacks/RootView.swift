@@ -2,22 +2,28 @@ import SwiftUI
 
 struct RootView: View {
 
-  @EnvironmentObject var auth: AuthService
+  var authState: AuthState
+  var login: () async -> ()
+  var logout: () async -> ()
+  var pins: [Pin]
 
   var body: some View {
     VStack {
-      if auth.loading {
-        ProgressView()
-      } else if auth.user == nil {
-        LoginView()
-      } else {
-        VStack {
-          Button { Task { await auth.logout() }} label: {
-            Text("Logout: \(auth.user!.email ?? "[no email]")")
+      switch authState {
+        case .Loading:
+          ProgressView()
+        case .LoggedOut:
+          LoginView(login: login)
+        case .LoggedIn(let user):
+          VStack {
+            Button { Task { await logout() }} label: {
+              Text("Logout: \(user.email ?? "[no email]")")
+            }
+            PinListView(
+              user: user,
+              pins: pins
+            )
           }
-          PinListView()
-            .environmentObject(auth.user!)
-        }
       }
     }
   }
@@ -26,6 +32,12 @@ struct RootView: View {
 
 struct RootView_Previews: PreviewProvider {
   static var previews: some View {
-    RootView()
+    let user = User.example0
+    RootView(authState: .Loading, login: {}, logout: {}, pins: [])
+      .previewLayout(.sizeThatFits)
+    RootView(authState: .LoggedOut, login: {}, logout: {}, pins: [])
+      .previewLayout(.sizeThatFits)
+    RootView(authState: .LoggedIn(user), login: {}, logout: {}, pins: [])
+      .previewLayout(.sizeThatFits)
   }
 }

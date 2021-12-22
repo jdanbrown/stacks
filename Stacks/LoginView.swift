@@ -2,12 +2,12 @@ import SwiftUI
 
 struct LoginView: View {
 
-  @EnvironmentObject var auth: AuthService
+  var login: () async -> ()
 
   var body: some View {
     VStack {
       Text("Login")
-      Button { Task { await auth.login() }} label: {
+      Button { Task { await login() }} label: {
         Text("Login with Google")
       }
     }
@@ -17,6 +17,6 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
   static var previews: some View {
-    LoginView()
+    LoginView(login: {})
   }
 }

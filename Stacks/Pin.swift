@@ -14,7 +14,7 @@ struct Pin: Codable, Identifiable {
     ref: DocumentReference, // TODO Pin + PurePin
     map: [String: Any]
   ) -> Pin {
-    log.info("map[\(map)]") // XXX Debug (noisy)
+    // log.info("map[\(map)]") // XXX Debug (noisy)
     return Pin(
       // id:    map["id"]    as! String,
       id:    map["url"]   as! String, // TODO
@@ -25,6 +25,22 @@ struct Pin: Codable, Identifiable {
       notes: map["notes"] as! String
     )
   }
+
+  static let ex0 = Pin(
+    id: "pin_0",
+    url: "url_0",
+    title: "title_0",
+    tags: ["tag-0a", "tag-0b"],
+    notes: "notes_0"
+  )
+
+  static let ex1 = Pin(
+    id: "pin_1",
+    url: "url_1",
+    title: "title_1",
+    tags: ["tag-1a", "tag-1b"],
+    notes: "notes_1"
+  )
 
 }
 
