@@ -11,15 +11,19 @@ struct PinListView: View {
       List(pins) { pin in
         VStack(alignment: .leading) {
           Text(pin.title)
+            .font(.body)
           Text(pin.url)
             .font(.caption)
+            .foregroundColor(Color.gray)
           HStack {
             ForEach(pin.tags, id: \.self) {
               Text($0)
                 .font(.caption)
+                .foregroundColor(Color.blue)
             }
           }
           Text(pin.notes)
+            .font(.footnote)
         }
       }
     }

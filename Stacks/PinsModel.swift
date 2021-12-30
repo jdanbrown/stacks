@@ -1,10 +1,14 @@
 import Combine
 import Firebase
 import FirebaseFirestore
+import FirebaseFirestoreSwift
+import FirebaseFirestoreCombineSwift
 import GoogleSignIn
 import SwiftUI
 import XCGLogger
 
+// TODO Can we simplify anything with FirebaseFirestoreCombineSwift + FirebaseFirestoreSwift?
+//  - https://github.com/firebase/firebase-ios-sdk/tree/master/Firestore/Swift
 class PinsModel: ObservableObject {
 
   @Published var pins = [Pin]()
@@ -57,11 +61,17 @@ class PinsModel: ObservableObject {
           return
         }
         log.info("Got snapshot: documents[\(documents.count)]")
-        self.pins = documents.map { queryDocumentSnapshot -> Pin in
-          return Pin.parseMap(
-            ref: queryDocumentSnapshot.reference,
-            map: queryDocumentSnapshot.data()
-          )
+        self.pins = documents.compactMap { queryDocumentSnapshot -> Pin? in
+          switch (Result { try Pin.fromDoc(doc: queryDocumentSnapshot) }) {
+            case .failure(let e):
+              log.error("Failed to parse document, skipping: queryDocumentSnapshot[\(queryDocumentSnapshot)], error[\(e)]")
+              return nil
+            case .success(nil):
+              log.error("Document does not exist, skipping: queryDocumentSnapshot[\(queryDocumentSnapshot)]")
+              return nil
+            case .success(let pin):
+              return pin
+          }
         }
       }
     )

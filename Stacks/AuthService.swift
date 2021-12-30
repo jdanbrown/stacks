@@ -1,8 +1,11 @@
 import Combine
 import Firebase
+import FirebaseAuthCombineSwift
 import GoogleSignIn
 import XCGLogger
 
+// TODO Does anything simplify if we use FirebaseAuthCombineSwift?
+//  - https://github.com/firebase/firebase-ios-sdk/tree/master/FirebaseCombineSwift
 enum AuthState {
 
   case Loading

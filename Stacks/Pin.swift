@@ -1,7 +1,14 @@
 import Firebase
+import FirebaseFirestoreSwift
 import SwiftUI
 import XCGLogger
 
+// TODO Don't do Pin vs. PurePin! -- DocumentReference doesn't need to be stored!
+//  - A DocumentReference is 1-1 with the document path, and can be recreated from it
+//  - https://firebase.google.com/docs/firestore/data-model#references
+
+// Codable enabled by `import FirebaseFirestoreSwift`
+//  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 struct Pin: Codable, Identifiable {
 
   var id: String
@@ -10,20 +17,10 @@ struct Pin: Codable, Identifiable {
   var tags: [String]
   var notes: String
 
-  static func parseMap(
-    ref: DocumentReference, // TODO Pin + PurePin
-    map: [String: Any]
-  ) -> Pin {
-    // log.info("map[\(map)]") // XXX Debug (noisy)
-    return Pin(
-      // id:    map["id"]    as! String,
-      id:    map["url"]   as! String, // TODO
-      url:   map["url"]   as! String,
-      title: map["title"] as! String,
-      // tags:  map["tags"]  as! [String],
-      tags:  [],
-      notes: map["notes"] as! String
-    )
+  // Returns nil if document does not exist, throws if decoding fails
+  static func fromDoc(doc: DocumentSnapshot) throws -> Pin? {
+    // https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
+    return try doc.data(as: Pin.self)
   }
 
   static let ex0 = Pin(

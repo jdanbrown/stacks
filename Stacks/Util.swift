@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import XCGLogger
 
@@ -55,17 +56,6 @@ extension DefaultStringInterpolation {
   }
 }
 
-func toJson(_ x: Any) throws -> String {
-  let data: Data = try JSONSerialization.data(withJSONObject: x, options: [])
-  return String(decoding: data, as: UTF8.self)
-}
-
-// Is this one useful? Newer style, but requires static/swift construction of the input data
-func toJson<X: Codable>(x: X) throws -> String {
-  let data: Data = try JSONEncoder().encode(x)
-  return String(decoding: data, as: UTF8.self)
-}
-
 // // Wrap types that aren't already ObservableObject
 // //  - e.g. Optional/Array for .environmentObject
 // class Obs<X>: ObservableObject {
@@ -74,3 +64,52 @@ func toJson<X: Codable>(x: X) throws -> String {
 //     self.value = value
 //   }
 // }
+
+//
+// Codable/json
+//
+
+func toJson(_ x: Any) throws -> String {
+  let data: Data = try JSONSerialization.data(withJSONObject: x, options: [])
+  return String(decoding: data, as: UTF8.self)
+}
+
+func toJson<X: Codable>(x: X) throws -> String {
+  let data: Data = try JSONEncoder().encode(x)
+  return String(decoding: data, as: UTF8.self)
+}
+
+func fromJson<X: Codable>(json: String) throws -> X {
+  guard let jsonData = json.data(using: .utf8) else {
+    preconditionFailure("Invalid json[\(json)]")
+  }
+  return try JSONDecoder().decode(X.self, from: jsonData)
+}
+
+//
+// async + Future/Combine
+//  - https://developer.apple.com/documentation/swift/asyncsequence
+//  - https://developer.apple.com/documentation/combine/future
+//  - https://benscheirman.com/2021/06/async-await-and-the-future-of-combine/
+//  - https://wwdcbysundell.com/2021/the-future-of-combine/
+//
+
+func toAsync<X>(fut: Future<X, Never>) async -> X {
+  for await x in fut.values {
+    return x
+  }
+  fatalError("""
+    A Future "eventually produces a single value and then finishes or fails"
+    - https://developer.apple.com/documentation/combine/future
+  """)
+}
+
+func toAsync<X>(fut: Future<X, Error>) async throws -> X {
+  for try await x in fut.values {
+    return x
+  }
+  fatalError("""
+    A Future "eventually produces a single value and then finishes or fails"
+    - https://developer.apple.com/documentation/combine/future
+  """)
+}
