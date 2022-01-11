@@ -11,49 +11,89 @@ import XCGLogger
 //  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 struct Pin: Codable, Identifiable {
 
-  var id: String
-  var url: String
+  // id is determined by url
+  var id: String {
+    get { return Pin.idFromUrl(url) }
+  }
+
+  var schemaVersion: String?
+  var url: String // NOTE When we need it: URL.absoluteString -> String
   var title: String
   var tags: [String]
   var notes: String
+  var createdAt: Date
+  var modifiedAt: Date
+  var accessedAt: Date
+  var isRead: Bool
+
+  // Progress data
+  //  - Track a separate notion of progress for each different content type
+  //  - Web pages scroll, pdfs flip pages, etc.
+  //  - (Conflating all of these into one shared, unitless "number" would probably be more confusing than simplifying)
+  var progressPageScroll: Int?
+  var progressPageScrollMax: Int?
+  var progressPdfPage: Int?
+  var progressPdfPageMax: Int?
+  // var progressVideoTime: Int?
+  // var progressVideoTimeMax: Int?
+  // var progressAudioTime: Int?
+  // var progressAudioTimeMax: Int?
+
+  enum CodingKeys: String, CodingKey {
+    case schemaVersion = "schema_version"
+    case url
+    case title
+    case tags
+    case notes
+    case createdAt = "created_at"
+    case modifiedAt = "modified_at"
+    case accessedAt = "accessed_at"
+    case isRead = "is_read"
+    case progressPageScroll = "progress_page_scroll"
+    case progressPageScrollMax = "progress_page_scroll_max"
+    case progressPdfPage = "progress_pdf_page"
+    case progressPdfPageMax = "progress_pdf_page_max"
+  }
 
   // Returns nil if document does not exist, throws if decoding fails
-  static func fromDoc(doc: DocumentSnapshot) throws -> Pin? {
-    // https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
+  //  - https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
+  static func fromDoc(_ doc: DocumentSnapshot) throws -> Pin? {
     return try doc.data(as: Pin.self)
   }
 
+  static func idFromUrl(_ url: String) -> String {
+    return sha1hex(normalizeUrlForId(url))
+  }
+
+  static func normalizeUrlForId(_ url: String) -> String {
+    return (url
+      // Treat http:// and https:// urls the same
+      //  - To avoid duplicate pins if the user saves a link before opening, and then again after opening and the link
+      //    was an http:// link that redirects to an https:// link
+      .replacingOccurrences(of: #"^https?://"#, with: "https?://", options: [.regularExpression])
+    )
+  }
+
   static let ex0 = Pin(
-    id: "pin_0",
     url: "url_0",
     title: "title_0",
     tags: ["tag-0a", "tag-0b"],
-    notes: "notes_0"
+    notes: "notes_0",
+    createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
+    modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+    accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+    isRead: false
   )
 
   static let ex1 = Pin(
-    id: "pin_1",
     url: "url_1",
     title: "title_1",
     tags: ["tag-1a", "tag-1b"],
-    notes: "notes_1"
+    notes: "notes_1",
+    createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
+    modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+    accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+    isRead: true
   )
 
 }
-
-// XXX Example
-// map[[
-//   "progress_page_scroll_max": <null>,
-//   "notes": ,
-//   "progress_pdf_page": <null>,
-//   "tags": <__NSArrayM 0x60000381abe0>( nn, overfitting, generalization, explained, good),
-//   "title": Are Deep Neural Networks Dramatically Overfitted?,
-//   "is_read": 0,
-//   "progress_pdf_page_max": <null>,
-//   "url": https://lilianweng.github.io/lil-log/2019/03/14/are-deep-neural-networks-dramatically-overfitted.html,
-//   "modified_at": <FIRTimestamp: seconds=1626103229 nanoseconds=0>,
-//   "accessed_at": <FIRTimestamp: seconds=1626103229 nanoseconds=0>,
-//   "created_at": <FIRTimestamp: seconds=1626103229 nanoseconds=0>,
-//   "progress_page_scroll": <null>,
-//   "schema_version": v0
-// ]]

@@ -62,7 +62,7 @@ class PinsModel: ObservableObject {
         }
         log.info("Got snapshot: documents[\(documents.count)]")
         self.pins = documents.compactMap { queryDocumentSnapshot -> Pin? in
-          switch (Result { try Pin.fromDoc(doc: queryDocumentSnapshot) }) {
+          switch (Result { try Pin.fromDoc(queryDocumentSnapshot) }) {
             case .failure(let e):
               log.error("Failed to parse document, skipping: queryDocumentSnapshot[\(queryDocumentSnapshot)], error[\(e)]")
               return nil
@@ -73,6 +73,12 @@ class PinsModel: ObservableObject {
               return pin
           }
         }
+
+        // HACK Uncomment this to dump data to the Xcode console to copy/paste out for Previews
+        //  - How can we make this a cli script or something?
+        // let pinsJson = try! toJson(self.pins, pretty: true)
+        // log.info("Dumping all pins: count[\(self.pins.count)], pins[\(pinsJson)]")
+
       }
     )
   }

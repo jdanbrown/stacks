@@ -28,6 +28,7 @@
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
 		B7856B9B277457A200A87DDA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */; };
 		B7856B9D277457AB00A87DDA /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */; };
+		B7856B9F278D4EC200A87DDA /* preview-pins.json in Resources */ = {isa = PBXBuildFile; fileRef = B7856B9E278D4EC200A87DDA /* preview-pins.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B77305552767184500BA1EE4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B7856B9527704C3400A87DDA /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B7856B9E278D4EC200A87DDA /* preview-pins.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "preview-pins.json"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 		B75B46A4275B3FC900923DE1 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				B7856B9E278D4EC200A87DDA /* preview-pins.json */,
 				B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -195,6 +198,7 @@
 			files = (
 				B75B46A6275B3FC900923DE1 /* Preview Assets.xcassets in Resources */,
 				B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */,
+				B7856B9F278D4EC200A87DDA /* preview-pins.json in Resources */,
 				B77305562767184500BA1EE4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

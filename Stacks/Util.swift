@@ -1,4 +1,5 @@
 import Combine
+import CryptoKit
 import Foundation
 import XCGLogger
 
@@ -69,21 +70,34 @@ extension DefaultStringInterpolation {
 // Codable/json
 //
 
-func toJson(_ x: Any) throws -> String {
+func toJsonNoCodable(_ x: Any) throws -> String {
   let data: Data = try JSONSerialization.data(withJSONObject: x, options: [])
   return String(decoding: data, as: UTF8.self)
 }
 
-func toJson<X: Codable>(x: X) throws -> String {
-  let data: Data = try JSONEncoder().encode(x)
+func toJson<X: Codable>(_ x: X, pretty: Bool = false) throws -> String {
+  let encoder = JSONEncoder()
+  encoder.dateEncodingStrategy = .formatted(isoDateFormatter) // Instead of unixtime int
+  if !pretty {
+    encoder.outputFormatting = [.sortedKeys]
+  } else {
+    encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+  }
+  let data: Data = try encoder.encode(x)
   return String(decoding: data, as: UTF8.self)
 }
 
-func fromJson<X: Codable>(json: String) throws -> X {
+func fromJson<X: Codable>(_ json: String) throws -> X {
   guard let jsonData = json.data(using: .utf8) else {
-    preconditionFailure("Invalid json[\(json)]")
+    preconditionFailure("Invalid utf8 string[\(json)]")
   }
-  return try JSONDecoder().decode(X.self, from: jsonData)
+  return try fromJson(jsonData)
+}
+
+func fromJson<X: Codable>(_ jsonData: Data) throws -> X {
+  let decoder = JSONDecoder()
+  decoder.dateDecodingStrategy = .formatted(isoDateFormatter) // Instead of unixtime int
+  return try decoder.decode(X.self, from: jsonData)
 }
 
 //
@@ -113,3 +127,38 @@ func toAsync<X>(fut: Future<X, Error>) async throws -> X {
     - https://developer.apple.com/documentation/combine/future
   """)
 }
+
+//
+// Crypto
+//
+
+func sha1hex(_ string: String) -> String {
+  let data: Data = string.data(using: .utf8)!
+  let bytes: [UInt8] = Array(Insecure.SHA1.hash(data: data).makeIterator())
+  let hex: String = bytes.map { String(format: "%02x", $0) }.joined()
+  return hex
+}
+
+//
+// Date
+//
+
+func parseDate(_ dateIso: String) throws -> Date {
+  guard let date = isoDateFormatter.date(from: dateIso) else {
+    preconditionFailure("Failed to parse iso8601 date[\(dateIso)]")
+  }
+  return date
+}
+
+func showDate(_ date: Date) -> String {
+  return isoDateFormatter.string(from: date)
+}
+
+// HACK JSONDecoder/JSONEncoder accepts DateFormatter but not ISO8601DateFormatter
+let isoDateFormatter: DateFormatter = {
+  // let x = ISO8601DateFormatter()
+  // x.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+  let x = DateFormatter()
+  x.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  return x
+}()
