@@ -1,5 +1,23 @@
 import SwiftUI
 
+// Font styles
+//  - https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/typography
+//  - https://useyourloaf.com/blog/using-a-custom-font-with-dynamic-type/
+//
+//    Style        Weight     Size  Leading
+//    —————————————————————————————————————
+//    largeTitle   regular    34    41
+//    title1       regular    28    34
+//    title2       regular    22    28
+//    title3       regular    20    25
+//    headline     semi-bold  17    22
+//    body         regular    17    22
+//    callout      regular    16    21
+//    subheadline  regular    15    20
+//    footnote     regular    13    18
+//    caption      regular    12    16
+//    caption2     regular    11    13
+
 struct PinListView: View {
 
   var user: User
@@ -7,27 +25,24 @@ struct PinListView: View {
 
   var body: some View {
     VStack {
-      Text("PinList (\(pins.count) pins)")
-      List(pins) { pin in
+      Text("\(pins.count) Pins")
+      List(pins.sorted(key: \.createdAt, desc: true)) { pin in
         VStack(alignment: .leading) {
           Text(pin.title)
-            .font(.body)
-          Text(pin.url)
-            .font(.caption)
+            .font(.subheadline)
+          Text("\(showDateForTimeline(pin.createdAt)) • \(showUrlForTimeline(pin.url))")
+            .font(.caption2)
             .foregroundColor(Color.gray)
-          HStack {
-            ForEach(pin.tags, id: \.self) {
-              Text($0)
-                .font(.caption)
-                .foregroundColor(Color.blue)
-            }
-          }
-          Text(pin.notes)
+          Text(pin.tags.joined(separator: "  "))
             .font(.footnote)
-          Text(showDate(pin.createdAt))
-            .font(.caption)
-            .foregroundColor(Color.gray)
+            .foregroundColor(Color.blue)
+          if pin.notes.trim() != "" {
+            Text(pin.notes)
+              .font(.caption)
+              .padding([.top], 1)
+          }
         }
+          .padding([.top, .bottom], 1)
       }
     }
   }
@@ -36,39 +51,36 @@ struct PinListView: View {
 
 struct PinListView_Previews: PreviewProvider {
   static var previews: some View {
-    let user = User.example0
-
-    // let pins = [
-    //   Pin.ex0,
-    //   Pin.ex1,
-    //   Pin.ex1,
-    //   Pin.ex0,
-    // ]
-
-    // WOOOOOOO it works!
-    //
-    // TODO TODO Load .json from asset file in 'Preview Content'/ dir
-    let pins: [Pin] = try! fromJson(loadAsset("preview-pins.json"))
-
     PinListView(
-      user: user,
-      pins: pins
+      user: User.example0,
+      pins: loadPreviewJson("preview-pins.json")
     )
   }
 
 }
 
+func showUrlForTimeline(_ url: String) -> String {
+  return url.replacingOccurrences(of: #"^https?://"#, with: "", options: [.regularExpression])
+}
 
-// TODO TODO Load .json from asset file in 'Preview Content'/ dir
-//  - https://medium.com/@keremkaratal/swiftui-exploiting-xcode-11-canvas-2fe46d66c3d8
-func loadAsset(_ filename: String) -> Data {
-  guard let file = Bundle.main.url(forResource: filename, withExtension: nil) else {
-    fatalError("Asset file not found: \(filename)")
-  }
-  do {
-    let data = try Data(contentsOf: file)
-    return data
-  } catch {
-    fatalError("Failed to read asset file[\(filename)] from main bundle: \(error)")
-  }
+func showDateForTimeline(_ t: Date) -> String {
+  // Docs: https://nsdateformatter.com
+  let now = Date()
+  return t.format(
+    t.year == now.year && t.month == now.month && t.day == now.day ?
+      // "'today,' h a"
+      "'today'"
+    : t.year == now.year && t.month == now.month && t.day == now.day - 1 ?
+      // "'yesterday,' h a"
+      "'yesterday'"
+    : t.year == now.year ?
+      // "E MMM d"
+      // "MMM d"
+      "yyyy-MM-dd"
+    :
+      // "E MMM d, yyyy"
+      // "yyyy E MMM d"
+      // "yyyy MMM d"
+      "yyyy-MM-dd"
+  )
 }

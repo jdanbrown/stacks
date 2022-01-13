@@ -74,26 +74,26 @@ struct Pin: Codable, Identifiable {
     )
   }
 
-  static let ex0 = Pin(
-    url: "url_0",
-    title: "title_0",
-    tags: ["tag-0a", "tag-0b"],
-    notes: "notes_0",
-    createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
-    modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-    accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-    isRead: false
-  )
-
-  static let ex1 = Pin(
-    url: "url_1",
-    title: "title_1",
-    tags: ["tag-1a", "tag-1b"],
-    notes: "notes_1",
-    createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
-    modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-    accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-    isRead: true
-  )
+  // static let ex0 = Pin(
+  //   url: "url_0",
+  //   title: "title_0",
+  //   tags: ["tag-0a", "tag-0b"],
+  //   notes: "notes_0",
+  //   createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   isRead: false
+  // )
+  //
+  // static let ex1 = Pin(
+  //   url: "url_1",
+  //   title: "title_1",
+  //   tags: ["tag-1a", "tag-1b"],
+  //   notes: "notes_1",
+  //   createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
+  //   isRead: true
+  // )
 
 }

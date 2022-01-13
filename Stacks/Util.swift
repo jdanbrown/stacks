@@ -42,6 +42,18 @@ class CustomLogFormatter: LogFormatterProtocol, CustomDebugStringConvertible {
 // swift
 //
 
+extension String {
+  func trim() -> String {
+    return trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+}
+
+extension Array {
+  func sorted<K: Comparable>(key: (Element) -> K, desc: Bool = false) -> Array<Element> {
+    return sorted(by: { x, y in !desc ? key(x) < key(y) : key(y) < key(x) })
+  }
+}
+
 extension Thread {
   var number: Any {
     get {
@@ -65,6 +77,26 @@ extension DefaultStringInterpolation {
 //     self.value = value
 //   }
 // }
+
+func loadPreviewAsset(_ filename: String) -> Data {
+  // Docs
+  //  - https://developer.apple.com/documentation/foundation/bundle
+  // Examples
+  //  - https://www.hackingwithswift.com/books/ios-swiftui/loading-resources-from-your-app-bundle
+  //  - https://medium.com/@keremkaratal/swiftui-exploiting-xcode-11-canvas-2fe46d66c3d8
+  guard let file = Bundle.main.url(forResource: filename, withExtension: nil) else {
+    fatalError("Asset file not found: \(filename)")
+  }
+  do {
+    return try Data(contentsOf: file)
+  } catch {
+    fatalError("Failed to read asset file[\(filename)] from main bundle: \(error)")
+  }
+}
+
+func loadPreviewJson<X: Codable>(_ filename: String) -> X {
+  return try! fromJson(loadPreviewAsset(filename))
+}
 
 //
 // Codable/json
@@ -150,8 +182,42 @@ func parseDate(_ dateIso: String) throws -> Date {
   return date
 }
 
-func showDate(_ date: Date) -> String {
-  return isoDateFormatter.string(from: date)
+extension Date {
+
+  var era:               Int { get { return component(.era) } }
+  var year:              Int { get { return component(.year) } }
+  var yearForWeekOfYear: Int { get { return component(.yearForWeekOfYear) } }
+  var quarter:           Int { get { return component(.quarter) } }
+  var month:             Int { get { return component(.month) } }
+  var weekOfYear:        Int { get { return component(.weekOfYear) } }
+  var weekOfMonth:       Int { get { return component(.weekOfMonth) } }
+  var weekday:           Int { get { return component(.weekday) } }
+  var weekdayOrdinal:    Int { get { return component(.weekdayOrdinal) } }
+  var day:               Int { get { return component(.day) } }
+  var hour:              Int { get { return component(.hour) } }
+  var minute:            Int { get { return component(.minute) } }
+  var second:            Int { get { return component(.second) } }
+  var nanosecond:        Int { get { return component(.nanosecond) } }
+  var calendar:          Int { get { return component(.calendar) } }
+  var timeZone:          Int { get { return component(.timeZone) } }
+
+  func component(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+    return calendar.component(component, from: self)
+  }
+
+  // Docs
+  //  - https://nsdateformatter.com/
+  //  - https://nsdateformatter.com/#best-practices
+  func format(_ format: String?) -> String {
+    if let format = format {
+      let x = DateFormatter()
+      x.dateFormat = format
+      return x.string(from: self)
+    } else {
+      return isoDateFormatter.string(from: self)
+    }
+  }
+
 }
 
 // HACK JSONDecoder/JSONEncoder accepts DateFormatter but not ISO8601DateFormatter
