@@ -37,7 +37,9 @@ struct PinListView: View {
             .font(.footnote)
             .foregroundColor(Color.blue)
           if pin.notes.trim() != "" {
-            Text(pin.notes)
+            // TODO Does markdown automatically work? Or do we need AttributedString?
+            // Text(pin.notes)
+            Text(.init(pin.notes))
               .font(.caption)
               .padding([.top], 1)
           }
