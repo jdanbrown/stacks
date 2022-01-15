@@ -7,6 +7,10 @@ default_platform(:ios)
 
 platform :ios do
   desc 'New iOS build'
+
+    # Docs
+    # - https://firebase.google.com/docs/app-distribution/ios/distribute-fastlane
+    #   - TODO Use increment_build_number?
     lane :firebase_distribute_beta do
       build_app(
         scheme: 'Stacks',
@@ -22,4 +26,5 @@ platform :ios do
         ipa_path: './build/Stacks/Stacks.ipa'
       )
   end
+
 end
