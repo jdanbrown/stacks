@@ -55,7 +55,7 @@ struct PinListView_Previews: PreviewProvider {
   static var previews: some View {
     PinListView(
       user: User.example0,
-      pins: loadPreviewJson("preview-pins.json")
+      pins: loadPreviewJson("personal/preview-pins.json")
     )
   }
 
