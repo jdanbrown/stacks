@@ -228,3 +228,45 @@ let isoDateFormatter: DateFormatter = {
   x.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
   return x
 }()
+
+//
+// http + url
+//
+
+// TODO Add PinboardService that calls this
+func httpGetString(_ url: URL, queryParams: [String: String] = [:]) async throws -> String {
+  let data = try await httpGet(url, queryParams: queryParams)
+  return String(data: data, encoding: .utf8)!
+}
+
+// Docs
+//  - https://developer.apple.com/documentation/foundation/url_loading_system
+//  - https://developer.apple.com/documentation/foundation/url_loading_system/fetching_website_data_into_memory
+//  - https://developer.apple.com/documentation/foundation/urlsession
+//  - https://developer.apple.com/documentation/foundation/urlsession/3767353-data
+//  - https://developer.apple.com/documentation/foundation/url
+func httpGet(_ url: URL, queryParams: [String: String] = [:]) async throws -> Data {
+  let url = try urlWithQueryParams(url, queryParams: queryParams)
+  // NOTE I think URLSession handles redirects by default?
+  //  - https://stackoverflow.com/questions/49477437/swift-urlsession-prevent-redirect
+  //  - https://stackoverflow.com/questions/29070420/preventing-urlsession-redirect-in-swift
+  let (data, rep) = try await URLSession.shared.data(from: url)
+  guard let rep = rep as? HTTPURLResponse else {
+    preconditionFailure("Expected HTTPURLResponse, got rep[\(rep)]")
+  }
+  guard (200..<300).contains(rep.statusCode) else {
+    preconditionFailure("Failed to http GET: status[\(rep.statusCode)], data[\(data)]")
+  }
+  return data
+}
+
+func urlWithQueryParams(_ url: URL, queryParams: [String: String] = [:]) throws -> URL {
+  guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+    preconditionFailure("Invalid url[\(url)]")
+  }
+  components.queryItems = queryParams.map { k, v in URLQueryItem(name: k, value: v) }
+  guard let url = components.url else {
+    preconditionFailure("Invalid queryParams[\(queryParams)] for url[\(url)]")
+  }
+  return url
+}
