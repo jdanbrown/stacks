@@ -1,0 +1,8 @@
+# firebase
+GoogleService-Info.plist
+
+# xcode
+xcuserdata/
+
+# xcode: Ignore preview files that might contain personal data
+Stacks/Preview Content/personal/preview-pins.json
