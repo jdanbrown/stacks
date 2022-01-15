@@ -5,6 +5,32 @@
 
 # Docs
 
+## Login to firebase — this will store creds for fastlane to use
+- https://firebase.google.com/docs/cli#sign-in-test-cli
+```sh
+firebase login
+firebase projects:list # To verify
+firebase login --reauth # If things aren't working, use this to force re-login
+```
+
+## Distribute to firebase using fastlane
+- https://firebase.google.com/docs/app-distribution/ios/distribute-fastlane
+- https://console.firebase.google.com/u/0/project/pinbot-9ec7f/appdistribution/app/ios:org.jdanbrown.Stacks/releases
+```sh
+bin/fastlane firebase_distribute_beta
+```
+
+## Manage firebase
+- Project files
+  - https://firebase.google.com/docs/cli -- install cli
+  - `firebase init` -- setup project files (maybe can run again to add more types of project files?)
+  - `firebase deploy` -- deploy changes from project files (e.g. firestore.rules, firestore.indexes.json)
+  - `firebase deploy --only firestore:rules` -- deploy only changes to firestore rules
+- Web console
+  - https://console.firebase.google.com/u/0/project/pinbot-9ec7f
+  - https://console.firebase.google.com/u/0/project/pinbot-9ec7f/firestore
+  - https://console.firebase.google.com/u/0/project/pinbot-9ec7f/firestore/rules
+
 ## Xcode: Swift Package Manager
 - https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app
   - Project: Stacks -> Targets: Stacks -> General -> Frameworks, Libraries
@@ -96,3 +122,15 @@
   - Targets Stacks and StacksTests built fine, but StacksUITests failed with that error
   - I didn't find a solution with ~1 page of googling
   - Hacky workaround: I simply deleted the StacksUITests target, because I'll ~never use it
+- Adding new device to firebase app distribution gets stuck at `Waiting for developer`
+  - Problem: Local Xcode provisioning profile is out of date
+    - So even though the new device UUID was added to https://developer.apple.com/account/resources/devices/list,
+      rebuilding the app doesn't include it because the local profile doesn't include the new device
+  - Solution: Delete the local provisioning profile file and trigger Xcode to re-download the new one
+    - Open `~/Library/MobileDevice/Provisioning Profiles/` in Finder
+    - Switch to "as Columns" view (cmd-3)
+    - Down-arrow through each file until one says "iOS Team Provisioning Profile: *"
+    - Delete it
+    - Go Xcode -> Runner project -> Targets: Runner -> Signing & Capabilities -> Provisioning Profile
+    - It will automatically re-download the new profile upon viewing (or maybe you have to click something)
+  - https://github.com/firebase/firebase-ios-sdk/issues/6223
