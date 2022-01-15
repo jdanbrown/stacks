@@ -1,0 +1,4 @@
+# Docs: https://docs.fastlane.tools/advanced/#appfile
+
+app_identifier("org.jdanbrown.Stacks")
+apple_id("jdanbrown@gmail.com")
