@@ -1,30 +1,36 @@
 # Docs
 # - https://docs.fastlane.tools
 # - https://docs.fastlane.tools/actions
+# - https://docs.fastlane.tools/actions/increment_build_number
 # - https://docs.fastlane.tools/plugins/available-plugins
+# - https://firebase.google.com/docs/app-distribution/ios/distribute-fastlane
+#
+# Helpful examples
+# - https://circleci.com/docs/2.0/deploying-ios/
+# - http://bytepace.com/blog/fastlane
 
 default_platform(:ios)
 
 platform :ios do
-  desc 'New iOS build'
 
-    # Docs
-    # - https://firebase.google.com/docs/app-distribution/ios/distribute-fastlane
-    #   - TODO Use increment_build_number?
-    lane :firebase_distribute_beta do
-      build_app(
-        scheme: 'Stacks',
-        archive_path: './build/Stacks.xcarchive',
-        export_method: 'development',
-        output_directory: './build/Stacks'
-      )
-      firebase_app_distribution(
-        app: '1:649977413874:ios:6bb6380fe981672ca4106b',
-        testers: 'jdanbrown@gmail.com',
-        release_notes: 'Dummy release notes',
-        firebase_cli_path: '/usr/local/bin/firebase',
-        ipa_path: './build/Stacks/Stacks.ipa'
-      )
+  desc 'Firebase: Distribute beta'
+  lane :firebase_distribute_beta do
+    increment_build_number(
+      build_number: Time.now.to_i
+    )
+    build_app(
+      scheme: 'Stacks',
+      archive_path: './build/Stacks.xcarchive',
+      export_method: 'development',
+      output_directory: './build/Stacks'
+    )
+    firebase_app_distribution(
+      app: '1:649977413874:ios:6bb6380fe981672ca4106b',
+      testers: 'jdanbrown@gmail.com',
+      release_notes: 'Dummy release notes',
+      firebase_cli_path: '/usr/local/bin/firebase',
+      ipa_path: './build/Stacks/Stacks.ipa'
+    )
   end
 
 end
