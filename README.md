@@ -43,6 +43,10 @@ bin/fastlane firebase_distribute_beta
 - https://useyourloaf.com/blog/swiftui-preview-data/
 - https://www.avanderlee.com/xcode/development-assets-preview-catalog/
 
+## Xcode: Create icon sets
+- Use app: Icon Set Creator
+  - https://stackoverflow.com/a/45122603/397334
+
 ## Swift: What's up with async/await vs. Future/Combine?
 - Are there no happy paths to interface them?
   - https://forums.swift.org/t/how-to-mix-async-await-and-combine/49394/4
