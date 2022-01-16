@@ -118,6 +118,11 @@ bin/fastlane firebase_distribute_beta
 ## SwiftUI: Books
 - https://www.objc.io/books/thinking-in-swiftui/
 
+## SwiftUI libs
+- Markdown
+  - https://github.com/gonzalezreal/MarkdownUI — using this one, simple to use
+  - https://github.com/johnxnguyen/Down – looks slightly more complex to use, haven't tried yet
+
 # Troubleshooting
 - 100% cpu from Simulator/Spotlight when rendering Previews / running Simulator
   - https://developer.apple.com/forums/thread/682253

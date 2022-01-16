@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B70C4E8B2793E7AB0010E119 /* personal in Resources */ = {isa = PBXBuildFile; fileRef = B70C4E8A2793E7AB0010E119 /* personal */; };
+		B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E8C2793F6B70010E119 /* PinView.swift */; };
+		B70C4E93279403530010E119 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = B70C4E92279403530010E119 /* Down */; };
 		B711EC6027686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
 		B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B711EC642769BD7E005223A2 /* XCGLogger */; };
 		B72509AC275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
@@ -33,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		B70C4E8A2793E7AB0010E119 /* personal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = personal; path = "../../../stacks/Stacks/Preview Content/personal"; sourceTree = "<group>"; };
+		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = ../../stacks/Stacks/PinView.swift; sourceTree = "<group>"; };
 		B711EC5F27686C86005223A2 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		B72509AB275DE50D00858384 /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		B72509AF275DE68B00858384 /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
@@ -57,6 +60,7 @@
 			files = (
 				B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */,
 				B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */,
+				B70C4E93279403530010E119 /* Down in Frameworks */,
 				B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */,
 				B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */,
 				B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */,
@@ -101,6 +105,7 @@
 				B72509BE275F2E4200858384 /* RootView.swift */,
 				B72509C2275F2E8E00858384 /* LoginView.swift */,
 				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
+				B70C4E8C2793F6B70010E119 /* PinView.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
@@ -148,6 +153,7 @@
 				B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */,
 				B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */,
 				B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */,
+				B70C4E92279403530010E119 /* Down */,
 			);
 			productName = Stacks;
 			productReference = B75B469B275B3FC700923DE1 /* Stacks.app */;
@@ -181,6 +187,7 @@
 				B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */,
+				B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -218,6 +225,7 @@
 				B72509BF275F2E4200858384 /* RootView.swift in Sources */,
 				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
 				B7856B9627704C3400A87DDA /* User.swift in Sources */,
+				B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */,
 				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 			);
@@ -348,7 +356,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1642312660;
+				CURRENT_PROJECT_VERSION = 1642367126;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -378,7 +386,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1642312660;
+				CURRENT_PROJECT_VERSION = 1642367126;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -426,6 +434,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/johnxnguyen/Down";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.11.0;
+			};
+		};
 		B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger.git";
@@ -453,6 +469,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B70C4E92279403530010E119 /* Down */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
+		};
 		B711EC642769BD7E005223A2 /* XCGLogger */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;

@@ -9,7 +9,7 @@ import XCGLogger
 
 // Codable enabled by `import FirebaseFirestoreSwift`
 //  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
-struct Pin: Codable, Identifiable {
+struct Pin: Codable, Identifiable, Withable {
 
   // id is determined by url
   var id: String {
@@ -95,5 +95,43 @@ struct Pin: Codable, Identifiable {
   //   accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
   //   isRead: true
   // )
+
+// HACK For testing markdown rendering
+static let exampleMarkdown = """
+  # Heading 1
+  ## Heading 2
+  ### Heading 3
+  #### Heading 4
+  ##### Heading 5
+  ###### Heading 6
+  Some paragraph about stuff. Lorem ipsum. Things and more things and more things and more:
+  - Normal x
+  - *Em*
+  - **Strong**
+  - ~Strikethrough~
+    - Sub-bullet 1
+      - Sub-sub-bullet a
+      - Sub-sub-bullet b
+    - Sub-bullet 2
+  - A [link to asdf](http://asdf.com)
+
+  A numbered list
+  1. one
+  1. two
+  1. three
+
+  ---
+
+  A checklist
+  - [ ] Do a thing
+  - [ ] Do another thing
+
+  > Blockquote
+
+  ```
+  print('foo')
+  ```
+  """
+
 
 }

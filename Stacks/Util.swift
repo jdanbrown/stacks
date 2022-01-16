@@ -69,6 +69,19 @@ extension DefaultStringInterpolation {
   }
 }
 
+// Extend to add struct.with(\.field, value)
+//  - NOTE This only works for var's, not let's
+//  - Based on: https://stackoverflow.com/a/66623586/397334
+protocol Withable {}
+extension Withable {
+  func with<X>(_ path: WritableKeyPath<Self, X>, _ value: X) -> Self {
+    var copy = self // Struct assignment makes a copy
+    copy[keyPath: path] = value
+    return copy
+  }
+}
+
+
 // // Wrap types that aren't already ObservableObject
 // //  - e.g. Optional/Array for .environmentObject
 // class Obs<X>: ObservableObject {
