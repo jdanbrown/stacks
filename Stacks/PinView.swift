@@ -94,7 +94,7 @@ struct PinView: View {
 
 struct PinView_Previews: PreviewProvider {
   static var previews: some View {
-    let pins: [Pin] = loadPreviewJson("personal/preview-pins.json")
+    let pins = Pin.previewPins
     Group {
 
       // TODO Down
@@ -105,20 +105,20 @@ struct PinView_Previews: PreviewProvider {
         // .frame(height: 300) // XXX Hack
 
       // TODO MarkdownUI
-      // Text(Pin.exampleMarkdown)
-      // Text(.init(Pin.exampleMarkdown))
-      // let exmd0 = Pin.exampleMarkdown
+      // Text(Pin.previewMarkdown)
+      // Text(.init(Pin.previewMarkdown))
+      // let exmd0 = Pin.previewMarkdown
       // let exmd1 = "This is **bold** and *italic*!"
       // Text(.init(exmd0))
       // Text(.init(exmd1))
       // Markdown(exmd0)
       // Markdown(Document(exmd1))
       // Markdown(Document("This is **bold** and *italic*!"))
-      // Markdown(Document(Pin.exampleMarkdown))
+      // Markdown(Document(Pin.previewMarkdown))
 
       PinView(pin: pins[0])
       PinView(pin: pins[1])
-      // PinView(pin: pins[1].with(\.notes, Pin.exampleMarkdown))
+      // PinView(pin: pins[1].with(\.notes, Pin.previewMarkdown))
 
     }
       .previewLayout(.sizeThatFits)

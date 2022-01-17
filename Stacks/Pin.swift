@@ -74,64 +74,45 @@ struct Pin: Codable, Identifiable, Withable {
     )
   }
 
-  // static let ex0 = Pin(
-  //   url: "url_0",
-  //   title: "title_0",
-  //   tags: ["tag-0a", "tag-0b"],
-  //   notes: "notes_0",
-  //   createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   isRead: false
-  // )
-  //
-  // static let ex1 = Pin(
-  //   url: "url_1",
-  //   title: "title_1",
-  //   tags: ["tag-1a", "tag-1b"],
-  //   notes: "notes_1",
-  //   createdAt:  try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   modifiedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   accessedAt: try! parseDate("2020-01-02T03:04:05:678Z"),
-  //   isRead: true
-  // )
+  // lazy because static [https://docs.swift.org/swift-book/LanguageGuide/Properties.html]
+  static let previewPins: [Pin] = loadPreviewJson("personal/preview-pins.json")
 
-// HACK For testing markdown rendering
-static let exampleMarkdown = """
-  # Heading 1
-  ## Heading 2
-  ### Heading 3
-  #### Heading 4
-  ##### Heading 5
-  ###### Heading 6
-  Some paragraph about stuff. Lorem ipsum. Things and more things and more things and more:
-  - Normal x
-  - *Em*
-  - **Strong**
-  - ~Strikethrough~
-    - Sub-bullet 1
-      - Sub-sub-bullet a
-      - Sub-sub-bullet b
-    - Sub-bullet 2
-  - A [link to asdf](http://asdf.com)
+  // HACK For testing markdown rendering
+  static let previewMarkdown = """
+    # Heading 1
+    ## Heading 2
+    ### Heading 3
+    #### Heading 4
+    ##### Heading 5
+    ###### Heading 6
+    Some paragraph about stuff. Lorem ipsum. Things and more things and more things and more:
+    - Normal x
+    - *Em*
+    - **Strong**
+    - ~Strikethrough~
+      - Sub-bullet 1
+        - Sub-sub-bullet a
+        - Sub-sub-bullet b
+      - Sub-bullet 2
+    - A [link to asdf](http://asdf.com)
 
-  A numbered list
-  1. one
-  1. two
-  1. three
+    A numbered list
+    1. one
+    1. two
+    1. three
 
-  ---
+    ---
 
-  A checklist
-  - [ ] Do a thing
-  - [ ] Do another thing
+    A checklist
+    - [ ] Do a thing
+    - [ ] Do another thing
 
-  > Blockquote
+    > Blockquote
 
-  ```
-  print('foo')
-  ```
-  """
+    ```
+    print('foo')
+    ```
+    """
 
 
 }

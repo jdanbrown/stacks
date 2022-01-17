@@ -16,10 +16,8 @@ struct RootView: View {
           LoginView(login: login)
         case .LoggedIn(let user):
           VStack {
-            Button { Task { await logout() }} label: {
-              Text("Logout: \(user.email ?? "[no email]")")
-            }
             PinListView(
+              logout: logout,
               user: user,
               pins: pins
             )
@@ -32,12 +30,16 @@ struct RootView: View {
 
 struct RootView_Previews: PreviewProvider {
   static var previews: some View {
-    let user = User.example0
-    RootView(authState: .Loading, login: {}, logout: {}, pins: [])
+    let user = User.previewUser0
+    let pins = Pin.previewPins
+    Group {
+      RootView(authState: .Loading, login: {}, logout: {}, pins: pins)
+      RootView(authState: .LoggedOut, login: {}, logout: {}, pins: pins)
+    }
       .previewLayout(.sizeThatFits)
-    RootView(authState: .LoggedOut, login: {}, logout: {}, pins: [])
-      .previewLayout(.sizeThatFits)
-    RootView(authState: .LoggedIn(user), login: {}, logout: {}, pins: [])
-      .previewLayout(.sizeThatFits)
+    Group {
+      RootView(authState: .LoggedIn(user), login: {}, logout: {}, pins: pins)
+    }
+      .previewLayout(.device)
   }
 }

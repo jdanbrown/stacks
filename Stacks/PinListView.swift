@@ -3,6 +3,7 @@ import SwiftUI
 
 struct PinListView: View {
 
+  var logout: () async -> ()
   var user: User
   var pins: [Pin]
 
@@ -10,23 +11,64 @@ struct PinListView: View {
 
   enum Order {
     case desc
+    case asc
     case shuffle(seed: UInt64)
+
+    func iconName() -> String {
+      switch self {
+        case .desc:    return "arrow.down"
+        case .asc:     return "arrow.up"
+        case .shuffle: return "shuffle"
+      }
+    }
+
+    func toggleDescAsc() -> Order {
+      switch self {
+        case .desc:    return .asc
+        case .asc:     return .desc
+        case .shuffle: return .desc
+      }
+    }
+
+    func shuffle() -> Order {
+      let seed = UInt64(Date().timeIntervalSince1970)
+      return .shuffle(seed: seed)
+    }
   }
 
   var body: some View {
-    VStack {
+    VStack(spacing: 5) {
       HStack {
+        Button { Task { await logout() }} label: {
+          if let photoURL = user.photoURL {
+            AsyncImage(url: photoURL) { image in
+              image.resizable().scaledToFit()
+            } placeholder: {
+              ProgressView()
+            }
+              .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
+          } else {
+            VStack(alignment: .leading) {
+              Text("Logout")
+              Text("\(user.email ?? "[no email?]")")
+            }
+          }
+        }
+          .padding(.leading)
         Spacer()
         Text("\(pins.count) Pins")
         Spacer()
         HStack {
-          Button("Desc", action: {
-            self.order = .desc
-          })
-          Button("Shuf", action: {
-            let seed = UInt64(Date().timeIntervalSince1970)
-            self.order = .shuffle(seed: seed)
-          })
+          // Order: toggle desc/asc
+          Button(action: { self.order = self.order.toggleDescAsc() }) {
+            Image(systemName: self.order.iconName())
+              .font(.body)
+          }
+          // Order: Shuffle
+          Button(action: { self.order = self.order.shuffle() }) {
+            Image(systemName: self.order.shuffle().iconName())
+              .font(.body)
+          }
         }
           .padding(.trailing)
       }
@@ -44,6 +86,8 @@ struct PinListView: View {
     switch order {
       case .desc:
         return pins.sorted(key: \.createdAt, desc: true)
+      case .asc:
+        return pins.sorted(key: \.createdAt, desc: false)
       case .shuffle(let seed):
         let generator = GKMersenneTwisterRandomSource(seed: seed)
         return generator.arrayByShufflingObjects(in: pins) as! [Pin]
@@ -55,9 +99,9 @@ struct PinListView: View {
 struct PinListView_Previews: PreviewProvider {
   static var previews: some View {
     PinListView(
-      user: User.example0,
-      pins: loadPreviewJson("personal/preview-pins.json")
+      logout: {},
+      user: User.previewUser0,
+      pins: Pin.previewPins
     )
   }
-
 }

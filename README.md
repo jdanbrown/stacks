@@ -139,7 +139,13 @@ bin/fastlane firebase_distribute_beta
     - https://developer.apple.com/documentation/swiftui/environmentobject
 
 ## SwiftUI: Books
-- https://www.objc.io/books/thinking-in-swiftui/
+- https://www.objc.io/books/thinking-in-swiftui
+
+## SwiftUI: Symbols
+- https://www.avanderlee.com/swift/sf-symbols-guide
+  - Very helpful!
+- https://developer.apple.com/design/human-interface-guidelines/sf-symbols/overview
+- https://developer.apple.com/sf-symbols
 
 ## SwiftUI libs
 - Markdown

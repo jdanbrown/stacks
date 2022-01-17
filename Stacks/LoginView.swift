@@ -6,7 +6,6 @@ struct LoginView: View {
 
   var body: some View {
     VStack {
-      Text("Login")
       Button { Task { await login() }} label: {
         Text("Login with Google")
       }

@@ -31,7 +31,7 @@ struct User: Equatable {
     )
   }
 
-  static let example0 = User(
+  static let previewUser0 = User(
     uid: "uid_0",
     displayName: "name_0",
     email: "email_0",

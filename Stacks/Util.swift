@@ -108,7 +108,11 @@ func loadPreviewAsset(_ filename: String) -> Data {
 }
 
 func loadPreviewJson<X: Codable>(_ filename: String) -> X {
-  return try! fromJson(loadPreviewAsset(filename))
+  do {
+    return try fromJson(loadPreviewAsset(filename))
+  } catch {
+    fatalError("Failed to load preview json: filename[\(filename)]")
+  }
 }
 
 //
