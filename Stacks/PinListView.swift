@@ -36,49 +36,61 @@ struct PinListView: View {
     }
   }
 
+  // TODO TODO Add swipe-right to show edit sheet
+  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-new-view-using-sheets
+  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-full-screen-modal-view-using-fullscreencover
+  //  - https://www.hackingwithswift.com/quick-start/swiftui
+
   var body: some View {
-    VStack(spacing: 5) {
-      HStack {
-        Button { Task { await logout() }} label: {
-          if let photoURL = user.photoURL {
-            AsyncImage(url: photoURL) { image in
-              image.resizable().scaledToFit()
-            } placeholder: {
-              ProgressView()
-            }
-              .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
-          } else {
-            VStack(alignment: .leading) {
-              Text("Logout")
-              Text("\(user.email ?? "[no email?]")")
+    // Docs
+    //  - https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
+    NavigationView {
+      VStack(spacing: 5) {
+        List {
+          ForEach(pinsOrdered()) { pin in
+            // TODO How to hide the right arrow on the nav link?
+            NavigationLink(destination: ReaderView(pin: pin)) {
+              PinView(pin: pin)
+                // .listRowInsets(EdgeInsets()) // To control padding for each list item
             }
           }
         }
-          .padding(.leading)
-        Spacer()
-        Text("\(pins.count) Pins")
-        Spacer()
-        HStack {
-          // Order: toggle desc/asc
-          Button(action: { self.order = self.order.toggleDescAsc() }) {
-            Image(systemName: self.order.iconName())
-              .font(.body)
-          }
-          // Order: Shuffle
-          Button(action: { self.order = self.order.shuffle() }) {
-            Image(systemName: self.order.shuffle().iconName())
-              .font(.body)
-          }
-        }
-          .padding(.trailing)
+          .listStyle(.plain) // Remove padding + rounded corders
       }
-      List {
-        ForEach(pinsOrdered()) { pin in
-          PinView(pin: pin)
-            // .listRowInsets(EdgeInsets()) // To control padding for each list item
-        }
-      }
-        .listStyle(.plain) // Remove padding + rounded corders
+        // .statusBar(hidden: true) // Want or not?
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("\(pins.count) Pins")
+        .navigationBarItems(
+          leading: HStack {
+            Button { Task { await logout() }} label: {
+              if let photoURL = user.photoURL {
+                AsyncImage(url: photoURL) { image in
+                  image.resizable().scaledToFit()
+                } placeholder: {
+                  ProgressView()
+                }
+                  .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
+              } else {
+                VStack(alignment: .leading) {
+                  Text("Logout")
+                  Text("\(user.email ?? "[no email?]")")
+                }
+              }
+            }
+          },
+          trailing: HStack {
+            // Order: toggle desc/asc
+            Button(action: { self.order = self.order.toggleDescAsc() }) {
+              Image(systemName: self.order.iconName())
+                .font(.body)
+            }
+            // Order: Shuffle
+            Button(action: { self.order = self.order.shuffle() }) {
+              Image(systemName: self.order.shuffle().iconName())
+                .font(.body)
+            }
+          }
+        )
     }
   }
 

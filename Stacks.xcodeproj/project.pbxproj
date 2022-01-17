@@ -10,6 +10,7 @@
 		B70C4E8B2793E7AB0010E119 /* personal in Resources */ = {isa = PBXBuildFile; fileRef = B70C4E8A2793E7AB0010E119 /* personal */; };
 		B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E8C2793F6B70010E119 /* PinView.swift */; };
 		B70C4E93279403530010E119 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = B70C4E92279403530010E119 /* Down */; };
+		B70C4E9527953EE70010E119 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E9427953EE70010E119 /* WebView.swift */; };
 		B711EC6027686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
 		B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B711EC642769BD7E005223A2 /* XCGLogger */; };
 		B72509AC275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
@@ -27,6 +28,7 @@
 		B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CB275B493D00923DE1 /* FirebaseAuth */; };
 		B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CD275B493D00923DE1 /* FirebaseFirestore */; };
 		B77305562767184500BA1EE4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B77305552767184500BA1EE4 /* GoogleService-Info.plist */; };
+		B7777A3A279616B600372937 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7777A39279616B600372937 /* ReaderView.swift */; };
 		B7856B9627704C3400A87DDA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7856B9527704C3400A87DDA /* User.swift */; };
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
 		B7856B9B277457A200A87DDA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */; };
@@ -36,6 +38,7 @@
 /* Begin PBXFileReference section */
 		B70C4E8A2793E7AB0010E119 /* personal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = personal; path = "../../../stacks/Stacks/Preview Content/personal"; sourceTree = "<group>"; };
 		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = ../../stacks/Stacks/PinView.swift; sourceTree = "<group>"; };
+		B70C4E9427953EE70010E119 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebView.swift; path = ../../stacks/Stacks/WebView.swift; sourceTree = "<group>"; };
 		B711EC5F27686C86005223A2 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		B72509AB275DE50D00858384 /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		B72509AF275DE68B00858384 /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
@@ -50,6 +53,8 @@
 		B75B46A2275B3FC900923DE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B77305552767184500BA1EE4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B7777A3827960D9C00372937 /* Stacks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stacks.entitlements; sourceTree = "<group>"; };
+		B7777A39279616B600372937 /* ReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
 		B7856B9527704C3400A87DDA /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +99,7 @@
 		B75B469D275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXGroup;
 			children = (
+				B7777A3827960D9C00372937 /* Stacks.entitlements */,
 				B72509C927607F0E00858384 /* Info.plist */,
 				B75B469E275B3FC700923DE1 /* AppMain.swift */,
 				B72509AB275DE50D00858384 /* Pin.swift */,
@@ -105,7 +111,9 @@
 				B72509BE275F2E4200858384 /* RootView.swift */,
 				B72509C2275F2E8E00858384 /* LoginView.swift */,
 				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
+				B70C4E9427953EE70010E119 /* WebView.swift */,
 				B70C4E8C2793F6B70010E119 /* PinView.swift */,
+				B7777A39279616B600372937 /* ReaderView.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
@@ -217,6 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7777A3A279616B600372937 /* ReaderView.swift in Sources */,
 				B72509B7275F2E0800858384 /* AuthService.swift in Sources */,
 				B711EC6027686C86005223A2 /* Util.swift in Sources */,
 				B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */,
@@ -226,6 +235,7 @@
 				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
 				B7856B9627704C3400A87DDA /* User.swift in Sources */,
 				B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */,
+				B70C4E9527953EE70010E119 /* WebView.swift in Sources */,
 				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 			);
@@ -355,6 +365,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1642367126;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
@@ -385,6 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1642367126;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";

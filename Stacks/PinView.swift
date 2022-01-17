@@ -70,6 +70,7 @@ struct PinView: View {
         Text(pin.notes)
           .font(.caption)
           .padding([.top], 1)
+          .fixedSize(horizontal: false, vertical: true)
 
         // Markdown(Document(pin.notes))
         //   .markdownStyle(
@@ -116,14 +117,14 @@ struct PinView_Previews: PreviewProvider {
       // Markdown(Document("This is **bold** and *italic*!"))
       // Markdown(Document(Pin.previewMarkdown))
 
-      PinView(pin: pins[0])
-      PinView(pin: pins[1])
+      ForEach(pins[0..<15]) { pin in
+        PinView(pin: pin)
+      }
       // PinView(pin: pins[1].with(\.notes, Pin.previewMarkdown))
 
     }
       .previewLayout(.sizeThatFits)
   }
-
 }
 
 func showUrlForTimeline(_ url: String) -> String {
