@@ -20,6 +20,29 @@ firebase login --reauth # If things aren't working, use this to force re-login
 bin/fastlane firebase_distribute_beta
 ```
 
+## TODO Github actions -- to move fastlane(xcodebuild,firebase) off my laptop
+- Goal
+  - Use cloud instead of 10m+ of laptop battery to distribute builds to Firebase/TestFlight
+- Read the docs first
+  - https://docs.github.com/en/actions
+  - https://docs.github.com/en/actions/quickstart
+  - https://docs.github.com/en/actions/learn-github-actions
+  - https://docs.github.com/en/actions/managing-workflow-runs
+  - https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+  - https://docs.github.com/en/actions/deployment/deploying-xcode-applications
+  - https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows
+  - https://docs.github.com/en/actions/using-github-hosted-runners
+  - https://docs.github.com/en/actions/security-guides
+- Resources
+  - https://github.com/nektos/act -- run github workflows locally (for testing, and replace bin?)
+- Approaches
+  1. Does our existing Fastfile just work in the cloud?
+    - https://github.com/marketplace/actions/fastlane-action
+  2. Port Fastfile to github actions, and replace local fastlane with act
+    - https://github.com/mxcl/xcodebuild
+    - https://github.com/marketplace/actions/firebase-app-distribution
+    - https://github.com/marketplace/actions/github-action-for-firebase
+
 ## Manage firebase
 - Project files
   - https://firebase.google.com/docs/cli -- install cli
