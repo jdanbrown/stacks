@@ -3,22 +3,21 @@ import SwiftUI
 struct ReaderView: View {
 
   let pin: Pin
-  // @ObservedObject var webViewModel: WebView.Model = WebView.Model() // TODO
-  // @State var webViewModel: WebView.Model = WebView.Model() // TODO This version doesn't update (maybe because of nested fields?)
-  // @StateObject var webViewModel: WebView.Model = WebView.Model() // TODO This version loops on update
   @StateObject var webViewModel: WebViewModel = WebViewModel()
 
   var body: some View {
-    VStack {
-      Text("\n\n" + "\(webViewModel.debug)") // XXX
-      WebView(
-        // model: $webViewModel,
-        model: webViewModel
-        // url: URL(string: pin.url)!
-      )
+    ZStack(alignment: .top) {
+      WebView(model: webViewModel)
         .onAppear { webViewModel.load(URL(string: pin.url)!) }
+      // ZStack the transient ProgressView so it doesn't offset the WebView when it disappears
+      if webViewModel.estimatedProgress < 1 {
+        ProgressView(value: webViewModel.estimatedProgress)
+          .frame(height: 1) // Match height of Divider
+      }
     }
-      .navigationTitle(pin.url)
+      // TODO Do we want to show the title or url?
+      .navigationTitle(webViewModel.title ?? "")
+      // .navigationTitle(webViewModel.url?.absoluteString ?? "")
   }
 
 }

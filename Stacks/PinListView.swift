@@ -49,7 +49,10 @@ struct PinListView: View {
         List {
           ForEach(pinsOrdered()) { pin in
             // TODO How to hide the right arrow on the nav link?
-            NavigationLink(destination: ReaderView(pin: pin)) {
+            NavigationLink(destination:
+              ReaderView(pin: pin)
+                .ignoresSafeArea(edges: .bottom)
+            ) {
               PinView(pin: pin)
                 // .listRowInsets(EdgeInsets()) // To control padding for each list item
             }
