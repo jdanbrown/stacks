@@ -66,6 +66,7 @@ struct AppScene: Scene {
           login: auth.login,
           logout: auth.logout,
           pins: pinsModel.pins
+          // pins: pinsModel.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
         .onOpenURL { auth.onOpenURL($0) }

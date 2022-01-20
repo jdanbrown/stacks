@@ -173,3 +173,6 @@ bin/fastlane firebase_distribute_beta
     - Go Xcode -> Runner project -> Targets: Runner -> Signing & Capabilities -> Provisioning Profile
     - It will automatically re-download the new profile upon viewing (or maybe you have to click something)
   - https://github.com/firebase/firebase-ios-sdk/issues/6223
+- WKWebView won't load `http:` urls
+  - Solution: Info.plist -> `NSAppTransportSecurity` -> `NSAllowsArbitraryLoadsInWebContent`
+  - https://www.hackingwithswift.com/example-code/wkwebview/how-to-load-http-content-in-wkwebview-and-uiwebview
