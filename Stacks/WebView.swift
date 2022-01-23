@@ -122,22 +122,18 @@ class WebViewDelegate: NSObject, WKNavigationDelegate, WKUIDelegate {
 
   func webView(_ wkWebView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
     log.debug("url[\(wkWebView.url?.absoluteString ?? "nil")], navigation[\(opt: navigation)]")
-    // TODO Add progress bar
   }
 
   func webView(_ wkWebView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
     log.debug("url[\(wkWebView.url?.absoluteString ?? "nil")], navigation[\(opt: navigation)]")
-    // TODO Add progress bar
   }
 
   func webView(_ wkWebView: WKWebView, didCommit navigation: WKNavigation!) {
     log.debug("url[\(wkWebView.url?.absoluteString ?? "nil")], navigation[\(opt: navigation)]")
-    // TODO Add progress bar
   }
 
   func webView(_ wkWebView: WKWebView, didFinish navigation: WKNavigation!) {
     log.debug("url[\(wkWebView.url?.absoluteString ?? "nil")], navigation[\(opt: navigation)]")
-    // TODO Add progress bar
   }
 
   func webView(_ wkWebView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {

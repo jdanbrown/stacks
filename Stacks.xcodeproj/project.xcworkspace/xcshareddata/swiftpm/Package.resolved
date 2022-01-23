@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "FlexView",
+        "repositoryURL": "https://github.com/berbschloe/FlexView",
+        "state": {
+          "branch": null,
+          "revision": "933e6ce389251f485cc956d91b6c03f899e90337",
+          "version": "1.0.4"
+        }
+      },
+      {
         "package": "GoogleAppMeasurement",
         "repositoryURL": "https://github.com/google/GoogleAppMeasurement.git",
         "state": {
@@ -143,6 +152,24 @@
           "branch": null,
           "revision": "7e2c5f3cbbeea68e004915e3a8961e20bd11d824",
           "version": "1.18.0"
+        }
+      },
+      {
+        "package": "WrappingStack",
+        "repositoryURL": "https://github.com/diniska/swiftui-wrapping-stack",
+        "state": {
+          "branch": null,
+          "revision": "530e1d24155bc272af461da4cc1ed25ecce9e3ab",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "WrappingHStack",
+        "repositoryURL": "https://github.com/dkk/WrappingHStack",
+        "state": {
+          "branch": null,
+          "revision": "3cc84e786aa996da32f476d89dab4e02d30ce691",
+          "version": "2.1.3"
         }
       },
       {

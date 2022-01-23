@@ -148,6 +148,46 @@ bin/fastlane firebase_distribute_beta
 - https://developer.apple.com/design/human-interface-guidelines/sf-symbols/overview
 - https://developer.apple.com/sf-symbols
 
+## SwiftUI: Flex / wrap
+- FlexView
+  - https://github.com/berbschloe/FlexView (1 star)
+    - Based on helpful article: https://www.fivestars.blog/articles/flexible-swiftui
+    - Claims that LazyVGrid/LazyHGrid can't do wrap (corroborates my takeaway from docs and experimenting)
+  - Comparison
+    - Speed: 4/5 -- very close to pure Text() version
+    - Preview sizing: too much vertical padding, sometimes correct (I _think_ I observed it be correct once?)
+  - Went with this one!
+    - Vendored it so I could make edits (MIT license)
+- WrappingStack
+  - https://github.com/diniska/swiftui-wrapping-stack (17 stars)
+  - Comparison
+    - Speed: 3.5/5 -- feels only very slightly slower than FlexView
+    - Preview sizing: too much vertical padding
+- WrappingHStack
+  - https://github.com/dkk/WrappingHStack (55 stars)
+  - Works, but slow-ish
+  - Comparison
+    - Speed: 1/5 -- way slower than pure Text() version, and feels annoyingly slow overall
+    - Preview sizing (PinView): bad, vertical clipping
+- WrapStack
+  - https://github.com/swiftuilib/wrap-stack (22 stars)
+  - Error: "The compiler is unable to type-check this expression in reasonable time"
+    - https://github.com/swiftuilib/wrap-stack/issues/3
+      - 2021-09-14 created
+      - 2022-01-22 still open
+- FlexLayout
+  - https://github.com/layoutBox/FlexLayout (1.5k stars)
+  - Flexbox in swift
+  - Supports wrap: https://github.com/layoutBox/FlexLayout#wrap
+  - No swiftui support :(
+
+## SwiftUI: Grids / flexbox / wrap
+- https://swiftui-lab.com/impossible-grids/
+  - Very illustrative!
+  - `LazyHGrid`, `LazyVGrid`, `GridItem`
+- https://github.com/exyte/Grid
+  - Mature, flexible
+
 ## SwiftUI libs
 - Markdown
   - https://github.com/gonzalezreal/MarkdownUI — using this one, simple to use
@@ -176,3 +216,7 @@ bin/fastlane firebase_distribute_beta
 - WKWebView won't load `http:` urls
   - Solution: Info.plist -> `NSAppTransportSecurity` -> `NSAllowsArbitraryLoadsInWebContent`
   - https://www.hackingwithswift.com/example-code/wkwebview/how-to-load-http-content-in-wkwebview-and-uiwebview
+- `There is no XCFramework found at` when building in Xcode or fastlane
+  - https://github.com/fastlane/fastlane/issues/19783
+  - Maybe a bug in fastlane ~1.999/1.201?
+  - Workaround: Quit xcode when running fastlane build

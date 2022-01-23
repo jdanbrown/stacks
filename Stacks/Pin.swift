@@ -75,7 +75,10 @@ struct Pin: Codable, Identifiable, Withable {
   }
 
   // lazy because static [https://docs.swift.org/swift-book/LanguageGuide/Properties.html]
-  static let previewPins: [Pin] = loadPreviewJson("personal/preview-pins.json")
+  static let previewPins: [Pin] = {
+    let pins: [Pin] = loadPreviewJson("personal/preview-pins.json")
+    return pins.sorted(key: { $0.createdAt }, desc: true)
+  }()
 
   // HACK For testing markdown rendering
   static let previewMarkdown = """

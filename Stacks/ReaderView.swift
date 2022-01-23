@@ -15,9 +15,7 @@ struct ReaderView: View {
           .frame(height: 1) // Match height of Divider
       }
     }
-      // TODO Do we want to show the title or url?
-      .navigationTitle(webViewModel.title ?? "")
-      // .navigationTitle(webViewModel.url?.absoluteString ?? "")
+      .navigationTitle(webViewModel.url?.host ?? "")
   }
 
 }
@@ -25,7 +23,15 @@ struct ReaderView: View {
 struct ReaderView_Previews: PreviewProvider {
   static var previews: some View {
     let pins = Pin.previewPins
-    ReaderView(pin: pins[0])
+    let pin = pins[0]
+    Group {
+      ReaderView(pin: pin)
+      // Add another with nav view to preview .navigationTitle
+      NavigationView {
+        ReaderView(pin: pin)
+          .navigationBarTitleDisplayMode(.inline)
+      }
+    }
       .previewLayout(.sizeThatFits)
   }
 }
