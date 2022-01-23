@@ -153,20 +153,20 @@ bin/fastlane firebase_distribute_beta
   - https://github.com/berbschloe/FlexView (1 star)
     - Based on helpful article: https://www.fivestars.blog/articles/flexible-swiftui
     - Claims that LazyVGrid/LazyHGrid can't do wrap (corroborates my takeaway from docs and experimenting)
-  - Comparison
+  - Comparison (e259dce)
     - Speed: 4/5 -- very close to pure Text() version
     - Preview sizing: too much vertical padding, sometimes correct (I _think_ I observed it be correct once?)
   - Went with this one!
     - Vendored it so I could make edits (MIT license)
 - WrappingStack
   - https://github.com/diniska/swiftui-wrapping-stack (17 stars)
-  - Comparison
+  - Comparison (e259dce)
     - Speed: 3.5/5 -- feels only very slightly slower than FlexView
     - Preview sizing: too much vertical padding
 - WrappingHStack
   - https://github.com/dkk/WrappingHStack (55 stars)
   - Works, but slow-ish
-  - Comparison
+  - Comparison (e259dce)
     - Speed: 1/5 -- way slower than pure Text() version, and feels annoyingly slow overall
     - Preview sizing (PinView): bad, vertical clipping
 - WrapStack

@@ -13,8 +13,6 @@
 		B70C4E9527953EE70010E119 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E9427953EE70010E119 /* WebView.swift */; };
 		B711EC6027686C86005223A2 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
 		B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B711EC642769BD7E005223A2 /* XCGLogger */; };
-		B71EC95F279D21C900CE9472 /* WrappingStack in Frameworks */ = {isa = PBXBuildFile; productRef = B71EC95E279D21C900CE9472 /* WrappingStack */; };
-		B71EC962279D21E700CE9472 /* FlexView in Frameworks */ = {isa = PBXBuildFile; productRef = B71EC961279D21E700CE9472 /* FlexView */; };
 		B71EC965279D2B0100CE9472 /* FlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC964279D2B0100CE9472 /* FlexView.swift */; };
 		B71EC967279D2B0B00CE9472 /* _FlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC966279D2B0B00CE9472 /* _FlexView.swift */; };
 		B71EC969279D2B1400CE9472 /* SizeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC968279D2B1400CE9472 /* SizeReader.swift */; };
@@ -38,7 +36,6 @@
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
 		B7856B9B277457A200A87DDA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */; };
 		B7856B9D277457AB00A87DDA /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */; };
-		B7BC8F64279CB3B80035908B /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = B7BC8F63279CB3B80035908B /* WrappingHStack */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,12 +70,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */,
-				B71EC962279D21E700CE9472 /* FlexView in Frameworks */,
 				B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */,
 				B70C4E93279403530010E119 /* Down in Frameworks */,
-				B71EC95F279D21C900CE9472 /* WrappingStack in Frameworks */,
 				B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */,
-				B7BC8F64279CB3B80035908B /* WrappingHStack in Frameworks */,
 				B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */,
 				B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */,
 				B7856B9D277457AB00A87DDA /* FirebaseFirestoreSwift-Beta in Frameworks */,
@@ -185,9 +179,6 @@
 				B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */,
 				B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */,
 				B70C4E92279403530010E119 /* Down */,
-				B7BC8F63279CB3B80035908B /* WrappingHStack */,
-				B71EC95E279D21C900CE9472 /* WrappingStack */,
-				B71EC961279D21E700CE9472 /* FlexView */,
 			);
 			productName = Stacks;
 			productReference = B75B469B275B3FC700923DE1 /* Stacks.app */;
@@ -222,9 +213,6 @@
 				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */,
 				B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */,
-				B7BC8F62279CB3B70035908B /* XCRemoteSwiftPackageReference "WrappingHStack" */,
-				B71EC95D279D21C800CE9472 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */,
-				B71EC960279D21E700CE9472 /* XCRemoteSwiftPackageReference "FlexView" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -494,22 +482,6 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		B71EC95D279D21C800CE9472 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/diniska/swiftui-wrapping-stack";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		B71EC960279D21E700CE9472 /* XCRemoteSwiftPackageReference "FlexView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/berbschloe/FlexView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -526,14 +498,6 @@
 				minimumVersion = 8.10.0;
 			};
 		};
-		B7BC8F62279CB3B70035908B /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dkk/WrappingHStack";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -546,16 +510,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;
 			productName = XCGLogger;
-		};
-		B71EC95E279D21C900CE9472 /* WrappingStack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B71EC95D279D21C800CE9472 /* XCRemoteSwiftPackageReference "swiftui-wrapping-stack" */;
-			productName = WrappingStack;
-		};
-		B71EC961279D21E700CE9472 /* FlexView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B71EC960279D21E700CE9472 /* XCRemoteSwiftPackageReference "FlexView" */;
-			productName = FlexView;
 		};
 		B72509B4275DF43C00858384 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -591,11 +545,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreSwift-Beta";
-		};
-		B7BC8F63279CB3B80035908B /* WrappingHStack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B7BC8F62279CB3B70035908B /* XCRemoteSwiftPackageReference "WrappingHStack" */;
-			productName = WrappingHStack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
