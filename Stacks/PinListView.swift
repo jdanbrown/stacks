@@ -28,6 +28,9 @@ struct _PinListView: View {
   //  - Multiple tags + full-text search (maybe that's all?)
   @State private var tagFilter: String? = nil
 
+  @State private var searchFilter: String? = nil
+  @FocusState private var searchFilterIsFocused: Bool
+
   enum Order: CustomStringConvertible {
     case desc
     case asc
@@ -46,6 +49,14 @@ struct _PinListView: View {
         case .desc:    return "arrow.down"
         case .asc:     return "arrow.up"
         case .shuffle: return "shuffle"
+      }
+    }
+
+    func cycle() -> Order {
+      switch self {
+        case .desc:    return .asc
+        case .asc:     return shuffle()
+        case .shuffle: return .desc
       }
     }
 
@@ -72,8 +83,29 @@ struct _PinListView: View {
     // Docs
     //  - https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
 
-    let pins = pinsForView()
+    let _ = print("XXX searchFilterIsFocused[\(searchFilterIsFocused)]")
+
+    let pins = pinsForView(searchFilter: searchFilter)
     VStack(spacing: 5) {
+
+      if searchFilter != nil {
+        TextField("Filter", text: Binding(
+          get: { self.searchFilter ?? "" },
+          set: { self.searchFilter = $0 }
+        ))
+          // TODO Make this focus (i.e. open keyboard) when it appears
+          //  - But also allow keyboard to be missed with "Search" button
+          //  - Doesn't work: `searchFilterIsFocused = true` in magnifyingglass button (below)
+          //  - Doesn't work: `searchFilterIsFocused = true` in TextField.onAppear (below)
+          .focused($searchFilterIsFocused)
+          .onAppear { self.searchFilterIsFocused = true } // TODO Not working (see above)
+          .textFieldStyle(RoundedBorderTextFieldStyle())
+          .keyboardType(.default)
+          .submitLabel(.search)
+          .autocapitalization(.none)
+          .disableAutocorrection(true) // Or maybe we do want autocorrect? Doubtful
+      }
+
       // Instead of List, use ScrollView + LazyVStack
       //  - https://stackoverflow.com/questions/64309390/swiftui-gap-left-margin-and-change-color-of-list-items-bottom-border
       //  - https://stackoverflow.com/questions/56553672/how-to-remove-the-line-separators-from-a-list-in-swiftui-without-using-foreach
@@ -99,6 +131,7 @@ struct _PinListView: View {
       }
         // Jump to top on pin reorder: Use .id to force-rebuild the ScrollView when order changes
         .id(order.description)
+
     }
 
       // .statusBar(hidden: true) // Want or not?
@@ -126,37 +159,79 @@ struct _PinListView: View {
           }
         },
         trailing: HStack {
+
+          // Search
+          //  - Keyboard management
+          //    - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
+          //    - https://www.hackingwithswift.com/quick-start/swiftui/how-to-dismiss-the-keyboard-for-a-textfield
+          //      - To force hide the keyboard:
+          //        - UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+          if searchFilter == nil {
+            // Search: Enable
+            Button(action: {
+              self.searchFilter = ""
+              self.searchFilterIsFocused = true // TODO Not working (see above)
+            }) {
+              Image(systemName: "magnifyingglass")
+                .font(.body)
+            }
+          } else {
+            // Search: Close
+            Button(action: {
+              self.searchFilter = nil
+            }) {
+              Image(systemName: "xmark.circle")
+                .font(.body)
+            }
+          }
+
           // Fitler: Reset
           Button(action: {
             self.tagFilter = nil
           }) {
-            Image(systemName: "xmark.circle")
+            Image(systemName: "xmark")
               .font(.body)
           }
-          // Order: toggle desc/asc
+
+          // Order: desc/asc/shuffle
           Button(action: {
-            self.order = self.order.toggleDescAsc()
+            self.order = self.order.cycle()
           }) {
             Image(systemName: self.order.iconName())
               .font(.body)
           }
-          // Order: Shuffle
-          Button(action: {
-            self.order = self.order.shuffle()
-          }) {
-            Image(systemName: self.order.shuffle().iconName())
-              .font(.body)
-          }
+          // // Order: toggle desc/asc
+          // Button(action: {
+          //   self.order = self.order.toggleDescAsc()
+          // }) {
+          //   Image(systemName: self.order.iconName())
+          //     .font(.body)
+          // }
+          // // Order: shuffle
+          // Button(action: {
+          //   self.order = self.order.shuffle()
+          // }) {
+          //   Image(systemName: self.order.shuffle().iconName())
+          //     .font(.body)
+          // }
+
         }
       )
 
   }
 
-  func pinsForView() -> [Pin] {
+  func pinsForView(searchFilter: String?) -> [Pin] {
     var pins = self.pins
     // Filter
     if let tagFilter = tagFilter {
       pins = pins.filter { $0.tags.contains(tagFilter) }
+    }
+    if var searchFilter = searchFilter, searchFilter != "" {
+      searchFilter = searchFilter.lowercased()
+      pins = pins.filter { pin in
+        // TODO Probably slow, but a very simple first implementation
+        ((try? toJson(pin)) ?? "").lowercased().contains(searchFilter)
+      }
     }
     // Order
     switch order {
