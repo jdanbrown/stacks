@@ -16,7 +16,7 @@ struct PinListView: View {
 
 }
 
-struct _PinListView: View, Withable {
+struct _PinListView: View {
 
   var logout: () async -> ()
   var user: User
@@ -24,23 +24,28 @@ struct _PinListView: View, Withable {
 
   @State private var order: Order = .desc
 
-  // TODO Generalize this to a "filter"
-  //  - Multiple tags + full-text search (maybe that's all?)
+  // tagFilter is the tag (optional) to filter our pins to
+  //  - TODO Generalize this to a "filter"
+  //    - Multiple tags + full-text search (maybe that's all?)
   @State private var tagFilter: String? = nil
-  // @State private var tagSelection: String? = nil
-  // @State private var tagSelectionPost: String? = nil
-  @State private var tagSelectionBindingPost: String? = nil
-  @State private var _tagSelectionBinding: String? = nil
-  private var tagSelectionBinding: Binding<String?> {
+
+  // tagSelection is the control to trigger navigation to withTagFilter(tagFilter: tagSelection)
+  //  - HACK State/State/Binding: Conceptually it should just be a single @State, but we implement it in this wacky
+  //    State/State/Binding way all so that we can render 1 NavigationLink instead of O(tags) many, which is slow
+  //    - Two phases: (1) render an unselected NavigationLink, (2) onAppear, select the rendered NavigationLink
+  //      - This makes the enter animation work (on tag) -- with one phase you only get the exit animation (on Back)
+  //    - Three states not four: When NavigationLink resets tagSelection = nil, also reset _tagSelectionPhaseTwo = nil
+  //      - Else our two-phase rendering logic doesn't work
+  @State private var _tagSelection: String? = nil
+  @State private var _tagSelectionPhaseTwo: String? = nil
+  private var tagSelection: Binding<String?> {
     return Binding(
-      get: { _tagSelectionBinding },
-      set: { x in
-        log.info("set/pre:  tagFilter[\(opt: tagFilter)], x[\(opt: x)], _tagSelectionBinding[\(opt: _tagSelectionBinding)]], tagSelectionBindingPost[\(opt: tagSelectionBindingPost)]") // XXX Debug
-        _tagSelectionBinding = x
-        if x == nil {
-          tagSelectionBindingPost = nil
+      get: { _tagSelection },
+      set: { new in
+        _tagSelection = new
+        if new == nil {
+          _tagSelectionPhaseTwo = nil
         }
-        log.info("set/post: tagFilter[\(opt: tagFilter)], x[\(opt: x)], _tagSelectionBinding[\(opt: _tagSelectionBinding)]], tagSelectionBindingPost[\(opt: tagSelectionBindingPost)]") // XXX Debug
       }
     )
   }
@@ -60,9 +65,6 @@ struct _PinListView: View, Withable {
   }
 
   func withTagFilter(tagFilter: String?) -> _PinListView {
-    // let view = _PinListView(logout: logout, user: user, pins: pins)
-    // view.tagFilter = tagFilter
-    // return view
     return _PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
 
@@ -76,81 +78,21 @@ struct _PinListView: View, Withable {
     //  - https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
 
     let pins = pinsForView()
-    // let tags = pins.flatMap { $0.tags }.unique().sorted() // TODO Make faster
-    // let tags = Array(Set(pins.makeIterator().flatMap { $0.tags.makeIterator() })) // TODO Faster?
-    // let tags: [String] = [] // TODO Noop
-
-    // let _ = log.info("tagSelection[\(opt: tagSelection)], tagSelectionPost[\(opt: tagSelectionPost)]") // XXX Debug
-    // let _ = log.info("tagSelectionBinding.wrappedValue[\(tagSelectionBinding.wrappedValue)], _tagSelectionBinding[\(_tagSelectionBinding)]")
-    let _ = log.info("tagFilter[\(opt: tagFilter)], _tagSelectionBinding[\(opt: _tagSelectionBinding)]], tagSelectionBindingPost[\(opt: tagSelectionBindingPost)]") // XXX Debug
 
     ZStack {
 
-      // Tag nav links -- v4: only tagSelection w/ two stages + custom Binding
-      if let tagSelectionBindingValue = tagSelectionBinding.wrappedValue {
+      // TODO Tag nav link
+      if let tagSelectionValue = tagSelection.wrappedValue {
         NavigationLink(
-          destination: LazyView { withTagFilter(tagFilter: tagSelectionBindingValue) },
-          tag: tagSelectionBindingPost ?? "",
-          selection: tagSelectionBinding
+          destination: LazyView { withTagFilter(tagFilter: tagSelectionValue) },
+          tag: _tagSelectionPhaseTwo ?? "",
+          selection: tagSelection
         ) { EmptyView() }
           .hidden()
           .onAppear {
-            self.tagSelectionBindingPost = tagSelectionBindingValue
+            self._tagSelectionPhaseTwo = tagSelectionValue
           }
       }
-
-      // // Tag nav links -- v3: only tagSelection w/ two stages
-      // if let tagSelection = tagSelection {
-      //   NavigationLink(
-      //     destination: LazyView {
-      //       withTagFilter(tagFilter: tagSelectionPost)
-      //         .onAppear {
-      //           log.info("withTagFilter.onAppear: tagSelection[\(opt: tagSelection)], tagSelectionPost[\(opt: tagSelectionPost)]") // XXX Debug
-      //           // self.tagSelectionPost = nil // XXX Update loop
-      //         }
-      //     },
-      //     tag: tagSelection,
-      //     selection: $tagSelectionPost
-      //   ) { EmptyView() }
-      //     .hidden()
-      //     .onAppear {
-      //       log.info("NavigationLink.onAppear: tagSelection[\(opt: tagSelection)], tagSelectionPost[\(opt: tagSelectionPost)]") // XXX Debug
-      //       self.tagSelectionPost = tagSelection
-      //     }
-      //     .onDisappear {
-      //       log.info("NavigationLink.onDisappear: tagSelection[\(opt: tagSelection)], tagSelectionPost[\(opt: tagSelectionPost)]") // XXX Debug
-      //       // self.tagSelectionPost = nil // XXX Update loop
-      //     }
-      // } else {
-      //   EmptyView()
-      //     .onAppear {
-      //       log.info("EmptyView.onAppear: tagSelection[\(opt: tagSelection)], tagSelectionPost[\(opt: tagSelectionPost)]") // XXX Debug
-      //       // self.tagSelectionPost = nil
-      //     }
-      // }
-
-      // // Tag nav links -- v2: only tagSelection
-      // if let tagSelection = tagSelection {
-      //   NavigationLink(
-      //     destination: withTagFilter(tagFilter: tagSelection),
-      //     tag: tagSelection,
-      //     selection: $tagSelection
-      //   ) { EmptyView() }
-      //     .hidden()
-      // }
-
-      // // Tag nav links -- v1: all tags
-      // ForEach(tags, id: \.self) { tag in
-      //   let _ = print("XXX tag[\(tag)]")
-      //   NavigationLink(
-      //     destination: LazyView {
-      //       withTagFilter(tagFilter: tag)
-      //     },
-      //     tag: tag,
-      //     selection: $tagSelection
-      //   ) { EmptyView() }
-      //     .hidden()
-      // }
 
       VStack(spacing: 5) {
 
@@ -190,8 +132,7 @@ struct _PinListView: View, Withable {
                       .ignoresSafeArea(edges: .bottom)
                   }
                 ) {
-                  // PinView(pin: pin, tagSelection: $tagSelection)
-                  PinView(pin: pin, tagSelection: tagSelectionBinding)
+                  PinView(pin: pin, tagSelection: tagSelection)
                 }
                 .buttonStyle(.plain)
                 .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
