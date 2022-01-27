@@ -61,6 +61,7 @@ struct PinView: View {
 
       Text(pin.title)
         .font(.subheadline)
+        .foregroundColor(!pin.isRead ? nil : Color.gray)
       Text("\(showDateForTimeline(pin.createdAt)) • \(showUrlForTimeline(pin.url))")
         .font(.caption2)
         .foregroundColor(Color.gray)
