@@ -29,25 +29,30 @@ struct _PinListView: View {
   //    - Multiple tags + full-text search (maybe that's all?)
   @State private var tagFilter: String? = nil
 
-  // tagSelection is the control to trigger navigation to withTagFilter(tagFilter: tagSelection)
-  //  - HACK State/State/Binding: Conceptually it should just be a single @State, but we implement it in this wacky
-  //    State/State/Binding way all so that we can render 1 NavigationLink instead of O(tags) many, which is slow
-  //    - Two phases: (1) render an unselected NavigationLink, (2) onAppear, select the rendered NavigationLink
-  //      - This makes the enter animation work (on tag) -- with one phase you only get the exit animation (on Back)
-  //    - Three states not four: When NavigationLink resets tagSelection = nil, also reset _tagSelectionPhaseTwo = nil
-  //      - Else our two-phase rendering logic doesn't work
-  @State private var _tagSelection: String? = nil
-  @State private var _tagSelectionPhaseTwo: String? = nil
-  private var tagSelection: Binding<String?> {
+  // Programmatic navigation (for any View)
+  //  - Conceptually this is just one @State, but we have to do State/State/Binding to render the NavigationLink in two
+  //    phases, which we need so that the enter animation doesn't get skipped
+  //  - Phase 1: render an unselected NavigationLink -> phase 2: onAppear, select the rendered NavigationLink
+  //  - The Binding is to give us 3 states instead of 4: when NavigationLink resets _tagSelectionPhaseTwo = false, also
+  //    reset _navigationPush = nil, else our two-phase rendering logic breaks down
+  @State private var _navigationPush: AnyView? = nil
+  @State private var _navigationPushPhaseTwo: Bool = false
+  private var navigationPushPhaseTwo: Binding<Bool> {
     return Binding(
-      get: { _tagSelection },
-      set: { new in
-        _tagSelection = new
-        if new == nil {
-          _tagSelectionPhaseTwo = nil
+      get: { _navigationPushPhaseTwo },
+      set: { x in
+        _navigationPushPhaseTwo = x
+        if x == false {
+          _navigationPush = nil
         }
       }
     )
+  }
+  func navigationPush<X: View>(_ view: X) {
+    _navigationPush = AnyView(view)
+  }
+  func navigationPushTag(_ tag: String) {
+    navigationPush(withTagFilter(tagFilter: tag))
   }
 
   @State private var searchFilter: String? = nil
@@ -81,20 +86,18 @@ struct _PinListView: View {
 
     ZStack {
 
-      // Tag navigation via tagSelection + tagFilter
-      //  - See State/State/Binding above for details
-      if let tagSelectionValue = tagSelection.wrappedValue {
-        // (1) Render an unselected NavigationLink
+      // Programmatic navigation (for any View)
+      //  - See details above
+      if let _navigationPush = _navigationPush {
+        // Phase 1: Render an unselected NavigationLink
         NavigationLink(
-          destination: LazyView { withTagFilter(tagFilter: tagSelectionValue) },
-          tag: _tagSelectionPhaseTwo ?? "",
-          selection: tagSelection
+          destination: _navigationPush,
+          isActive: navigationPushPhaseTwo
         ) { EmptyView() }
           .hidden()
           .onAppear {
-            // (2) Immediately select it
-            //  - Without this phase two the enter animation gets skipped
-            self._tagSelectionPhaseTwo = tagSelectionValue
+            // Phase 2: Immediately select it
+            self._navigationPushPhaseTwo = true
           }
       }
 
@@ -128,19 +131,36 @@ struct _PinListView: View {
         ScrollView {
           ScrollViewReader { (scrollViewProxy: ScrollViewProxy) in
             LazyVStack(alignment: .leading) {
+        // List {
               ForEach(pins) { pin in
                 Divider()
-                NavigationLink(destination:
-                  LazyView {
-                    ReaderView(pin: pin)
-                      .ignoresSafeArea(edges: .bottom)
+                PinView(pin: pin, navigationPushTag: navigationPushTag)
+                  .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
+                  // TODO TODO How to make swipe gestures work?
+                  //  - Ah hah! -- it works with List, but not with ScrollView
+                  //  - Hmm, can I live with List, or do I need to get gnarly with ScrollView gesture interactions?
+                  //    - https://www.google.com/search?q=swiftui+scrollview+swipe
+                  .swipeActions(edge: .leading) {
+                    Button { log.info("swipeRight") } label: { Label("Add", systemImage: "plus.circle") }
+                      .tint(.blue)
                   }
-                ) {
-                  PinView(pin: pin, tagSelection: tagSelection)
-                }
-                .buttonStyle(.plain)
-                .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
+                  .swipeActions(edge: .trailing) {
+                    Button { log.info("swipeLeft") } label: { Label("Remove", systemImage: "minus.circle") }
+                      .tint(.red)
+                  }
+                  .onTapGesture {
+                    log.info("tap")
+                    self.navigationPush(
+                      ReaderView(pin: pin)
+                        .ignoresSafeArea(edges: .bottom)
+                    )
+                  }
+                  .onLongPressGesture {
+                    log.info("longPress")
+                  }
               }
+
+        // }
             }
           }
         }

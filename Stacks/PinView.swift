@@ -54,7 +54,7 @@ struct PinView: View {
 
   var pin: Pin
 
-  @Binding var tagSelection: String?
+  let navigationPushTag: (String) -> Void
 
   var body: some View {
     VStack(alignment: .leading) {
@@ -70,7 +70,7 @@ struct PinView: View {
           .font(.footnote)
           .foregroundColor(Color.blue)
           .onTapGesture {
-            tagSelection = tag
+            navigationPushTag(tag)
           }
       }
 
@@ -129,9 +129,8 @@ struct PinView_Previews: PreviewProvider {
       // Markdown(Document(Pin.previewMarkdown))
 
       ForEach(pins[0..<15]) { pin in
-        PinView(pin: pin, tagSelection: .constant(nil))
+        PinView(pin: pin, navigationPushTag: { tag in () })
       }
-      // PinView(pin: pins[1].with(\.notes, Pin.previewMarkdown), tagSelection: .constant(nil))
 
     }
       .previewLayout(.sizeThatFits)
