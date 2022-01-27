@@ -1,6 +1,7 @@
 import Combine
 import CryptoKit
 import Foundation
+import SwiftUI
 import XCGLogger
 
 //
@@ -51,6 +52,12 @@ extension String {
 extension Array {
   func sorted<K: Comparable>(key: (Element) -> K, desc: Bool = false) -> Array<Element> {
     return sorted(by: { x, y in !desc ? key(x) < key(y) : key(y) < key(x) })
+  }
+}
+
+extension Array where Element: Hashable {
+  func unique() -> Array<Element> {
+    return Array(Set(self))
   }
 }
 
@@ -286,4 +293,20 @@ func urlWithQueryParams(_ url: URL, queryParams: [String: String] = [:]) throws 
     preconditionFailure("Invalid queryParams[\(queryParams)] for url[\(url)]")
   }
   return url
+}
+
+//
+// swiftui
+//
+
+// Motivated by NavigationLink, which eagerly loads its destination view
+//  - https://gist.github.com/chriseidhof/d2fcafb53843df343fe07f3c0dac41d5
+//  - https://betterprogramming.pub/swiftui-navigation-links-and-the-common-pitfalls-faced-505cbfd8029b
+//  - Alternate approaches I didn't try
+//    - https://swiftwithmajid.com/2021/01/27/lazy-navigation-in-swiftui/
+struct LazyView<Content: View>: View {
+  let build: () -> Content
+  var body: Content {
+    build()
+  }
 }

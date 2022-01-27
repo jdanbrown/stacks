@@ -54,7 +54,7 @@ struct PinView: View {
 
   var pin: Pin
 
-  @Binding var tagFilter: String?
+  @Binding var tagSelection: String?
 
   var body: some View {
     VStack(alignment: .leading) {
@@ -69,7 +69,7 @@ struct PinView: View {
           .font(.footnote)
           .foregroundColor(Color.blue)
           .onTapGesture {
-            tagFilter = tag
+            tagSelection = tag
           }
       }
 
@@ -128,9 +128,9 @@ struct PinView_Previews: PreviewProvider {
       // Markdown(Document(Pin.previewMarkdown))
 
       ForEach(pins[0..<15]) { pin in
-        PinView(pin: pin, tagFilter: .constant(nil))
+        PinView(pin: pin, tagSelection: .constant(nil))
       }
-      // PinView(pin: pins[1].with(\.notes, Pin.previewMarkdown), tagFilter: .constant(nil))
+      // PinView(pin: pins[1].with(\.notes, Pin.previewMarkdown), tagSelection: .constant(nil))
 
     }
       .previewLayout(.sizeThatFits)
