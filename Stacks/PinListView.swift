@@ -81,8 +81,10 @@ struct _PinListView: View {
 
     ZStack {
 
-      // TODO Tag nav link
+      // Tag navigation via tagSelection + tagFilter
+      //  - See State/State/Binding above for details
       if let tagSelectionValue = tagSelection.wrappedValue {
+        // (1) Render an unselected NavigationLink
         NavigationLink(
           destination: LazyView { withTagFilter(tagFilter: tagSelectionValue) },
           tag: _tagSelectionPhaseTwo ?? "",
@@ -90,6 +92,8 @@ struct _PinListView: View {
         ) { EmptyView() }
           .hidden()
           .onAppear {
+            // (2) Immediately select it
+            //  - Without this phase two the enter animation gets skipped
             self._tagSelectionPhaseTwo = tagSelectionValue
           }
       }
