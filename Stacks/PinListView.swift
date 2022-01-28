@@ -122,48 +122,59 @@ struct _PinListView: View {
             .disableAutocorrection(true) // Or maybe we do want autocorrect? Doubtful
         }
 
-        // Instead of List, use ScrollView + LazyVStack
-        //  - https://stackoverflow.com/questions/64309390/swiftui-gap-left-margin-and-change-color-of-list-items-bottom-border
-        //  - https://stackoverflow.com/questions/56553672/how-to-remove-the-line-separators-from-a-list-in-swiftui-without-using-foreach
-        //  - Bonus: This also results in hiding the NavigationLink "disclosure indicator"
-        //    - https://stackoverflow.com/questions/56516333/swiftui-navigationbutton-without-the-disclosure-indicator
-        //    - https://www.appcoda.com/hide-disclosure-indicator-swiftui-list/
-        ScrollView {
-          ScrollViewReader { (scrollViewProxy: ScrollViewProxy) in
-            LazyVStack(alignment: .leading) {
-        // List {
-              ForEach(pins) { pin in
-                Divider()
-                PinView(pin: pin, navigationPushTag: navigationPushTag)
-                  .padding(.init(top: 0, leading: 10, bottom: 0, trailing: 10))
-                  // TODO TODO How to make swipe gestures work?
-                  //  - Ah hah! -- it works with List, but not with ScrollView
-                  //  - Hmm, can I live with List, or do I need to get gnarly with ScrollView gesture interactions?
-                  //    - https://www.google.com/search?q=swiftui+scrollview+swipe
-                  .swipeActions(edge: .leading) {
-                    Button { log.info("swipeRight") } label: { Label("Add", systemImage: "plus.circle") }
-                      .tint(.blue)
-                  }
-                  .swipeActions(edge: .trailing) {
-                    Button { log.info("swipeLeft") } label: { Label("Remove", systemImage: "minus.circle") }
-                      .tint(.red)
-                  }
-                  .onTapGesture {
-                    log.info("tap")
-                    self.navigationPush(
-                      ReaderView(pin: pin)
-                        .ignoresSafeArea(edges: .bottom)
-                    )
-                  }
-                  .onLongPressGesture {
-                    log.info("longPress")
-                  }
+        // Using List instead of ScrollView so that swipe gestures work
+        //  - Gestures in List
+        //    - https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-custom-swipe-action-buttons-to-a-list-row
+        //  - How to ScrollView(LazyVStack(...)), in case we want to try that again
+        //    - https://developer.apple.com/documentation/swiftui/lazyvstack
+        //    - https://www.hackingwithswift.com/quick-start/swiftui/how-to-lazy-load-views-using-lazyvstack-and-lazyhstack
+        //    - https://stackoverflow.com/questions/64309390/swiftui-gap-left-margin-and-change-color-of-list-items-bottom-border
+        //    - https://stackoverflow.com/questions/56553672/how-to-remove-the-line-separators-from-a-list-in-swiftui-without-using-foreach
+        //  - Maybe how to make swipe gestures work in ScrollView
+        //    - https://developer.apple.com/documentation/swiftui/gestures
+        //    - https://developer.apple.com/documentation/swiftui/composing-swiftui-gestures
+        //    - https://www.hackingwithswift.com/books/ios-swiftui/how-to-use-gestures-in-swiftui
+        //    - https://stackoverflow.com/questions/64573755/swiftui-scrollview-with-tap-and-drag-gesture
+        List {
+          ForEach(pins) { pin in
+            PinView(pin: pin, navigationPushTag: navigationPushTag)
+              .padding(.init(top: 10, leading: 10, bottom: 10, trailing: 10))
+              // Use .listRowInsets to remove left/right padding on List
+              //  - https://programmingwithswift.com/swiftui-list-remove-padding-left-and-right/
+              //  - https://stackoverflow.com/questions/68490542/swiftui-remove-the-space-on-list-view-left-and-right
+              .listRowInsets(.init())
+              .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                Button {
+                  // TODO Show edit view/sheet
+                } label: {
+                  Label("Edit", systemImage: "pencil")
+                }
+                .tint(.purple)
               }
-
-        // }
-            }
+              .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button {
+                  // TODO pin.isRead.toggle()
+                } label: {
+                  if pin.isRead {
+                    Label("Mark unread", systemImage: "doc")
+                  } else {
+                    Label("Mark read", systemImage: "doc.fill")
+                  }
+                }
+                  .tint(.blue)
+              }
+              .onTapGesture {
+                log.info("tap")
+                self.navigationPush(
+                  ReaderView(pin: pin)
+                    .ignoresSafeArea(edges: .bottom)
+                )
+              }
+              .onLongPressGesture {
+                log.info("longPress")
+              }
           }
-        }
+        }.listStyle(.plain)
           // Jump to top on pin reorder: Use .id to force-rebuild the ScrollView when order changes
           .id(order.description)
 
