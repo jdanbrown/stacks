@@ -58,6 +58,8 @@ struct _PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
+  @State private var showEditSheet: Bool = false
+
   init(logout: @escaping () async -> (), user: User, pins: [Pin]) {
     self.logout = logout
     self.user = user
@@ -124,6 +126,8 @@ struct _PinListView: View {
 
         // Using List instead of ScrollView so that swipe gestures work
         //  - Gestures in List
+        //    - https://developer.apple.com/documentation/SwiftUI/View/swipeActions(edge:allowsFullSwipe:content:)
+        //    - https://useyourloaf.com/blog/swiftui-swipe-actions/
         //    - https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-custom-swipe-action-buttons-to-a-list-row
         //  - How to ScrollView(LazyVStack(...)), in case we want to try that again
         //    - https://developer.apple.com/documentation/swiftui/lazyvstack
@@ -137,29 +141,38 @@ struct _PinListView: View {
         //    - https://stackoverflow.com/questions/64573755/swiftui-scrollview-with-tap-and-drag-gesture
         List {
           ForEach(pins) { pin in
+            let isLast = pin.id == pins.last?.id
             PinView(pin: pin, navigationPushTag: navigationPushTag)
-              .padding(.init(top: 10, leading: 10, bottom: 10, trailing: 10))
+
+              // Replace List separators with custom separators
+              //  - List separators don't extend to the left edge, these custom ones do
+              .listRowSeparator(.hidden)
+              .padding(.init(top: 9, leading: 10, bottom: 9, trailing: 10))
+              .overlay(Divider(), alignment: .top)
+              .padding(.init(top: 1, leading: 0, bottom: 0, trailing: 0))
+              .pipe { v in !isLast ? AnyView(v) : AnyView(v
+                .overlay(Divider(), alignment: .bottom)
+              )}
+
               // Use .listRowInsets to remove left/right padding on List
               //  - https://programmingwithswift.com/swiftui-list-remove-padding-left-and-right/
               //  - https://stackoverflow.com/questions/68490542/swiftui-remove-the-space-on-list-view-left-and-right
               .listRowInsets(.init())
+
+              // Gestures
               .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button {
-                  // TODO Show edit view/sheet
+                  showEditSheet.toggle()
                 } label: {
-                  Label("Edit", systemImage: "pencil")
+                  Label("", systemImage: "pencil")
                 }
-                .tint(.purple)
+                  .tint(.purple)
               }
               .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button {
                   // TODO pin.isRead.toggle()
                 } label: {
-                  if pin.isRead {
-                    Label("Mark unread", systemImage: "doc")
-                  } else {
-                    Label("Mark read", systemImage: "doc.fill")
-                  }
+                  Label("", systemImage: "doc")
                 }
                   .tint(.blue)
               }
@@ -173,10 +186,33 @@ struct _PinListView: View {
               .onLongPressGesture {
                 log.info("longPress")
               }
+
+              .sheet(isPresented: $showEditSheet, onDismiss: {}) {
+                // TODO TODO PinEditView
+                List {
+                  Button("Done", action: { showEditSheet.toggle() })
+                  Text("url: \(pin.url)")
+                  Text("title: \(pin.title)")
+                  Text("tags: \(try! toJson(pin.tags))")
+                  Text("notes: \(pin.notes)")
+                  Text("createdAt: \(pin.createdAt)")
+                  Text("modifiedAt: \(pin.modifiedAt)")
+                  Text("accessedAt: \(pin.accessedAt)")
+                  Text("isRead: \(try! toJson(pin.isRead))")
+                  // TODO Adding 2+ more of these items makes the compiler time out
+                  // Text("progressPageScroll: \(try! toJson(pin.progressPageScroll))")
+                  // Text("progressPageScrollMax: \(try! toJson(pin.progressPageScrollMax))")
+                  // Text("progressPdfPage: \(try! toJson(pin.progressPdfPage))")
+                  // Text("progressPdfPageMax: \(try! toJson(pin.progressPdfPageMax))")
+                }
+                  .listStyle(.plain)
+              }
+
           }
-        }.listStyle(.plain)
+        }
           // Jump to top on pin reorder: Use .id to force-rebuild the ScrollView when order changes
           .id(order.description)
+          .listStyle(.plain)
 
       }
 

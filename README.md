@@ -114,9 +114,12 @@ bin/fastlane firebase_distribute_beta
 - https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui
 - https://developer.apple.com/tutorials/swiftui/working-with-ui-controls
 
-## SwiftUI: Helpful books
+## SwiftUI: Generally helpful
 - https://www.objc.io/books/thinking-in-swiftui
 - https://www.hackingwithswift.com/quick-start/swiftui
+- https://swiftontap.com/
+- https://useyourloaf.com/
+- https://fuckingswiftui.com/
 
 ## SwiftUI: Helpful articles
 - `@State` vs. `@Binding` vs. `@StateObject` vs. `@ObservedObject` vs. `@EnvironmentObject`
@@ -141,6 +144,10 @@ bin/fastlane firebase_distribute_beta
     - https://developer.apple.com/documentation/swiftui/stateobject
     - https://developer.apple.com/documentation/swiftui/observedobject
     - https://developer.apple.com/documentation/swiftui/environmentobject
+
+## SwiftUI: Colors
+- https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/color/
+- https://developer.apple.com/documentation/uikit/uicolor/standard_colors
 
 ## SwiftUI: Symbols
 - https://www.avanderlee.com/swift/sf-symbols-guide
