@@ -101,6 +101,14 @@ bin/fastlane firebase_distribute_beta
 - How to map firestore `.data()` using `Codable`
   - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 
+## SwiftUI: Overviews / Entrypoints
+- https://developer.apple.com/design/human-interface-guidelines/ios
+- https://www.objc.io/books/thinking-in-swiftui
+- https://www.hackingwithswift.com/quick-start/swiftui
+- https://swiftontap.com/
+- https://useyourloaf.com/
+- https://fuckingswiftui.com/
+
 ## SwiftUI: Docs
 - https://developer.apple.com/documentation/swiftui
 - https://developer.apple.com/documentation/swiftui/state-and-data-flow
@@ -109,51 +117,30 @@ bin/fastlane firebase_distribute_beta
 - https://developer.apple.com/documentation/uikit/view_controllers/restoring_your_app_s_state_with_swiftui
 - https://developer.apple.com/documentation/coredata/loading_and_displaying_a_large_data_feed
 
-## SwiftUI: Tutorials
-- https://developer.apple.com/tutorials/SwiftUI
-- https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui
-- https://developer.apple.com/tutorials/swiftui/working-with-ui-controls
-
-## SwiftUI: Generally helpful
-- https://www.objc.io/books/thinking-in-swiftui
-- https://www.hackingwithswift.com/quick-start/swiftui
-- https://swiftontap.com/
-- https://useyourloaf.com/
-- https://fuckingswiftui.com/
-
-## SwiftUI: Helpful articles
-- `@State` vs. `@Binding` vs. `@StateObject` vs. `@ObservedObject` vs. `@EnvironmentObject`
-  - Summary
-    - Value types
-      - `@State` for owner
-      - `@Binding` for children
-    - Object types
-      - `@StateObject` for owner
-      - `@ObservedObject` for children
-      - `@EnvironmentObject` as a bonus thing -- no analogue for value types
-  - Articles
-    - https://www.hackingwithswift.com/quick-start/swiftui/whats-the-difference-between-observedobject-state-and-environmentobject
-    - Book ch2: https://www.objc.io/books/thinking-in-swiftui/
-  - Docs
-    - https://developer.apple.com/documentation/swiftui/state-and-data-flow
-    - https://developer.apple.com/documentation/swiftui/managing-user-interface-state
-    - https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
-  - Reference
-    - https://developer.apple.com/documentation/swiftui/state
-    - https://developer.apple.com/documentation/swiftui/binding
-    - https://developer.apple.com/documentation/swiftui/stateobject
-    - https://developer.apple.com/documentation/swiftui/observedobject
-    - https://developer.apple.com/documentation/swiftui/environmentobject
+## SwiftUI: Design
+- https://developer.apple.com/design/human-interface-guidelines/ios/views
+- https://developer.apple.com/design/human-interface-guidelines/ios/controls
+- https://developer.apple.com/design/human-interface-guidelines/ios/bars
+- https://developer.apple.com/design/human-interface-guidelines/ios/user-interaction/gestures
+- https://developer.apple.com/design/human-interface-guidelines/ios/app-architecture/navigation
+- https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/color
+- https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/materials
+- https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/typography
+- https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/adaptivity-and-layout
 
 ## SwiftUI: Colors
 - https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/color/
 - https://developer.apple.com/documentation/uikit/uicolor/standard_colors
 
 ## SwiftUI: Symbols
+- https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/system-icons
 - https://www.avanderlee.com/swift/sf-symbols-guide
   - Very helpful!
 - https://developer.apple.com/design/human-interface-guidelines/sf-symbols/overview
 - https://developer.apple.com/sf-symbols
+
+## SwiftUI: Navigation
+- https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
 
 ## SwiftUI: Flex / wrap
 - FlexView
@@ -196,9 +183,40 @@ bin/fastlane firebase_distribute_beta
   - Mature, flexible
 
 ## SwiftUI libs
+- More widgets
+  - https://github.com/SwiftUIX/SwiftUIX
+  - https://github.com/AvdLee/SwiftUIKitView
 - Markdown
   - https://github.com/gonzalezreal/MarkdownUI — using this one, simple to use
   - https://github.com/johnxnguyen/Down – looks slightly more complex to use, haven't tried yet
+- Plotting
+  - https://github.com/AppPear/ChartView
+  - https://github.com/mecid/SwiftUICharts
+  - https://github.com/spacenation/swiftui-charts
+
+## SwiftUI: Helpful articles
+- `@State` vs. `@Binding` vs. `@StateObject` vs. `@ObservedObject` vs. `@EnvironmentObject`
+  - Summary
+    - Value types
+      - `@State` for owner
+      - `@Binding` for children
+    - Object types
+      - `@StateObject` for owner
+      - `@ObservedObject` for children
+      - `@EnvironmentObject` as a bonus thing -- no analogue for value types
+  - Articles
+    - https://www.hackingwithswift.com/quick-start/swiftui/whats-the-difference-between-observedobject-state-and-environmentobject
+    - Book ch2: https://www.objc.io/books/thinking-in-swiftui/
+  - Docs
+    - https://developer.apple.com/documentation/swiftui/state-and-data-flow
+    - https://developer.apple.com/documentation/swiftui/managing-user-interface-state
+    - https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
+  - Reference
+    - https://developer.apple.com/documentation/swiftui/state
+    - https://developer.apple.com/documentation/swiftui/binding
+    - https://developer.apple.com/documentation/swiftui/stateobject
+    - https://developer.apple.com/documentation/swiftui/observedobject
+    - https://developer.apple.com/documentation/swiftui/environmentobject
 
 # Troubleshooting
 - 100% cpu from Simulator/Spotlight when rendering Previews / running Simulator

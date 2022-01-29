@@ -81,49 +81,13 @@ struct _PinListView: View {
   //  - https://www.hackingwithswift.com/quick-start/swiftui
 
   var body: some View {
-    // Docs
-    //  - https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
 
     let pins = pinsForView()
 
     ZStack {
-
-      // Programmatic navigation (for any View)
-      //  - See details above
-      if let _navigationPush = _navigationPush {
-        // Phase 1: Render an unselected NavigationLink
-        NavigationLink(
-          destination: _navigationPush,
-          isActive: navigationPushPhaseTwo
-        ) { EmptyView() }
-          .hidden()
-          .onAppear {
-            // Phase 2: Immediately select it
-            self._navigationPushPhaseTwo = true
-          }
-      }
-
+      programmaticNavigationLink()
       VStack(spacing: 5) {
-
-        // Search bar
-        if searchFilter != nil {
-          TextField("Filter", text: Binding(
-            get: { self.searchFilter ?? "" },
-            set: { self.searchFilter = $0 }
-          ))
-            // TODO Make this focus (i.e. open keyboard) when it appears
-            //  - But also allow keyboard to be missed with "Search" button
-            //  - Doesn't work: `searchFilterIsFocused = true` in magnifyingglass button (below)
-            //  - Doesn't work: `searchFilterIsFocused = true` in TextField.onAppear (below)
-            .focused($searchFilterIsFocused)
-            .onAppear { self.searchFilterIsFocused = true } // TODO Not working (see above)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .keyboardType(.default)
-            .submitLabel(.search)
-            .autocapitalization(.none)
-            .disableAutocorrection(true) // Or maybe we do want autocorrect? Doubtful
-        }
-
+        searchBar()
         // Using List instead of ScrollView so that swipe gestures work
         //  - Gestures in List
         //    - https://developer.apple.com/documentation/SwiftUI/View/swipeActions(edge:allowsFullSwipe:content:)
@@ -141,81 +105,13 @@ struct _PinListView: View {
         //    - https://stackoverflow.com/questions/64573755/swiftui-scrollview-with-tap-and-drag-gesture
         List {
           ForEach(pins) { pin in
-            let isLast = pin.id == pins.last?.id
-            PinView(pin: pin, navigationPushTag: navigationPushTag)
-
-              // Replace List separators with custom separators
-              //  - List separators don't extend to the left edge, these custom ones do
-              .listRowSeparator(.hidden)
-              .padding(.init(top: 9, leading: 10, bottom: 9, trailing: 10))
-              .overlay(Divider(), alignment: .top)
-              .padding(.init(top: 1, leading: 0, bottom: 0, trailing: 0))
-              .pipe { v in !isLast ? AnyView(v) : AnyView(v
-                .overlay(Divider(), alignment: .bottom)
-              )}
-
-              // Use .listRowInsets to remove left/right padding on List
-              //  - https://programmingwithswift.com/swiftui-list-remove-padding-left-and-right/
-              //  - https://stackoverflow.com/questions/68490542/swiftui-remove-the-space-on-list-view-left-and-right
-              .listRowInsets(.init())
-
-              // Gestures
-              .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button {
-                  showEditSheet.toggle()
-                } label: {
-                  Label("", systemImage: "pencil")
-                }
-                  .tint(.purple)
-              }
-              .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button {
-                  // TODO pin.isRead.toggle()
-                } label: {
-                  Label("", systemImage: "doc")
-                }
-                  .tint(.blue)
-              }
-              .onTapGesture {
-                log.info("tap")
-                self.navigationPush(
-                  ReaderView(pin: pin)
-                    .ignoresSafeArea(edges: .bottom)
-                )
-              }
-              .onLongPressGesture {
-                log.info("longPress")
-              }
-
-              .sheet(isPresented: $showEditSheet, onDismiss: {}) {
-                // TODO TODO PinEditView
-                List {
-                  Button("Done", action: { showEditSheet.toggle() })
-                  Text("url: \(pin.url)")
-                  Text("title: \(pin.title)")
-                  Text("tags: \(try! toJson(pin.tags))")
-                  Text("notes: \(pin.notes)")
-                  Text("createdAt: \(pin.createdAt)")
-                  Text("modifiedAt: \(pin.modifiedAt)")
-                  Text("accessedAt: \(pin.accessedAt)")
-                  Text("isRead: \(try! toJson(pin.isRead))")
-                  // TODO Adding 2+ more of these items makes the compiler time out
-                  // Text("progressPageScroll: \(try! toJson(pin.progressPageScroll))")
-                  // Text("progressPageScrollMax: \(try! toJson(pin.progressPageScrollMax))")
-                  // Text("progressPdfPage: \(try! toJson(pin.progressPdfPage))")
-                  // Text("progressPdfPageMax: \(try! toJson(pin.progressPdfPageMax))")
-                }
-                  .listStyle(.plain)
-              }
-
+            pinRow(pin: pin, pins: pins)
           }
         }
           // Jump to top on pin reorder: Use .id to force-rebuild the ScrollView when order changes
           .id(order.description)
           .listStyle(.plain)
-
       }
-
     }
 
       // .statusBar(hidden: true) // Want or not?
@@ -223,85 +119,196 @@ struct _PinListView: View {
       .navigationTitle("\(tagFilter ?? "All pins") (\(pins.count))")
       .navigationBarItems(
         leading: HStack {
-          Button { Task { await logout() }} label: {
-            if let photoURL = user.photoURL {
-              AsyncImage(url: photoURL) { image in
-                image
-                  .resizable()
-                  .scaledToFit()
-                  .clipShape(Circle())
-              } placeholder: {
-                ProgressView()
-              }
-                .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
-            } else {
-              VStack(alignment: .leading) {
-                Text("Logout")
-                Text("\(user.email ?? "[no email?]")")
-              }
-            }
-          }
+          buttonProfilePhoto()
         },
         trailing: HStack {
-
-          // Search
-          //  - Keyboard management
-          //    - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
-          //    - https://www.hackingwithswift.com/quick-start/swiftui/how-to-dismiss-the-keyboard-for-a-textfield
-          //      - To force hide the keyboard:
-          //        - UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-          if searchFilter == nil {
-            // Search: Enable
-            Button(action: {
-              self.searchFilter = ""
-              self.searchFilterIsFocused = true // TODO Not working (see above)
-            }) {
-              Image(systemName: "magnifyingglass")
-                .font(.body)
-            }
-          } else {
-            // Search: Close
-            Button(action: {
-              self.searchFilter = nil
-            }) {
-              Image(systemName: "xmark.circle")
-                .font(.body)
-            }
-          }
-
-          // // Fitler: Reset
-          // Button(action: {
-          //   self.tagFilter = nil
-          // }) {
-          //   Image(systemName: "xmark")
-          //     .font(.body)
-          // }
-
-          // Order: desc/asc/shuffle
-          Button(action: {
-            self.order = self.order.cycle()
-          }) {
-            Image(systemName: self.order.iconName())
-              .font(.body)
-          }
-          // // Order: toggle desc/asc
-          // Button(action: {
-          //   self.order = self.order.toggleDescAsc()
-          // }) {
-          //   Image(systemName: self.order.iconName())
-          //     .font(.body)
-          // }
-          // // Order: shuffle
-          // Button(action: {
-          //   self.order = self.order.shuffle()
-          // }) {
-          //   Image(systemName: self.order.shuffle().iconName())
-          //     .font(.body)
-          // }
-
+          buttonSearch()
+          // buttonFilterReset()
+          buttonOrderCycleDescAscShuffle()
+          // buttonOrderToggleDescAsc()
+          // buttonOrderShuffle()
         }
       )
 
+  }
+
+  // Programmatic navigation (for any View)
+  //  - See details above
+  @ViewBuilder func programmaticNavigationLink() -> some View {
+    if let _navigationPush = _navigationPush {
+      // Phase 1: Render an unselected NavigationLink
+      NavigationLink(
+        destination: _navigationPush,
+        isActive: navigationPushPhaseTwo
+      ) { EmptyView() }
+        .hidden()
+        .onAppear {
+          // Phase 2: Immediately select it
+          self._navigationPushPhaseTwo = true
+        }
+    }
+  }
+
+  @ViewBuilder func searchBar() -> some View {
+    if searchFilter != nil {
+      TextField("Filter", text: Binding(
+        get: { self.searchFilter ?? "" },
+        set: { self.searchFilter = $0 }
+      ))
+        // TODO Make this focus (i.e. open keyboard) when it appears
+        //  - But also allow keyboard to be missed with "Search" button
+        //  - Doesn't work: `searchFilterIsFocused = true` in magnifyingglass button (below)
+        //  - Doesn't work: `searchFilterIsFocused = true` in TextField.onAppear (below)
+        .focused($searchFilterIsFocused)
+        .onAppear { self.searchFilterIsFocused = true } // TODO Not working (see above)
+        .textFieldStyle(RoundedBorderTextFieldStyle())
+        .keyboardType(.default)
+        .submitLabel(.search)
+        .autocapitalization(.none)
+        .disableAutocorrection(true) // Or maybe we do want autocorrect? Doubtful
+    }
+  }
+
+  @ViewBuilder func pinRow(pin: Pin, pins: [Pin]) -> some View {
+
+    let isLast = pin.id == pins.last?.id
+    PinView(pin: pin, navigationPushTag: navigationPushTag)
+
+      // Replace List separators with custom separators
+      //  - List separators don't extend to the left edge, these custom ones do
+      .listRowSeparator(.hidden)
+      .padding(.init(top: 9, leading: 10, bottom: 9, trailing: 10))
+      .overlay(Divider(), alignment: .top)
+      .padding(.init(top: 1, leading: 0, bottom: 0, trailing: 0))
+      .pipe { v in !isLast ? AnyView(v) : AnyView(v
+        .overlay(Divider(), alignment: .bottom)
+      )}
+
+      // Use .listRowInsets to remove left/right padding on List
+      //  - https://programmingwithswift.com/swiftui-list-remove-padding-left-and-right/
+      //  - https://stackoverflow.com/questions/68490542/swiftui-remove-the-space-on-list-view-left-and-right
+      .listRowInsets(.init())
+
+      // Gestures
+      .swipeActions(edge: .leading, allowsFullSwipe: true) {
+        Button {
+          showEditSheet.toggle()
+        } label: {
+          Label("", systemImage: "square.and.pencil")
+        }
+          .tint(.purple)
+      }
+      .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+        Button {
+          // TODO pin.isRead.toggle()
+        } label: {
+          Label("", systemImage: "doc")
+        }
+          .tint(.blue)
+      }
+      .onTapGesture {
+        log.info("tap")
+        self.navigationPush(
+          ReaderView(pin: pin)
+            .ignoresSafeArea(edges: .bottom)
+        )
+      }
+      .onLongPressGesture {
+        log.info("longPress")
+      }
+
+      // TODO TODO PinEditView
+      //  - https://serialcoder.dev/text-tutorials/swiftui/presenting-sheets-in-swiftui/
+      //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-new-view-using-sheets
+      //  - https://developer.apple.com/documentation/SwiftUI/View/sheet(isPresented:onDismiss:content:)
+      // .sheet(isPresented: $showEditSheet, onDismiss: {}) {
+      .fullScreenCover(isPresented: $showEditSheet, onDismiss: {}) {
+        PinEditView(pin: pin, showEditSheet: $showEditSheet)
+      }
+
+  }
+
+  @ViewBuilder func buttonProfilePhoto() -> some View {
+    Button { Task { await logout() }} label: {
+      if let photoURL = user.photoURL {
+        AsyncImage(url: photoURL) { image in
+          image
+            .resizable()
+            .scaledToFit()
+            .clipShape(Circle())
+        } placeholder: {
+          ProgressView()
+        }
+          .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
+      } else {
+        VStack(alignment: .leading) {
+          Text("Logout")
+          Text("\(user.email ?? "[no email?]")")
+        }
+      }
+    }
+  }
+
+  @ViewBuilder func buttonSearch() -> some View {
+    // Keyboard management
+    //  - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
+    //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-dismiss-the-keyboard-for-a-textfield
+    //    - To force hide the keyboard:
+    //      - UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    if searchFilter == nil {
+      // Search: Enable
+      Button(action: {
+        self.searchFilter = ""
+        self.searchFilterIsFocused = true // TODO Not working (see above)
+      }) {
+        Image(systemName: "magnifyingglass")
+          .font(.body)
+      }
+    } else {
+      // Search: Close
+      Button(action: {
+        self.searchFilter = nil
+      }) {
+        Image(systemName: "xmark.circle")
+          .font(.body)
+      }
+    }
+  }
+
+  @ViewBuilder func buttonFilterReset() -> some View {
+    Button(action: {
+      self.tagFilter = nil
+    }) {
+      Image(systemName: "xmark")
+        .font(.body)
+    }
+  }
+
+  @ViewBuilder func buttonOrderCycleDescAscShuffle() -> some View {
+    Button(action: {
+      self.order = self.order.cycle()
+    }) {
+      Image(systemName: self.order.iconName())
+        .font(.body)
+    }
+  }
+
+  @ViewBuilder func buttonOrderToggleDescAsc() -> some View {
+    Button(action: {
+      self.order = self.order.toggleDescAsc()
+    }) {
+      Image(systemName: self.order.iconName())
+        .font(.body)
+    }
+  }
+
+  @ViewBuilder func buttonOrderShuffle() -> some View {
+    Button(action: {
+      self.order = self.order.shuffle()
+    }) {
+      Image(systemName: self.order.shuffle().iconName())
+        .font(.body)
+    }
   }
 
   func pinsForView() -> [Pin] {
@@ -373,6 +380,34 @@ struct _PinListView: View {
     }
   }
 
+}
+
+// TODO TODO PinEditView
+struct PinEditView: View {
+  let pin: Pin
+  @Binding var showEditSheet: Bool
+  var body: some View {
+    List {
+      Button("Done", action: { showEditSheet.toggle() })
+      ForEach([
+        ("url",                   try! toJson(pin.url)),
+        ("title",                 try! toJson(pin.title)),
+        ("isRead",                try! toJson(pin.isRead)),
+        ("tags",                  try! toJson(pin.tags)),
+        ("notes",                 try! toJson(pin.notes)),
+        ("createdAt",             try! toJson(pin.createdAt)),
+        ("modifiedAt",            try! toJson(pin.modifiedAt)),
+        ("accessedAt",            try! toJson(pin.accessedAt)),
+        ("progressPageScroll",    try! toJson(pin.progressPageScroll)),
+        ("progressPageScrollMax", try! toJson(pin.progressPageScrollMax)),
+        ("progressPdfPage",       try! toJson(pin.progressPdfPage)),
+        ("progressPdfPageMax",    try! toJson(pin.progressPdfPageMax)),
+      ], id: \.0) { k, v in
+        Text("\(k): \(v)")
+      }
+    }
+      .listStyle(.plain)
+  }
 }
 
 struct PinListView_Previews: PreviewProvider {

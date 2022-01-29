@@ -299,6 +299,13 @@ func urlWithQueryParams(_ url: URL, queryParams: [String: String] = [:]) throws 
 // swiftui
 //
 
+// HACK We wish we could add .pipe to Any/AnyObject, but you can't extend those
+extension View {
+  func pipe<X>(f: (Self) -> X) -> X {
+    return f(self)
+  }
+}
+
 // Motivated by NavigationLink, which eagerly loads its destination view
 //  - https://gist.github.com/chriseidhof/d2fcafb53843df343fe07f3c0dac41d5
 //  - https://betterprogramming.pub/swiftui-navigation-links-and-the-common-pitfalls-faced-505cbfd8029b
