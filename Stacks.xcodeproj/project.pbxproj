@@ -23,6 +23,7 @@
 		B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BA275F2E3900858384 /* FirestoreService.swift */; };
 		B72509BF275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
 		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
+		B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B727DDF027A517E100FF3242 /* PinEditView.swift */; };
 		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
 		B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
 		B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A2275B3FC900923DE1 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		B72509BE275F2E4200858384 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B72509C2275F2E8E00858384 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B72509C927607F0E00858384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B727DDF027A517E100FF3242 /* PinEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEditView.swift; sourceTree = "<group>"; };
 		B75B469B275B3FC700923DE1 /* Stacks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stacks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B75B469E275B3FC700923DE1 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		B75B46A0275B3FC700923DE1 /* PinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinListView.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
 				B70C4E9427953EE70010E119 /* WebView.swift */,
 				B70C4E8C2793F6B70010E119 /* PinView.swift */,
+				B727DDF027A517E100FF3242 /* PinEditView.swift */,
 				B71EC963279D2AEE00CE9472 /* FlexView */,
 				B7777A39279616B600372937 /* ReaderView.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
@@ -243,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7777A3A279616B600372937 /* ReaderView.swift in Sources */,
+				B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */,
 				B71EC965279D2B0100CE9472 /* FlexView.swift in Sources */,
 				B72509B7275F2E0800858384 /* AuthService.swift in Sources */,
 				B711EC6027686C86005223A2 /* Util.swift in Sources */,
@@ -387,7 +391,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1643414918;
+				CURRENT_PROJECT_VERSION = 1643436618;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -418,7 +422,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1643414918;
+				CURRENT_PROJECT_VERSION = 1643436618;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;

@@ -75,11 +75,6 @@ struct _PinListView: View {
     return _PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
 
-  // TODO TODO Add swipe-right to show edit sheet
-  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-new-view-using-sheets
-  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-full-screen-modal-view-using-fullscreencover
-  //  - https://www.hackingwithswift.com/quick-start/swiftui
-
   var body: some View {
 
     let pins = pinsForView()
@@ -388,34 +383,6 @@ struct _PinListView: View {
     }
   }
 
-}
-
-// TODO TODO PinEditView
-struct PinEditView: View {
-  let pin: Pin
-  @Binding var showEditSheet: Bool
-  var body: some View {
-    List {
-      Button("Done", action: { showEditSheet.toggle() })
-      ForEach([
-        ("url",                   try! toJson(pin.url)),
-        ("title",                 try! toJson(pin.title)),
-        ("isRead",                try! toJson(pin.isRead)),
-        ("tags",                  try! toJson(pin.tags)),
-        ("notes",                 try! toJson(pin.notes)),
-        ("createdAt",             try! toJson(pin.createdAt)),
-        ("modifiedAt",            try! toJson(pin.modifiedAt)),
-        ("accessedAt",            try! toJson(pin.accessedAt)),
-        ("progressPageScroll",    try! toJson(pin.progressPageScroll)),
-        ("progressPageScrollMax", try! toJson(pin.progressPageScrollMax)),
-        ("progressPdfPage",       try! toJson(pin.progressPdfPage)),
-        ("progressPdfPageMax",    try! toJson(pin.progressPdfPageMax)),
-      ], id: \.0) { k, v in
-        Text("\(k): \(v)")
-      }
-    }
-      .listStyle(.plain)
-  }
 }
 
 struct PinListView_Previews: PreviewProvider {
