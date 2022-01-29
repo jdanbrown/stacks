@@ -108,7 +108,7 @@ struct _PinListView: View {
             pinRow(pin: pin, pins: pins)
           }
         }
-          // Jump to top on pin reorder: Use .id to force-rebuild the ScrollView when order changes
+          // Use .id to force-rebuild the ScrollView when order changes, to jump to top when cycling order
           .id(order.description)
           .listStyle(.plain)
       }
@@ -134,7 +134,8 @@ struct _PinListView: View {
 
   // Programmatic navigation (for any View)
   //  - See details above
-  @ViewBuilder func programmaticNavigationLink() -> some View {
+  @ViewBuilder
+  func programmaticNavigationLink() -> some View {
     if let _navigationPush = _navigationPush {
       // Phase 1: Render an unselected NavigationLink
       NavigationLink(
@@ -149,7 +150,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func searchBar() -> some View {
+  @ViewBuilder
+  func searchBar() -> some View {
     if searchFilter != nil {
       TextField("Filter", text: Binding(
         get: { self.searchFilter ?? "" },
@@ -169,7 +171,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func pinRow(pin: Pin, pins: [Pin]) -> some View {
+  @ViewBuilder
+  func pinRow(pin: Pin, pins: [Pin]) -> some View {
 
     let isLast = pin.id == pins.last?.id
     PinView(pin: pin, navigationPushTag: navigationPushTag)
@@ -227,7 +230,8 @@ struct _PinListView: View {
 
   }
 
-  @ViewBuilder func buttonProfilePhoto() -> some View {
+  @ViewBuilder
+  func buttonProfilePhoto() -> some View {
     Button { Task { await logout() }} label: {
       if let photoURL = user.photoURL {
         AsyncImage(url: photoURL) { image in
@@ -248,7 +252,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func buttonSearch() -> some View {
+  @ViewBuilder
+  func buttonSearch() -> some View {
     // Keyboard management
     //  - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-dismiss-the-keyboard-for-a-textfield
@@ -274,7 +279,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func buttonFilterReset() -> some View {
+  @ViewBuilder
+  func buttonFilterReset() -> some View {
     Button(action: {
       self.tagFilter = nil
     }) {
@@ -283,7 +289,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func buttonOrderCycleDescAscShuffle() -> some View {
+  @ViewBuilder
+  func buttonOrderCycleDescAscShuffle() -> some View {
     Button(action: {
       self.order = self.order.cycle()
     }) {
@@ -292,7 +299,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func buttonOrderToggleDescAsc() -> some View {
+  @ViewBuilder
+  func buttonOrderToggleDescAsc() -> some View {
     Button(action: {
       self.order = self.order.toggleDescAsc()
     }) {
@@ -301,7 +309,8 @@ struct _PinListView: View {
     }
   }
 
-  @ViewBuilder func buttonOrderShuffle() -> some View {
+  @ViewBuilder
+  func buttonOrderShuffle() -> some View {
     Button(action: {
       self.order = self.order.shuffle()
     }) {
