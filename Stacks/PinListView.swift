@@ -180,9 +180,8 @@ struct _PinListView: View {
       .padding(.init(top: 9, leading: 10, bottom: 9, trailing: 10))
       .overlay(Divider(), alignment: .top)
       .padding(.init(top: 1, leading: 0, bottom: 0, trailing: 0))
-      .pipe { v in !isLast ? AnyView(v) : AnyView(v
-        .overlay(Divider(), alignment: .bottom)
-      )}
+      // Curious: .pipe(b ? v : f(v)) makes List scrolling _very_ slow, whereas .overlay(b ? v : EmptyView()) doesn't
+      .overlay(isLast ? AnyView(Divider()) : AnyView(EmptyView()), alignment: .bottom)
 
       // Use .listRowInsets to remove left/right padding on List
       //  - https://programmingwithswift.com/swiftui-list-remove-padding-left-and-right/
