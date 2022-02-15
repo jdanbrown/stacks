@@ -22,18 +22,18 @@ struct PinEditView: View {
           Text("Read").tag(true)
         }
           .pickerStyle(SegmentedPickerStyle())
-        TextEditor(text: .constant(pin.url))
+        Group {
+          TextEditor(text: .constant(pin.url))
+          TextEditor(text: .constant(pin.title))
+          TextEditor(text: .constant(pin.tags.joined(separator: " ")))
+          TextEditor(text: .constant(pin.notes))
+        }
           .fixedSize(horizontal: false, vertical: true)
-          .lineLimit(nil)
-        TextEditor(text: .constant(pin.title))
-          .fixedSize(horizontal: false, vertical: true)
-          .lineLimit(nil)
-        TextEditor(text: .constant(pin.tags.joined(separator: " ")))
-          .fixedSize(horizontal: false, vertical: true)
-          .lineLimit(nil)
-        TextEditor(text: .constant(pin.notes))
-          .fixedSize(horizontal: false, vertical: true)
-          .lineLimit(nil)
+          // .fixedSize(horizontal: true, vertical: false)
+          // .lineLimit(1)
+          // .lineLimit(nil)
+          // .frame(maxHeight: 80)
+          // .border(.black)
       }
         .headerProminence(.increased)
 
