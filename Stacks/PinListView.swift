@@ -113,8 +113,8 @@ struct _PinListView: View {
       //  - https://serialcoder.dev/text-tutorials/swiftui/presenting-sheets-in-swiftui/
       //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-new-view-using-sheets
       //  - https://developer.apple.com/documentation/SwiftUI/View/sheet(isPresented:onDismiss:content:)
-      // .sheet(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
-      .fullScreenCover(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
+      // .fullScreenCover(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
+      .sheet(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
         PinEditView(pin: pin, dismiss: { showPinEditView = nil })
       }
 
