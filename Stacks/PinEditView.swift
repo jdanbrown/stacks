@@ -9,41 +9,72 @@ struct PinEditView: View {
     Form {
       // TODO Why a bunch of vertical space here?
 
-      Section(
-        header: HStack {
-          Spacer()
-          Button(action: { dismiss() }) {
-            Image(systemName: "xmark")
-          }
+      // Text("Edit")
+      //   .background(Color.gray.opacity(0))
+
+      // Section {
+      //   HStack {
+      //     Spacer()
+      //     Text("Edit")
+      //     Spacer()
+      //     // Button(action: { dismiss() }) {
+      //     //   // Image(systemName: "xmark")
+      //     //   Text("Done")
+      //     // }
+      //   }
+      // }
+
+      // Section(
+      //   header: HStack {
+      //     Spacer()
+      //     Text("Edit")
+      //     Spacer()
+      //     // Button(action: { dismiss() }) {
+      //     //   // Image(systemName: "xmark")
+      //     //   Text("Done")
+      //     // }
+      //   }
+      // ) {
+
+      // Problem: Can't figure out how to stack multiple multi-line TextEditor's in the same view
+      //  - e.g. .fixedSize(horizontal: false, vertical: true) stops working with >1 TextEditor
+      //  - e.g. Adding .frame(maxHeight: 10000) doesn't help
+      //  - e.g. Adding .lineLimit(nil) doesn't help
+      //  - Tip: add .border(.black) to debug frame size
+      //  - TODO TODO Instead, tap to open a new overlay with TextEditor
+      //    - This is how Pushpin does it and it works well enough
+
+      Section {
+        Group {
+          Text(pin.url)
         }
-      ) {
         Picker("isRead", selection: .constant(pin.isRead)) {
           Text("Unread").tag(false)
           Text("Read").tag(true)
         }
           .pickerStyle(SegmentedPickerStyle())
+      }
+
+      Section {
         Group {
-          TextEditor(text: .constant(pin.url))
-          TextEditor(text: .constant(pin.title))
-          TextEditor(text: .constant(pin.tags.joined(separator: " ")))
-          TextEditor(text: .constant(pin.notes))
+          Text(pin.title)
+          Text(pin.tags.joined(separator: " "))
+          Text(pin.notes)
         }
-          .fixedSize(horizontal: false, vertical: true)
-          // .fixedSize(horizontal: true, vertical: false)
-          // .lineLimit(1)
-          // .lineLimit(nil)
-          // .frame(maxHeight: 80)
-          // .border(.black)
-      }
-        .headerProminence(.increased)
-
-      Section {
-        Text("Created: \(  try! toJson(pin.createdAt))")
-        Text("Modified: \( try! toJson(pin.modifiedAt))")
-        Text("Accessed: \( try! toJson(pin.accessedAt))")
       }
 
-      Section {
+      Section(
+        header: Text("Timestamps")
+      ) {
+        // https://www.datetimeformatter.com/how-to-format-date-time-in-swift/
+        Text("Created: \(pin.createdAt.format("yyyy MMM dd, h:mm a"))")
+        Text("Modified: \(pin.modifiedAt.format("yyyy MMM dd, h:mm a"))")
+        Text("Accessed: \(pin.accessedAt.format("yyyy MMM dd, h:mm a"))")
+      }
+
+      Section(
+        header: Text("Debug")
+      ) {
         Text("progressPageScroll: \(    try! toJson(pin.progressPageScroll))")
         Text("progressPageScrollMax: \( try! toJson(pin.progressPageScrollMax))")
         Text("progressPdfPage: \(       try! toJson(pin.progressPdfPage))")

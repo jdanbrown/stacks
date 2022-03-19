@@ -201,8 +201,12 @@ struct _PinListView: View {
           showPinEditView = pin
         } label: {
           Label("", systemImage: "square.and.pencil")
+            // .onAppear { log.info("Label.onAppear") }
+            // .onDisappear() { log.info("Label.onDisappear") }
         }
           .tint(.purple)
+          // .onAppear { log.info("Button.onAppear") }
+          // .onDisappear() { log.info("Button.onDisappear") }
       }
       .swipeActions(edge: .trailing, allowsFullSwipe: true) {
         Button {
