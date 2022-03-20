@@ -5,6 +5,30 @@ struct PinEditView: View {
   let pin: Pin
   let dismiss: () -> ()
 
+  // TODO Throwaway editable fields to use until we move our data model to CloudKit
+  @State var url: String
+  @State var title: String
+  @State var tags: [String]
+  @State var notes: String
+  @State var isRead: Bool
+
+  // TODO TODO Add .sheet
+  @State private var showTextEditView: Pin? = nil
+
+  init(pin: Pin, dismiss: @escaping () -> ()) {
+
+    self.pin = pin
+    self.dismiss = dismiss
+
+    // TODO Throwaway editable fields to use until we move our data model to CloudKit
+    _url    = State(initialValue: pin.url)
+    _title  = State(initialValue: pin.title)
+    _tags   = State(initialValue: pin.tags)
+    _notes  = State(initialValue: pin.notes)
+    _isRead = State(initialValue: pin.isRead)
+
+  }
+
   var body: some View {
     Form {
       // TODO Why a bunch of vertical space here?
@@ -41,44 +65,60 @@ struct PinEditView: View {
       //  - e.g. Adding .frame(maxHeight: 10000) doesn't help
       //  - e.g. Adding .lineLimit(nil) doesn't help
       //  - Tip: add .border(.black) to debug frame size
-      //  - TODO TODO Instead, tap to open a new overlay with TextEditor
-      //    - This is how Pushpin does it and it works well enough
 
+      // In pinbot I used single-line TextField's for everything except notes, where I used a multi-line TextEditor
+      //  - I don't think I like single-line... and this doesn't solve the multi-line issues with TextEditor anyway
+      // Section {
+      //   Group {
+      //     TextField("a", text: .constant(url))
+      //     TextField("b", text: .constant(title))
+      //     TextField("c", text: .constant(tags.joined(separator: " ")))
+      //     TextEditor(text: .constant(notes))
+      //       .fixedSize(horizontal: false, vertical: true)
+      //       .lineLimit(nil)
+      //       .frame(maxHeight: 10000)
+      //   }
+      // }
+
+      // Alternate approach: Pushpin shows text fields that you tap to edit in their own full-sized sheet
       Section {
-        Group {
-          Text(pin.url)
-        }
-        Picker("isRead", selection: .constant(pin.isRead)) {
+        Picker("isRead", selection: $isRead) {
           Text("Unread").tag(false)
           Text("Read").tag(true)
         }
           .pickerStyle(SegmentedPickerStyle())
-      }
-
-      Section {
         Group {
-          Text(pin.title)
-          Text(pin.tags.joined(separator: " "))
-          Text(pin.notes)
-        }
-      }
+          Text(url)
+          Text(title)
+          Text(tags.joined(separator: " "))
+          Text(notes)
 
-      Section(
-        header: Text("Timestamps")
-      ) {
-        // https://www.datetimeformatter.com/how-to-format-date-time-in-swift/
-        Text("Created: \(pin.createdAt.format("yyyy MMM dd, h:mm a"))")
-        Text("Modified: \(pin.modifiedAt.format("yyyy MMM dd, h:mm a"))")
-        Text("Accessed: \(pin.accessedAt.format("yyyy MMM dd, h:mm a"))")
+            // TODO TODO Add .sheet to edit each Text in a TextEditor -- see PinListView for .sheet example
+            .onTapGesture {
+              showTextEditView = pin
+            }
+            .sheet(item: $showTextEditView, onDismiss: { showTextEditView = nil }) { pin in
+              Text(showTextEditView!.notes)
+              // PinEditView(pin: pin, dismiss: { showTextEditView = nil })
+            }
+
+        }
       }
 
       Section(
         header: Text("Debug")
       ) {
-        Text("progressPageScroll: \(    try! toJson(pin.progressPageScroll))")
-        Text("progressPageScrollMax: \( try! toJson(pin.progressPageScrollMax))")
-        Text("progressPdfPage: \(       try! toJson(pin.progressPdfPage))")
-        Text("progressPdfPageMax: \(    try! toJson(pin.progressPdfPageMax))")
+        // https://www.datetimeformatter.com/how-to-format-date-time-in-swift/
+        Group {
+          Text("Created: \(pin.createdAt.format("yyyy MMM dd, h:mm a"))")
+          Text("Modified: \(pin.modifiedAt.format("yyyy MMM dd, h:mm a"))")
+          Text("Accessed: \(pin.accessedAt.format("yyyy MMM dd, h:mm a"))")
+          Text("progressPageScroll: \(try! toJson(pin.progressPageScroll))")
+          Text("progressPageScrollMax: \(try! toJson(pin.progressPageScrollMax))")
+          Text("progressPdfPage: \(try! toJson(pin.progressPdfPage))")
+          Text("progressPdfPageMax: \(try! toJson(pin.progressPdfPageMax))")
+        }
+          .foregroundColor(.gray)
       }
 
     }
