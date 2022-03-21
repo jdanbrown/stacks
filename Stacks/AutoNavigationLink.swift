@@ -33,7 +33,7 @@ class AutoNavigationLinkModel: ObservableObject {
 
 struct AutoNavigationLink: View {
 
-  let model: AutoNavigationLinkModel
+  @StateObject var model: AutoNavigationLinkModel
 
   var body: some View {
     if let _push = model._push {
