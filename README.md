@@ -141,6 +141,12 @@ bin/fastlane firebase_distribute_beta
 
 ## SwiftUI: Navigation
 - https://www.hackingwithswift.com/articles/216/complete-guide-to-navigationview-in-swiftui
+- https://sarunw.com/posts/navigation-in-swiftui/
+- https://www.ralfebert.com/ios/swiftui-programmatic-navigationview/
+  - Tip: `.navigationViewStyle(.stack)` -- else you can't stack navigations
+  - Tip: Two libraries for more flexible + programmatic navigation
+    - https://github.com/matteopuc/swiftui-navigation-stack
+    - https://github.com/Bahn-X/swift-composable-navigator
 
 ## SwiftUI: Flex / wrap
 - FlexView

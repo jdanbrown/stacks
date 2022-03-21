@@ -12,6 +12,9 @@ struct PinListView: View {
     NavigationView {
       _PinListView(logout: logout, user: user, pins: pins)
     }
+      // Set this else you can't stack navigations
+      //  - https://www.ralfebert.com/ios/swiftui-programmatic-navigationview/
+      .navigationViewStyle(.stack)
   }
 
 }
@@ -89,8 +92,8 @@ struct _PinListView: View {
     }
 
       // .statusBar(hidden: true) // Want or not?
-      .navigationBarTitleDisplayMode(.inline)
       .navigationTitle("\(tagFilter ?? "All pins") (\(pins.count))")
+      .navigationBarTitleDisplayMode(.inline)
       .navigationBarItems(
         leading: HStack {
           buttonProfilePhoto()
