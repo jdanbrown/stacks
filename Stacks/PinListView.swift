@@ -35,8 +35,6 @@ struct _PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  @State private var showPinEditView: Pin? = nil
-
   init(logout: @escaping () async -> (), user: User, pins: [Pin]) {
     self.logout = logout
     self.user = user
@@ -89,15 +87,6 @@ struct _PinListView: View {
           .listStyle(.plain)
       }
     }
-
-      // TODO PinEditView
-      //  - https://serialcoder.dev/text-tutorials/swiftui/presenting-sheets-in-swiftui/
-      //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-present-a-new-view-using-sheets
-      //  - https://developer.apple.com/documentation/SwiftUI/View/sheet(isPresented:onDismiss:content:)
-      // .fullScreenCover(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
-      .sheet(item: $showPinEditView, onDismiss: { showPinEditView = nil }) { pin in
-        PinEditView(pin: pin, dismiss: { showPinEditView = nil })
-      }
 
       // .statusBar(hidden: true) // Want or not?
       .navigationBarTitleDisplayMode(.inline)
@@ -161,7 +150,9 @@ struct _PinListView: View {
       // Gestures
       .swipeActions(edge: .leading, allowsFullSwipe: true) {
         Button {
-          showPinEditView = pin
+          navigation.push(
+            PinEditView(pin: pin, dismiss: {})
+          )
         } label: {
           Label("", systemImage: "square.and.pencil")
             // .onAppear { log.info("Label.onAppear") }

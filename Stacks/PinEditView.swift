@@ -12,8 +12,8 @@ struct PinEditView: View {
   @State var notes: String
   @State var isRead: Bool
 
-  // TODO TODO Add .sheet
-  @State private var showTextEditView: Pin? = nil
+  // Navigation
+  @StateObject var navigation: AutoNavigationLinkModel = AutoNavigationLinkModel()
 
   init(pin: Pin, dismiss: @escaping () -> ()) {
 
@@ -80,7 +80,7 @@ struct PinEditView: View {
       //   }
       // }
 
-      // Alternate approach: Pushpin shows text fields that you tap to edit in their own full-sized sheet
+      // Alternate approach: Pushpin shows text fields that you tap to edit in their own full-sized screen
       Section {
         Picker("isRead", selection: $isRead) {
           Text("Unread").tag(false)
@@ -93,13 +93,14 @@ struct PinEditView: View {
           Text(tags.joined(separator: " "))
           Text(notes)
 
-            // TODO TODO Add .sheet to edit each Text in a TextEditor -- see PinListView for .sheet example
+            // TODO TODO Add nav to edit each Text in a TextEditor
             .onTapGesture {
-              showTextEditView = pin
-            }
-            .sheet(item: $showTextEditView, onDismiss: { showTextEditView = nil }) { pin in
-              Text(showTextEditView!.notes)
-              // PinEditView(pin: pin, dismiss: { showTextEditView = nil })
+              navigation.push(
+                VStack {
+                  Text("Edit notes")
+                  Text(pin.notes)
+                }
+              )
             }
 
         }
