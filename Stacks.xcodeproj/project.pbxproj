@@ -37,6 +37,7 @@
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
 		B7856B9B277457A200A87DDA /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */; };
 		B7856B9D277457AB00A87DDA /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */; };
+		B79A4E2027E8368300E7483B /* AutoNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		B7777A3827960D9C00372937 /* Stacks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stacks.entitlements; sourceTree = "<group>"; };
 		B7777A39279616B600372937 /* ReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
 		B7856B9527704C3400A87DDA /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoNavigationLink.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 				B70C4E9427953EE70010E119 /* WebView.swift */,
 				B70C4E8C2793F6B70010E119 /* PinView.swift */,
 				B727DDF027A517E100FF3242 /* PinEditView.swift */,
+				B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */,
 				B71EC963279D2AEE00CE9472 /* FlexView */,
 				B7777A39279616B600372937 /* ReaderView.swift */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
@@ -245,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B79A4E2027E8368300E7483B /* AutoNavigationLink.swift in Sources */,
 				B7777A3A279616B600372937 /* ReaderView.swift in Sources */,
 				B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */,
 				B71EC965279D2B0100CE9472 /* FlexView.swift in Sources */,
@@ -391,7 +395,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1647725747;
+				CURRENT_PROJECT_VERSION = 1647837911;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -422,7 +426,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1647725747;
+				CURRENT_PROJECT_VERSION = 1647837911;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;

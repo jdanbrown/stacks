@@ -29,31 +29,8 @@ struct _PinListView: View {
   //    - Multiple tags + full-text search (maybe that's all?)
   @State private var tagFilter: String? = nil
 
-  // Programmatic navigation (for any View)
-  //  - Conceptually this is just one @State, but we have to do State/State/Binding to render the NavigationLink in two
-  //    phases, which we need so that the enter animation doesn't get skipped
-  //  - Phase 1: render an unselected NavigationLink -> phase 2: onAppear, select the rendered NavigationLink
-  //  - The Binding is to give us 3 states instead of 4: when NavigationLink resets _tagSelectionPhaseTwo = false, also
-  //    reset _navigationPush = nil, else our two-phase rendering logic breaks down
-  @State private var _navigationPush: AnyView? = nil
-  @State private var _navigationPushPhaseTwo: Bool = false
-  private var navigationPushPhaseTwo: Binding<Bool> {
-    return Binding(
-      get: { _navigationPushPhaseTwo },
-      set: { x in
-        _navigationPushPhaseTwo = x
-        if x == false {
-          _navigationPush = nil
-        }
-      }
-    )
-  }
-  func navigationPush<X: View>(_ view: X) {
-    _navigationPush = AnyView(view)
-  }
-  func navigationPushTag(_ tag: String) {
-    navigationPush(withTagFilter(tagFilter: tag))
-  }
+  // Navigation
+  @StateObject var navigation: AutoNavigationLinkModel = AutoNavigationLinkModel()
 
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
@@ -71,6 +48,10 @@ struct _PinListView: View {
     self.tagFilter = tagFilter
   }
 
+  func navigationPushTag(_ tag: String) {
+    navigation.push(withTagFilter(tagFilter: tag))
+  }
+
   func withTagFilter(tagFilter: String?) -> _PinListView {
     return _PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
@@ -80,7 +61,7 @@ struct _PinListView: View {
     let pins = pinsForView()
 
     ZStack {
-      programmaticNavigationLink()
+      AutoNavigationLink(model: navigation)
       VStack(spacing: 5) {
         searchBar()
         // Using List instead of ScrollView so that swipe gestures work
@@ -134,24 +115,6 @@ struct _PinListView: View {
         }
       )
 
-  }
-
-  // Programmatic navigation (for any View)
-  //  - See details above
-  @ViewBuilder
-  func programmaticNavigationLink() -> some View {
-    if let _navigationPush = _navigationPush {
-      // Phase 1: Render an unselected NavigationLink
-      NavigationLink(
-        destination: _navigationPush,
-        isActive: navigationPushPhaseTwo
-      ) { EmptyView() }
-        .hidden()
-        .onAppear {
-          // Phase 2: Immediately select it
-          self._navigationPushPhaseTwo = true
-        }
-    }
   }
 
   @ViewBuilder
@@ -218,7 +181,7 @@ struct _PinListView: View {
       }
       .onTapGesture {
         log.info("tap")
-        self.navigationPush(
+        self.navigation.push(
           ReaderView(pin: pin)
             .ignoresSafeArea(edges: .bottom)
         )
