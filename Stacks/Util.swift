@@ -300,6 +300,23 @@ func urlWithQueryParams(_ url: URL, queryParams: [String: String] = [:]) throws 
 // swiftui
 //
 
+// Wrap non-Nav views with a Nav so we can Nav in xcode previews
+//  - HACK Also, unwrap your Nav to workaround xcode previews not letting you focus any views inside a NavigationView
+struct NavWrap<Content: View>: View {
+
+  @ViewBuilder let content: Content
+
+  var body: some View {
+    NavigationView {
+      content
+    }
+      // Set this else you can't stack navigations
+      //  - https://www.ralfebert.com/ios/swiftui-programmatic-navigationview/
+      .navigationViewStyle(.stack)
+  }
+
+}
+
 // Motivated by NavigationLink, which eagerly loads its destination view
 //  - https://gist.github.com/chriseidhof/d2fcafb53843df343fe07f3c0dac41d5
 //  - https://betterprogramming.pub/swiftui-navigation-links-and-the-common-pitfalls-faced-505cbfd8029b

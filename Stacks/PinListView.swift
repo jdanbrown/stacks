@@ -1,7 +1,6 @@
 import GameplayKit
 import SwiftUI
 
-// HACK Workaround xcode previews not letting you focus any views inside a NavigationView
 struct PinListView: View {
 
   var logout: () async -> ()
@@ -9,17 +8,15 @@ struct PinListView: View {
   var pins: [Pin]
 
   var body: some View {
-    NavigationView {
-      _PinListView(logout: logout, user: user, pins: pins)
+    NavWrap {
+      _PinListView_NoNav(logout: logout, user: user, pins: pins)
     }
-      // Set this else you can't stack navigations
-      //  - https://www.ralfebert.com/ios/swiftui-programmatic-navigationview/
-      .navigationViewStyle(.stack)
   }
 
 }
 
-struct _PinListView: View {
+// HACK Workaround xcode previews not letting you focus any views inside a NavigationView
+struct _PinListView_NoNav: View {
 
   var logout: () async -> ()
   var user: User
@@ -53,8 +50,8 @@ struct _PinListView: View {
     navigation.push(withTagFilter(tagFilter: tag))
   }
 
-  func withTagFilter(tagFilter: String?) -> _PinListView {
-    return _PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
+  func withTagFilter(tagFilter: String?) -> _PinListView_NoNav {
+    return _PinListView_NoNav(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
 
   var body: some View {
@@ -355,6 +352,6 @@ struct PinListView_Previews: PreviewProvider {
     // HACK Wrap each in ZStack to avoid FocusState crashing previews
     //  - https://stackoverflow.com/questions/70430440/why-focusstate-crashing-swiftui-preview
     ZStack { PinListView(logout: logout, user: user, pins: pins) }
-    ZStack { _PinListView(logout: logout, user: user, pins: pins) }
+    ZStack { _PinListView_NoNav(logout: logout, user: user, pins: pins) }
   }
 }

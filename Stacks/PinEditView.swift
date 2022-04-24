@@ -90,23 +90,42 @@ struct PinEditView: View {
           }
             .pickerStyle(SegmentedPickerStyle())
           Group {
-            Text(url)
+            (url == ""
+              ? Text("URL").foregroundColor(.gray)
+              : Text(url)
+            )
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+              .contentShape(Rectangle())
               .onTapGesture {
                 navigation.push(UrlEditView(url: $url).navigationTitle("URL"))
               }
-            Text(title)
+            (title == ""
+              ? Text("Title").foregroundColor(.gray)
+              : Text(title)
+            )
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+              .contentShape(Rectangle())
               .onTapGesture {
                 navigation.push(TitleEditView(title: $title).navigationTitle("Title"))
               }
-            Text(tags.joined(separator: " "))
+            (tags == []
+              ? Text("Tags").foregroundColor(.gray)
+              : Text(tags.joined(separator: " "))
+            )
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+              .contentShape(Rectangle())
               .onTapGesture {
                 navigation.push(TagsEditView(tags: $tags).navigationTitle("Tags"))
               }
-            Text(notes)
+            (notes == ""
+              ? Text("Notes").foregroundColor(.gray)
+              : Text(notes)
+            )
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+              .contentShape(Rectangle())
               .onTapGesture {
                 navigation.push(NotesEditView(notes: $notes).navigationTitle("Notes"))
               }
-
           }
         }
 
@@ -163,10 +182,19 @@ struct NotesEditView: View {
   }
 }
 
+// // Copy/paste: https://stackoverflow.com/a/61002589/397334
+// func ??<T>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
+//   Binding(
+//     get: { lhs.wrappedValue ?? rhs },
+//     set: { lhs.wrappedValue = $0 }
+//   )
+// }
+
 struct PinEditView_Previews: PreviewProvider {
   static var previews: some View {
     let pins = Pin.previewPins
     Group {
+      NavWrap { PinEditView(pin: pins[0], dismiss: {}) }
       ForEach(pins[0..<3]) { pin in
         PinEditView(pin: pin, dismiss: {})
       }
