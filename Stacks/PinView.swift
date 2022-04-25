@@ -60,9 +60,13 @@ struct PinView: View {
     VStack(alignment: .leading) {
 
       Text(pin.title)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .font(.subheadline)
         .foregroundColor(!pin.isRead ? nil : Color.gray)
       Text("\(showDateForTimeline(pin.createdAt)) • \(showUrlForTimeline(pin.url))")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .font(.caption2)
         .foregroundColor(Color.gray)
       FlexView(pin.tags, alignment: .leading, horizontalSpacing: 8, verticalSpacing: 2) { tag in
@@ -78,6 +82,8 @@ struct PinView: View {
         // TODO Does markdown automatically work? Or do we need AttributedString?
 
         Text(pin.notes)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .contentShape(Rectangle())
           .font(.caption)
           .padding([.top], 1)
           .fixedSize(horizontal: false, vertical: true)
