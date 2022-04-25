@@ -148,6 +148,16 @@ bin/fastlane firebase_distribute_beta
     - https://github.com/matteopuc/swiftui-navigation-stack
     - https://github.com/Bahn-X/swift-composable-navigator
 
+## SwiftUI: Gestures
+- https://developer.apple.com/documentation/swiftui/gestures
+  - https://developer.apple.com/documentation/swiftui/adding-interactivity-with-gestures
+  - https://developer.apple.com/documentation/swiftui/composing-swiftui-gestures
+- https://developer.apple.com/documentation/swiftui/gesture
+  - https://developer.apple.com/documentation/swiftui/longpressgesture
+- https://www.hackingwithswift.com/books/ios-swiftui/how-to-use-gestures-in-swiftui
+- Stackoverflow tips
+  - https://stackoverflow.com/questions/58284994/swiftui-how-to-handle-both-tap-long-press-of-button
+
 ## SwiftUI: Flex / wrap
 - FlexView
   - https://github.com/berbschloe/FlexView (1 star)

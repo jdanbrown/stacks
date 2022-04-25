@@ -133,38 +133,30 @@ struct PinListView: View {
       .listRowInsets(.init())
 
       // Gestures
-      .swipeActions(edge: .leading, allowsFullSwipe: true) {
-        Button {
-          navigation.push(
+      //  - This is tricky, see big comment + links at OnTapAndLongPressGesture
+      .modifier(OnTapAndLongPressGesture(
+        onTap: {
+          log.info("OnTapAndLongPressGesture.onTap")
+          // TODO Fix slow nav?!
+          //  - The gesture responds fast (as per logging), but the nav seems to respond very slowly
+          self.navigation.push(
+            ReaderView(pin: pin)
+              .ignoresSafeArea(edges: .bottom)
+          )
+        },
+        onLongPress: {
+          log.info("OnTapAndLongPressGesture.onLongPress")
+          self.navigation.push(
             PinEditView(pin: pin, dismiss: {})
           )
-        } label: {
-          Label("", systemImage: "square.and.pencil")
-            // .onAppear { log.info("Label.onAppear") }
-            // .onDisappear() { log.info("Label.onDisappear") }
-        }
-          .tint(.purple)
-          // .onAppear { log.info("Button.onAppear") }
-          // .onDisappear() { log.info("Button.onDisappear") }
-      }
-      .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-        Button {
-          // TODO pin.isRead.toggle()
-        } label: {
-          Label("", systemImage: "doc")
-        }
-          .tint(.blue)
-      }
-      .onTapGesture {
-        log.info("tap")
-        self.navigation.push(
-          ReaderView(pin: pin)
-            .ignoresSafeArea(edges: .bottom)
-        )
-      }
-      .onLongPressGesture {
-        log.info("longPress")
-      }
+        },
+        // TODO Add state+binding to visually indicate the row is being pressed (like Hack.app)
+        isLongPressing: Binding(
+          get: { true }, // (Unused)
+          set: { x in log.info("OnTapAndLongPressGesture.isLongPressing = \(x)") }
+        ),
+        longPressMinimumDuration: 0.1
+      ))
 
   }
 

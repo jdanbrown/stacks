@@ -328,3 +328,69 @@ struct LazyView<Content: View>: View {
     build()
   }
 }
+
+// Avoid issues with ScrollView + TapGesture + LongPressGesture(minimumDuration)
+//  - Obvious combinations break scrolling -- probably by design
+//  - Clever combinations break minimumDuration -- probably a swiftui bug
+//  - The solution below strong-arms it all into working together
+//
+// Based on:
+//  - https://stackoverflow.com/a/69217016/397334 -- central insight about manually doing DispatchQueue
+//  - https://stackoverflow.com/a/44634230/397334 -- how to use DispatchWorkItem
+//  - https://developer.apple.com/documentation/swiftui/view/onlongpressgesture(minimumduration:maximumdistance:perform:onpressingchanged:)
+//  - https://developer.apple.com/documentation/swiftui/viewmodifier
+//
+// Graveyard of things that didn't work:
+//  - https://stackoverflow.com/questions/58284994/swiftui-how-to-handle-both-tap-long-press-of-button
+//    - https://stackoverflow.com/a/66539032/397334
+//      - This answer almost worked, but it breaks minimumDuration (swiftui bug?)
+//  - https://stackoverflow.com/questions/62733633/swiftui-tapgesture-and-longpressgesture-in-scrollview-with-tap-indication-not-wo
+//    - Same
+//  - https://stackoverflow.com/questions/59440283/longpress-and-list-scrolling
+//    - Same
+//
+struct OnTapAndLongPressGesture: ViewModifier {
+
+  let onTap: () -> Void
+  let onLongPress: () -> Void
+  @Binding var isLongPressing: Bool
+  // Match defaults:
+  //  - https://developer.apple.com/documentation/swiftui/view/onlongpressgesture(minimumduration:maximumdistance:perform:onpressingchanged:)
+  var longPressMinimumDuration: Double = 0.5
+  var longPressMaximumDistance: CGFloat = 10
+
+  @State private var work: DispatchWorkItem? = nil
+
+  func body(content: Content) -> some View {
+    content
+      .onTapGesture {
+        onTap()
+      }
+      .onLongPressGesture(
+        minimumDuration: longPressMinimumDuration, // NOTE Ignored (swiftui bug?)
+        maximumDistance: longPressMaximumDistance, // TODO Is this also ignored? (never tested it)
+        perform: {},
+        onPressingChanged: { isPressing in
+          log.debug("onLongPressGesture.pressing: \(isPressing)")
+          if let work = work {
+            log.debug("onLongPressGesture.pressing: Canceling work[\(work)]")
+            work.cancel()
+            self.work = nil
+            isLongPressing = false
+          }
+          if isPressing {
+            let work = DispatchWorkItem(block: {
+              onLongPress()
+              self.work = nil
+              isLongPressing = false
+            })
+            log.debug("onLongPressGesture.pressing: Starting work[\(work)]")
+            self.work = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + longPressMinimumDuration, execute: work)
+            isLongPressing = true
+          }
+        }
+      )
+  }
+
+}
