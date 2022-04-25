@@ -7,21 +7,6 @@ struct PinListView: View {
   var user: User
   var pins: [Pin]
 
-  var body: some View {
-    NavWrap {
-      _PinListView_NoNav(logout: logout, user: user, pins: pins)
-    }
-  }
-
-}
-
-// HACK Workaround xcode previews not letting you focus any views inside a NavigationView
-struct _PinListView_NoNav: View {
-
-  var logout: () async -> ()
-  var user: User
-  var pins: [Pin]
-
   @State private var order: Order = .desc
 
   // tagFilter is the tag (optional) to filter our pins to
@@ -50,8 +35,8 @@ struct _PinListView_NoNav: View {
     navigation.push(withTagFilter(tagFilter: tag))
   }
 
-  func withTagFilter(tagFilter: String?) -> _PinListView_NoNav {
-    return _PinListView_NoNav(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
+  func withTagFilter(tagFilter: String?) -> PinListView {
+    return PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
 
   var body: some View {
@@ -351,7 +336,7 @@ struct PinListView_Previews: PreviewProvider {
     // HACK Split in two to workaround xcode previews not letting you focus views inside a NavigationView
     // HACK Wrap each in ZStack to avoid FocusState crashing previews
     //  - https://stackoverflow.com/questions/70430440/why-focusstate-crashing-swiftui-preview
+    ZStack { NavWrap { PinListView(logout: logout, user: user, pins: pins) } }
     ZStack { PinListView(logout: logout, user: user, pins: pins) }
-    ZStack { _PinListView_NoNav(logout: logout, user: user, pins: pins) }
   }
 }

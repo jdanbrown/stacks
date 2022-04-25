@@ -15,7 +15,7 @@ struct RootView: View {
         case .LoggedOut:
           LoginView(login: login)
         case .LoggedIn(let user):
-          VStack {
+          NavWrap {
             PinListView(
               logout: logout,
               user: user,
