@@ -158,6 +158,24 @@ bin/fastlane firebase_distribute_beta
 - Stackoverflow tips
   - https://stackoverflow.com/questions/58284994/swiftui-how-to-handle-both-tap-long-press-of-button
 
+## SwiftUI: CloudKit / Core Data
+- https://stackoverflow.com/questions/61699905/storage-options-for-offline-and-online-ios-app-with-synchronization
+- https://developer.apple.com/documentation/coredata/nspersistentcloudkitcontainer
+- https://developer.apple.com/documentation/coredata/creating_a_core_data_model
+- https://developer.apple.com/documentation/coredata/setting_up_a_core_data_stack
+- https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit
+- https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/setting_up_core_data_with_cloudkit
+- https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/creating_a_core_data_model_for_cloudkit
+- https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/syncing_a_core_data_store_with_cloudkit
+- https://developer.apple.com/documentation/coredata/mirroring_a_core_data_store_with_cloudkit/reading_cloudkit_records_for_core_data
+- https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui/
+  - https://www.andrewcbancroft.com/blog/ios-development/data-persistence/getting-started-with-nspersistentcloudkitcontainer/
+  - https://github.com/SchwiftyUI/OrderedList
+  - https://github.com/SchwiftyUI/OrderedList/blob/master/OrderedList/AppDelegate.swift
+- https://www.hackingwithswift.com/quick-start/swiftui -> Data
+  - https://www.hackingwithswift.com/quick-start/swiftui/introduction-to-using-core-data-with-swiftui
+  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
+
 ## SwiftUI: Flex / wrap
 - FlexView
   - https://github.com/berbschloe/FlexView (1 star)

@@ -40,6 +40,10 @@ struct AppMain: App {
     self.firestore = firestore
     self.pinsModel = pinsModel
 
+    // PersistenceController for CloudKit + Core Data
+    //  - Touch to init (lazy static let)
+    PersistenceController.shared
+
   }
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
