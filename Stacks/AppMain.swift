@@ -42,7 +42,7 @@ struct AppMain: App {
 
     // PersistenceController for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    PersistenceController.shared
+    let _ = PersistenceController.shared
 
   }
 
