@@ -28,7 +28,7 @@ platform :ios do
       export_options: {iCloudContainerEnvironment: 'Development'}
     )
     firebase_app_distribution(
-      app: '1:649977413874:ios:6bb6380fe981672ca4106b',
+      app: '1:649977413874:ios:e5c13f240795a955a4106b',
       testers: 'jdanbrown@gmail.com',
       release_notes: 'Dummy release notes',
       firebase_cli_path: '/usr/local/bin/firebase',
