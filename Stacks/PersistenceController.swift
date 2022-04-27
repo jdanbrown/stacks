@@ -34,7 +34,7 @@ class PersistenceController {
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     container.loadPersistentStores { storeDescription, error in
       if let error = error {
-        fatalError("Error: \(error.localizedDescription)")
+        fatalError("\(error)")
       }
     }
 
