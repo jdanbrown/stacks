@@ -22,7 +22,10 @@ platform :ios do
       scheme: 'Stacks',
       archive_path: './build/Stacks.xcarchive',
       export_method: 'development',
-      output_directory: './build/Stacks'
+      output_directory: './build/Stacks',
+      # TODO Try replacing com.apple.developer.icloud-container-environment in Stacks.entitlements with this
+      # - https://github.com/fastlane/fastlane/issues/12044
+      export_options: {iCloudContainerEnvironment: 'Development'}
     )
     firebase_app_distribution(
       app: '1:649977413874:ios:6bb6380fe981672ca4106b',
