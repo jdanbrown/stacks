@@ -4,16 +4,11 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="tags" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
-        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreTag" inverseName="pins" inverseEntity="CoreTag"/>
-    </entity>
-    <entity name="CoreTag" representedClassName="CoreTag" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="pins" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CorePin" inverseName="tags" inverseEntity="CorePin"/>
     </entity>
     <elements>
-        <element name="CorePin" positionX="-306.07421875" positionY="-98.46875" width="143.70703125" height="133"/>
-        <element name="CoreTag" positionX="-54.2890625" positionY="-67.7109375" width="128" height="73"/>
+        <element name="CorePin" positionX="-306.07421875" positionY="-98.46875" width="143.70703125" height="119"/>
     </elements>
 </model>

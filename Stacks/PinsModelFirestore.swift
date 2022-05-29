@@ -9,7 +9,7 @@ import XCGLogger
 
 // TODO Can we simplify anything with FirebaseFirestoreCombineSwift + FirebaseFirestoreSwift?
 //  - https://github.com/firebase/firebase-ios-sdk/tree/master/Firestore/Swift
-class PinsModel: ObservableObject {
+class PinsModelFirestore: ObservableObject {
 
   @Published var pins = [Pin]()
 

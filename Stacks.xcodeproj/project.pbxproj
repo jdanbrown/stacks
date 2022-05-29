@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B704D66A284327FB00C7C874 /* PinsModelPinboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B704D669284327FB00C7C874 /* PinsModelPinboard.swift */; };
+		B704D66C284334DE00C7C874 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = B704D66B284334DE00C7C874 /* Tags.swift */; };
+		B704D66E2843379400C7C874 /* PINBOARD_API_TOKEN.swift in Sources */ = {isa = PBXBuildFile; fileRef = B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */; };
 		B70C4E8B2793E7AB0010E119 /* personal in Resources */ = {isa = PBXBuildFile; fileRef = B70C4E8A2793E7AB0010E119 /* personal */; };
 		B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E8C2793F6B70010E119 /* PinView.swift */; };
 		B70C4E93279403530010E119 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = B70C4E92279403530010E119 /* Down */; };
@@ -17,7 +20,7 @@
 		B71EC967279D2B0B00CE9472 /* _FlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC966279D2B0B00CE9472 /* _FlexView.swift */; };
 		B71EC969279D2B1400CE9472 /* SizeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC968279D2B1400CE9472 /* SizeReader.swift */; };
 		B72509AC275DE50D00858384 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
-		B72509B0275DE68B00858384 /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AF275DE68B00858384 /* PinsModel.swift */; };
+		B72509B0275DE68B00858384 /* PinsModelFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AF275DE68B00858384 /* PinsModelFirestore.swift */; };
 		B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B72509B4275DF43C00858384 /* GoogleSignIn */; };
 		B72509B7275F2E0800858384 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509B6275F2E0800858384 /* AuthService.swift */; };
 		B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BA275F2E3900858384 /* FirestoreService.swift */; };
@@ -44,6 +47,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B704D669284327FB00C7C874 /* PinsModelPinboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModelPinboard.swift; sourceTree = "<group>"; };
+		B704D66B284334DE00C7C874 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
+		B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINBOARD_API_TOKEN.swift; sourceTree = "<group>"; };
 		B70C4E8A2793E7AB0010E119 /* personal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = personal; path = "../../../stacks/Stacks/Preview Content/personal"; sourceTree = "<group>"; };
 		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = ../../stacks/Stacks/PinView.swift; sourceTree = "<group>"; };
 		B70C4E9427953EE70010E119 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebView.swift; path = ../../stacks/Stacks/WebView.swift; sourceTree = "<group>"; };
@@ -52,7 +58,7 @@
 		B71EC966279D2B0B00CE9472 /* _FlexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FlexView.swift; sourceTree = "<group>"; };
 		B71EC968279D2B1400CE9472 /* SizeReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReader.swift; sourceTree = "<group>"; };
 		B72509AB275DE50D00858384 /* Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
-		B72509AF275DE68B00858384 /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
+		B72509AF275DE68B00858384 /* PinsModelFirestore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModelFirestore.swift; sourceTree = "<group>"; };
 		B72509B6275F2E0800858384 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		B72509BA275F2E3900858384 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		B72509BE275F2E4200858384 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -132,7 +138,10 @@
 				B7A732902817BBCF0011FACE /* PersistenceController.swift */,
 				B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */,
 				B72509AB275DE50D00858384 /* Pin.swift */,
-				B72509AF275DE68B00858384 /* PinsModel.swift */,
+				B704D66B284334DE00C7C874 /* Tags.swift */,
+				B72509AF275DE68B00858384 /* PinsModelFirestore.swift */,
+				B704D669284327FB00C7C874 /* PinsModelPinboard.swift */,
+				B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */,
 				B72509B6275F2E0800858384 /* AuthService.swift */,
 				B7856B9527704C3400A87DDA /* User.swift */,
 				B711EC5F27686C86005223A2 /* Util.swift */,
@@ -260,12 +269,13 @@
 			files = (
 				B79A4E2027E8368300E7483B /* AutoNavigationLink.swift in Sources */,
 				B7777A3A279616B600372937 /* ReaderView.swift in Sources */,
+				B704D66C284334DE00C7C874 /* Tags.swift in Sources */,
 				B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */,
 				B71EC965279D2B0100CE9472 /* FlexView.swift in Sources */,
 				B72509B7275F2E0800858384 /* AuthService.swift in Sources */,
 				B711EC6027686C86005223A2 /* Util.swift in Sources */,
 				B72509BB275F2E3900858384 /* FirestoreService.swift in Sources */,
-				B72509B0275DE68B00858384 /* PinsModel.swift in Sources */,
+				B72509B0275DE68B00858384 /* PinsModelFirestore.swift in Sources */,
 				B72509AC275DE50D00858384 /* Pin.swift in Sources */,
 				B72509BF275F2E4200858384 /* RootView.swift in Sources */,
 				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
@@ -276,7 +286,9 @@
 				B70C4E9527953EE70010E119 /* WebView.swift in Sources */,
 				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
 				B7A7328F2817B7AA0011FACE /* Model.xcdatamodeld in Sources */,
+				B704D66A284327FB00C7C874 /* PinsModelPinboard.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
+				B704D66E2843379400C7C874 /* PINBOARD_API_TOKEN.swift in Sources */,
 				B7A732912817BBCF0011FACE /* PersistenceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,7 +419,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1651040699;
+				CURRENT_PROJECT_VERSION = 1653802642;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -438,7 +450,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1651040699;
+				CURRENT_PROJECT_VERSION = 1653802642;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;

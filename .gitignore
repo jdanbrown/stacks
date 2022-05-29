@@ -10,3 +10,6 @@ xcuserdata/
 
 # xcode: Ignore preview files that might contain personal data
 Stacks/Preview Content/personal/preview-pins.json
+
+# TODO Store this in user settings + add an prompt/edit view for it
+PINBOARD_API_TOKEN.swift

@@ -5,9 +5,14 @@ import XCGLogger
 @main
 struct AppMain: App {
 
-  var firestore: FirestoreService
-  var auth: AuthService
-  var pinsModel: PinsModel
+  let hasICloud: Bool
+  let persistenceController: PersistenceController
+
+  let firestore: FirestoreService
+  let auth: AuthService
+  let pinsModelFirestore: PinsModelFirestore
+
+  let pinsModelPinboard: PinsModelPinboard
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
@@ -26,31 +31,58 @@ struct AppMain: App {
     log.formatters = [CustomLogFormatter()]
     log.logAppDetails()
 
-    // Before AuthService()
-    //  - https://peterfriese.dev/swiftui-new-app-lifecycle-firebase/
-    //  - https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/
-    FirebaseApp.configure()
-
-    // After FirebaseApp.configure()
-    let firestore = FirestoreService()
-    let auth = AuthService()
-    let pinsModel = PinsModel(auth: auth, firestore: firestore)
-
-    self.auth = auth
-    self.firestore = firestore
-    self.pinsModel = pinsModel
+    // Check if the user is logged into iCloud, else we'll refuse to load (in RootView, with a helpful error msg)
+    //  - https://developer.apple.com/documentation/foundation/nsfilemanager/1408036-ubiquityidentitytoken
+    //    - TODO Use `accountStatus() async` instead, as per those docs
+    //      - https://developer.apple.com/documentation/cloudkit/ckcontainer/1399180-accountstatus
+    //    - TODO Don't require user to restart app after logging in
+    //      - This will require the same async handling as the previous bullet
+    //  - If we don't _explicitly_ check iCloud, then NSPersistentCloudKitContainer will silently fail to sync and log uncatchable errors
+    //    - https://stackoverflow.com/questions/59138880/nspersistentcloudkitcontainer-how-to-check-if-data-is-synced-to-cloudkit
+    self.hasICloud = FileManager.default.ubiquityIdentityToken != nil
 
     // PersistenceController for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    let _ = PersistenceController.shared
+    self.persistenceController = PersistenceController.shared
 
+    // Firestore
+    //  - Must call configure() before AuthService()
+    //    - https://peterfriese.dev/swiftui-new-app-lifecycle-firebase/
+    //    - https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/
+    FirebaseApp.configure()
+    let firestore = FirestoreService()
+    let auth = AuthService()
+    let pinsModelFirestore = PinsModelFirestore(auth: auth, firestore: firestore)
+
+    // Pinboard
+    let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
+
+    // Initialize fields
+    self.auth = auth
+    self.firestore = firestore
+    self.pinsModelFirestore = pinsModelFirestore
+    self.pinsModelPinboard = pinsModelPinboard
+
+  }
+
+  func initAsync() async {
+    log.info()
+    do {
+      try await pinsModelPinboard.fetch()
+    } catch  {
+      log.error("Failed to fetch pinboard posts, ignoring: \(error)")
+    }
   }
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
     AppScene(
+      initAsync: initAsync,
+      hasICloud: hasICloud,
+      persistenceController: persistenceController,
       auth: auth,
-      pinsModel: pinsModel
+      pinsModelFirestore: pinsModelFirestore,
+      pinsModelPinboard: pinsModelPinboard
     )
   }
 
@@ -58,23 +90,45 @@ struct AppMain: App {
 
 struct AppScene: Scene {
 
+  let initAsync: () async -> ()
+  let hasICloud: Bool
+  let persistenceController: PersistenceController
+
   @ObservedObject var auth: AuthService
-  @ObservedObject var pinsModel: PinsModel
+  @ObservedObject var pinsModelFirestore: PinsModelFirestore
+  @ObservedObject var pinsModelPinboard: PinsModelPinboard
+
+  // Docs
+  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
+  //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-when-your-app-moves-to-the-background-or-foreground-with-scenephase
+  //  - https://developer.apple.com/documentation/swiftui/scenephase
+  @Environment(\.scenePhase) var scenePhase
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
     WindowGroup {
       Group {
         RootView(
+          hasICloud: hasICloud,
           authState: auth.authState,
           login: auth.login,
           logout: auth.logout,
-          pins: pinsModel.pins
-          // pins: pinsModel.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
+          // TODO TODO
+          pins: pinsModelFirestore.pins
+          // pins: pinsModelPinboard.pins
+          // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
+        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        .task { await initAsync() }
         .onOpenURL { auth.onOpenURL($0) }
     }
+      .onChange(of: scenePhase) { phase in
+        log.info("onChange: scenephase[\(phase)]")
+        if [.inactive, .background].contains(phase) {
+          persistenceController.save()
+        }
+      }
   }
 
 }

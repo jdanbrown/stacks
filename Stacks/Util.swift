@@ -43,6 +43,17 @@ class CustomLogFormatter: LogFormatterProtocol, CustomDebugStringConvertible {
 // swift
 //
 
+// https://stackoverflow.com/questions/31443645/simplest-way-to-throw-an-error-exception-with-a-custom-message-in-swift
+struct SimpleError: Error {
+  let message: String
+  init(_ message: String) {
+    self.message = message
+  }
+  public var localizedDescription: String {
+    return message
+  }
+}
+
 extension String {
   func trim() -> String {
     return trimmingCharacters(in: .whitespacesAndNewlines)
@@ -58,6 +69,16 @@ extension Array {
 extension Array where Element: Hashable {
   func unique() -> Array<Element> {
     return Array(Set(self))
+  }
+}
+
+extension Dictionary {
+  func getOrThrow(_ key: Key) throws -> Value {
+    if !keys.contains(key) {
+      throw SimpleError("Key not found: key[\(key)], keys[\(keys)]")
+    } else {
+      return self[key]!
+    }
   }
 }
 
@@ -199,8 +220,8 @@ func sha1hex(_ string: String) -> String {
 // Date
 //
 
-func parseDate(_ dateIso: String) throws -> Date {
-  guard let date = isoDateFormatter.date(from: dateIso) else {
+func parseDate(_ dateIso: String, dateFormat: String = isoDateFormat) throws -> Date {
+  guard let date = makeDateFormatter(dateFormat).date(from: dateIso) else {
     preconditionFailure("Failed to parse iso8601 date[\(dateIso)]")
   }
   return date
@@ -245,14 +266,17 @@ extension Date {
 
 }
 
+let isoDateFormat    = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+let isoDateFormatter = makeDateFormatter(isoDateFormat)
+
 // HACK JSONDecoder/JSONEncoder accepts DateFormatter but not ISO8601DateFormatter
-let isoDateFormatter: DateFormatter = {
+func makeDateFormatter(_ dateFormat: String) -> DateFormatter {
   // let x = ISO8601DateFormatter()
   // x.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
   let x = DateFormatter()
-  x.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  x.dateFormat = dateFormat
   return x
-}()
+}
 
 //
 // http + url

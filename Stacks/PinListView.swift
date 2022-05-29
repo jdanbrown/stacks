@@ -1,5 +1,55 @@
-import GameplayKit
+import GameplayKit // For GKMersenneTwisterRandomSource
 import SwiftUI
+
+// TODO TODO YOU ARE HERE
+//  - Sync is working (+ learned that you must explicitly check that icloud is logged in, else silent failures)
+//  - 2022-05-27
+//    - Next: Adding duplicate tags/pins (by name/url) creates multiple cloudkit records (by id)
+//      - I think unique constraints aren't supported in cloudkit? -- need to add our own layer to read/upsert
+//    - Next: How to add/delete records from swiftui views
+//      - See the two open tabs in "read next"
+//    - Next: Import pinboard/firebase pins into cloudkit records
+//      - This will require both of the above
+//    - Maybe do all of these in tandem?
+//  - 2022-05-28
+//    - Added PinsModelPinboard
+//    - Next: Add pin merging for PinsModelPinboard + PinsModelFirestore
+//    - Next: Add pin updates for PinsModelPinboard + PinsModelFirestore -> Core Data
+//    - Next: Add pin edits for PinEditView -> Core Data
+struct HACK_CorePin_list: View {
+
+  // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest
+  // https://www.hackingwithswift.com/quick-start/swiftui/how-to-limit-the-number-of-items-in-a-fetch-request
+  @FetchRequest(
+    entity: CorePin.entity(),
+    sortDescriptors: [
+      NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
+      // Use .absoluteString because URL isn't Comparable
+      //  - https://stackoverflow.com/questions/66056599/sorting-urls-with-fetchrequest-crashes-when-new-content-is-saved
+      //  - https://developer.apple.com/documentation/foundation/nssortdescriptor?language=objc
+      NSSortDescriptor(key: "url.absoluteString", ascending: true),
+    ]
+  ) var corePins: FetchedResults<CorePin>
+
+  var body: some View {
+
+    // XXX
+    let _ = {
+      print("corePins: length[\(corePins.count)]")
+      for corePin in corePins {
+        print("  corePin[\(corePin)]")
+      }
+    }()
+    List {
+      ForEach(corePins) { corePin in
+        Text(corePin.title ?? "[no-title]")
+        Text(corePin.tags ?? "[no-tags]")
+      }
+    }
+
+  }
+
+}
 
 struct PinListView: View {
 
@@ -46,6 +96,7 @@ struct PinListView: View {
     ZStack {
       AutoNavigationLink(model: navigation)
       VStack(spacing: 5) {
+        // HACK_CorePin_list() // XXX Dev
         searchBar()
         // Using List instead of ScrollView so that swipe gestures work
         //  - Gestures in List
