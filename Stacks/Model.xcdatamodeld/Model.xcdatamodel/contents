@@ -6,9 +6,15 @@
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="tags" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="tombstone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
     </entity>
+    <entity name="CorePinDiff" representedClassName="CorePinDiff" syncable="YES" codeGenerationType="class">
+        <attribute name="after" optional="YES" attributeType="String"/>
+        <attribute name="before" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
-        <element name="CorePin" positionX="-306.07421875" positionY="-98.46875" width="143.70703125" height="119"/>
+        <element name="CorePin" positionX="-306.07421875" positionY="-98.46875" width="143.70703125" height="134"/>
+        <element name="CorePinDiff" positionX="-297" positionY="-45" width="128" height="59"/>
     </elements>
 </model>

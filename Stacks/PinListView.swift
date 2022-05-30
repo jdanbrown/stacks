@@ -16,6 +16,16 @@ import SwiftUI
 //    - Next: Add pin merging for PinsModelPinboard + PinsModelFirestore
 //    - Next: Add pin updates for PinsModelPinboard + PinsModelFirestore -> Core Data
 //    - Next: Add pin edits for PinEditView -> Core Data
+//    - Next: Fix app crashing on phone (but not simulator)
+//  - 2022-05-29
+//    - Added PinsModelMerge (w/ firestore + pinboard)
+//    - Added CorePinDiff
+//    - Next: Add a CorePin model to PinsModelMerge (call it just 'PinsModel'?)
+//      - Define Pin.fromCore
+//    - Next: Store PinDiff's
+//      - Bound at n=1000
+//    - Next: How to avoid emitting ~44 duplicate PinDiff's on every app launch?
+//      - Or is this not worth the complexity, and we just let the n=1000 trimming keep it bounded (but noisy)?
 struct HACK_CorePin_list: View {
 
   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest

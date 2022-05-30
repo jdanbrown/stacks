@@ -25,16 +25,20 @@ class PinsModelPinboard: ObservableObject {
 func pinboardPostToPin(post: [String: String]) throws -> Pin {
   return Pin(
     // Map data that's present in pinboard
+    tombstone:  false,
     url:        try post.getOrThrow("href"),
     title:      try post.getOrThrow("description"),
-    tags:       Tags.decode(try post.getOrThrow("tags")),
+    tags:       (try post.getOrThrow("tags")).split(separator: " ").map { String($0) },
     notes:      try post.getOrThrow("extended"),
     createdAt:  try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
     modifiedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
     accessedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
-    isRead:     (try post.getOrThrow("toread")) == "no"
-    // Default remaining data to null that isn't present in pinboard
-    // ...
+    isRead:     (try post.getOrThrow("toread")) == "no",
+    // Default remaining data that isn't present in pinboard
+    progressPageScroll:    0,
+    progressPageScrollMax: 0,
+    progressPdfPage:       0,
+    progressPdfPageMax:    0
   )
 }
 

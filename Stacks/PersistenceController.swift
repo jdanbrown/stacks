@@ -1,12 +1,13 @@
 import CoreData
 
+// TODO Popup + exit button i/o fatalError
+//  - e.g. run app on phone -> app dies without error msg -> run macos Console.app to see fatalError("Can't migrate schema in place")
+//  - More immediate UX that doesn't require going back to laptop would be a popup with the error msg and an exit button
+
 // TODO Decide codegen for CorePin / Pin, CoreTag / Tag
 //  - https://developer.apple.com/documentation/coredata/modeling_data/generating_code
 //  - TODO Follow this helpful example of wrapping CoreFoo with Foo
 //    - https://www.hackingwithswift.com/books/ios-swiftui/one-to-many-relationships-with-core-data-swiftui-and-fetchrequest
-
-// TODO onChange(of: scenePhase) -> save()
-//  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
 
 // Based on:
 //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
@@ -44,20 +45,21 @@ class PersistenceController {
     //  - https://developer.apple.com/documentation/coredata/nsmergepolicy/merge_policies
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     //  - TODO Change this to handle merges manually so we can union/max/join each field
-    //    - Set NSErrorMergePolicy here, then save() can throw -> catch and resolve -> ...?
-    //    - How to manually union/max/join all fields
-    //      - created -> max
-    //      - tags -> union
-    //      - notes -> append with separator ('===' like git merge)
-    //      - etc.
+    //    - Use Pins.merge(xs, ys)
     container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     // "Without this, changes will not be pulled down from the iCloud to your phone"
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     container.viewContext.automaticallyMergesChangesFromParent = true
 
     // Observe remote change notifications
-    //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
+    //  - Example
+    //    - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
+    //  - Docs
+    //    - https://developer.apple.com/documentation/coredata/nspersistentstoredescription/1640574-setoption
+    //    - https://developer.apple.com/documentation/coredata/nspersistentstorecoordinator
+    //    - https://developer.apple.com/documentation/coredata/core_data_constants
     //  - TODO Is this working? -- onRemoteChange didn't log when I created a CorePin in the web console (using the blue plus icon)
+    //    - Update: Yes, I think it's working
     guard let storeDescription = container.persistentStoreDescriptions.first else {
       fatalError("Failed to retrieve persistentStoreDescription")
     }

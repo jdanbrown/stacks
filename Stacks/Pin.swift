@@ -7,40 +7,46 @@ import XCGLogger
 //  - A DocumentReference is 1-1 with the document path, and can be recreated from it
 //  - https://firebase.google.com/docs/firestore/data-model#references
 
+// TODO Do we want Withable here?
+//  - Requires all let's be var's (ugh)
+//  - How will PinEditView work? -- that's all that should matter
+
 // Codable enabled by `import FirebaseFirestoreSwift`
 //  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
-struct Pin: Codable, Identifiable, Withable {
+struct Pin: Codable, Identifiable, Equatable {
 
   // id is determined by url
   var id: String {
     get { return Pin.idFromUrl(url) }
   }
 
-  var schemaVersion: String?
-  var url: String // NOTE When we need it: URL.absoluteString -> String
-  var title: String
-  var tags: [String]
-  var notes: String
-  var createdAt: Date
-  var modifiedAt: Date
-  var accessedAt: Date
-  var isRead: Bool
+  let schemaVersion: String = "v1"
+  let tombstone: Bool
+  let url: String // NOTE When we need it: URL.absoluteString -> String
+  let title: String
+  let tags: [String]
+  let notes: String
+  let createdAt: Date
+  let modifiedAt: Date
+  let accessedAt: Date
+  let isRead: Bool
 
   // Progress data
   //  - Track a separate notion of progress for each different content type
   //  - Web pages scroll, pdfs flip pages, etc.
   //  - (Conflating all of these into one shared, unitless "number" would probably be more confusing than simplifying)
-  var progressPageScroll: Int?
-  var progressPageScrollMax: Int?
-  var progressPdfPage: Int?
-  var progressPdfPageMax: Int?
-  // var progressVideoTime: Int?
-  // var progressVideoTimeMax: Int?
-  // var progressAudioTime: Int?
-  // var progressAudioTimeMax: Int?
+  let progressPageScroll: Int
+  let progressPageScrollMax: Int
+  let progressPdfPage: Int
+  let progressPdfPageMax: Int
+  // let progressVideoTime: Int
+  // let progressVideoTimeMax: Int
+  // let progressAudioTime: Int
+  // let progressAudioTimeMax: Int
 
   enum CodingKeys: String, CodingKey {
     case schemaVersion = "schema_version"
+    case tombstone
     case url
     case title
     case tags
@@ -56,9 +62,22 @@ struct Pin: Codable, Identifiable, Withable {
   }
 
   // Returns nil if document does not exist, throws if decoding fails
-  //  - https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
   static func fromDoc(_ doc: DocumentSnapshot) throws -> Pin? {
-    return try doc.data(as: Pin.self)
+    // Reimplement `try doc.data(as: Pin.self)`, but add default values
+    //  - https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
+    guard var data = doc.data() else {
+      log.error("Null doc, returning nil")
+      return nil
+    }
+    // Set defaults for keys that aren't present in firestore
+    data.setDefault("tombstone", false)
+    // HACK Be more aggressive than setDefault for these, since some firestore docs contain null for some of these keys
+    for k in ["progress_page_scroll", "progress_page_scroll_max", "progress_pdf_page", "progress_pdf_page_max"] {
+      if data[k] == nil || data[k] is NSNull {
+        data[k] = 0
+      }
+    }
+    return try Firestore.Decoder().decode(Pin.self, from: data, in: doc.reference)
   }
 
   static func idFromUrl(_ url: String) -> String {
@@ -117,5 +136,67 @@ struct Pin: Codable, Identifiable, Withable {
     ```
     """
 
+  // Idempotent
+  static func merge(_ x: Pin, _ y: Pin) -> Pin {
+    assert(x.url == y.url, "x.url[\(x.url)] == y.url[\(y.url)]")
+    let url     = x.url
+    let earlier = x.modifiedAt <= y.modifiedAt ? x : y
+    let later   = x.modifiedAt >  y.modifiedAt ? x : y
+    return Pin(
+      tombstone:             later.tombstone,
+      url:                   url,
+      title:                 later.title,
+      tags:                  (x.tags + y.tags).unique(),
+      notes:                 later.notes,
+      createdAt:             earlier.createdAt,
+      modifiedAt:            later.modifiedAt,
+      accessedAt:            later.accessedAt,
+      isRead:                later.isRead,
+      progressPageScroll:    [x.progressPageScroll,    y.progressPageScroll]    .max() ?? 0,
+      progressPageScrollMax: [x.progressPageScrollMax, y.progressPageScrollMax] .max() ?? 0,
+      progressPdfPage:       [x.progressPdfPage,       y.progressPdfPage]       .max() ?? 0,
+      progressPdfPageMax:    [x.progressPdfPageMax,    y.progressPdfPageMax]    .max() ?? 0
+    )
+
+  }
+
+}
+
+class Pins {
+
+  // Properties
+  //  - Idempotent
+  //  - Minimally destructive / maximally recoverable
+  //
+  // Examples
+  //  - Merge pinboard/firestore/stacks -> edit url X->Y in stacks -> merge pinboard/firestore/stacks
+  //    - Don't recreate pin with url X that was already moved to Y
+  //  - Merge pinboard/firestore/stacks -> manually de-dupe notes text in stacks -> merge pinboard/firestore/stacks
+  //    - Don't junk up notes text with more '==='
+  //    - Don't endlessly append '===' conflicts onto the already conflict-annotated notes text
+  //
+  static func merge(_ xs: [Pin], _ ys: [Pin]) -> ([Pin], [PinDiff]) {
+    let xd = Dictionary(uniqueKeysWithValues: xs.map { ($0.url, $0) }) // Fails if duplicates url's
+    let yd = Dictionary(uniqueKeysWithValues: ys.map { ($0.url, $0) }) // Fails if duplicates url's
+    var zs: [Pin] = []
+    var diffs: [PinDiff] = []
+    for k in Set(xd.keys).union(yd.keys) {
+      let x = xd[k]
+      let y = yd[k]
+      if y == nil {
+        zs.append(x!)
+      } else if x == nil {
+        zs.append(y!)
+      } else if x == y {
+        zs.append(x!)
+      } else {
+        let z = Pin.merge(x!, y!)
+        zs.append(z)
+        diffs.append(PinDiff(before: [x!, y!], after: z))
+      }
+    }
+    log.info("xs.count[\(xs.count)], ys.count[\(ys.count)] -> zs.count[\(zs.count)], diffs.count[\(diffs.count)]")
+    return (zs, diffs)
+  }
 
 }

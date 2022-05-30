@@ -14,6 +14,8 @@ struct AppMain: App {
 
   let pinsModelPinboard: PinsModelPinboard
 
+  let pinsModelMerge: PinsModelMerge
+
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
   //  - https://developer.apple.com/forums/thread/653737 -- if you need an AppDelegate
@@ -57,17 +59,22 @@ struct AppMain: App {
     // Pinboard
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
+    let pinsModelMerge = PinsModelMerge(pinsModelFirestore: pinsModelFirestore, pinsModelPinboard: pinsModelPinboard)
+
     // Initialize fields
     self.auth = auth
     self.firestore = firestore
     self.pinsModelFirestore = pinsModelFirestore
     self.pinsModelPinboard = pinsModelPinboard
+    self.pinsModelMerge = pinsModelMerge
 
   }
 
   func initAsync() async {
     log.info()
     do {
+      // TODO Integrate this with ProgressView() at startup
+      //  - Maybe wait until we get Firestore/AuthService out of the picture
       try await pinsModelPinboard.fetch()
     } catch  {
       log.error("Failed to fetch pinboard posts, ignoring: \(error)")
@@ -81,8 +88,9 @@ struct AppMain: App {
       hasICloud: hasICloud,
       persistenceController: persistenceController,
       auth: auth,
-      pinsModelFirestore: pinsModelFirestore,
-      pinsModelPinboard: pinsModelPinboard
+      // pinsModelFirestore: pinsModelFirestore,
+      // pinsModelPinboard: pinsModelPinboard
+      pinsModelMerge: pinsModelMerge
     )
   }
 
@@ -95,8 +103,9 @@ struct AppScene: Scene {
   let persistenceController: PersistenceController
 
   @ObservedObject var auth: AuthService
-  @ObservedObject var pinsModelFirestore: PinsModelFirestore
-  @ObservedObject var pinsModelPinboard: PinsModelPinboard
+  // @ObservedObject var pinsModelFirestore: PinsModelFirestore
+  // @ObservedObject var pinsModelPinboard: PinsModelPinboard
+  @ObservedObject var pinsModelMerge: PinsModelMerge
 
   // Docs
   //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
@@ -114,7 +123,8 @@ struct AppScene: Scene {
           login: auth.login,
           logout: auth.logout,
           // TODO TODO
-          pins: pinsModelFirestore.pins
+          pins: pinsModelMerge.pins
+          // pins: pinsModelFirestore.pins
           // pins: pinsModelPinboard.pins
           // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )

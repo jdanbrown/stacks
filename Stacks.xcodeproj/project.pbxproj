@@ -27,6 +27,8 @@
 		B72509BF275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
 		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
 		B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B727DDF027A517E100FF3242 /* PinEditView.swift */; };
+		B74E88A02844828600DFF9FD /* PinDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E889F2844828600DFF9FD /* PinDiff.swift */; };
+		B74E88A22844910C00DFF9FD /* PinsModelMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E88A12844910C00DFF9FD /* PinsModelMerge.swift */; };
 		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
 		B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B46A0275B3FC700923DE1 /* PinListView.swift */; };
 		B75B46A3275B3FC900923DE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A2275B3FC900923DE1 /* Assets.xcassets */; };
@@ -65,6 +67,8 @@
 		B72509C2275F2E8E00858384 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B72509C927607F0E00858384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B727DDF027A517E100FF3242 /* PinEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEditView.swift; sourceTree = "<group>"; };
+		B74E889F2844828600DFF9FD /* PinDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDiff.swift; sourceTree = "<group>"; };
+		B74E88A12844910C00DFF9FD /* PinsModelMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModelMerge.swift; sourceTree = "<group>"; };
 		B75B469B275B3FC700923DE1 /* Stacks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stacks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B75B469E275B3FC700923DE1 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		B75B46A0275B3FC700923DE1 /* PinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinListView.swift; sourceTree = "<group>"; };
@@ -138,8 +142,10 @@
 				B7A732902817BBCF0011FACE /* PersistenceController.swift */,
 				B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */,
 				B72509AB275DE50D00858384 /* Pin.swift */,
+				B74E889F2844828600DFF9FD /* PinDiff.swift */,
 				B704D66B284334DE00C7C874 /* Tags.swift */,
 				B72509AF275DE68B00858384 /* PinsModelFirestore.swift */,
+				B74E88A12844910C00DFF9FD /* PinsModelMerge.swift */,
 				B704D669284327FB00C7C874 /* PinsModelPinboard.swift */,
 				B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */,
 				B72509B6275F2E0800858384 /* AuthService.swift */,
@@ -283,12 +289,14 @@
 				B71EC967279D2B0B00CE9472 /* _FlexView.swift in Sources */,
 				B7856B9627704C3400A87DDA /* User.swift in Sources */,
 				B70C4E8D2793F6B70010E119 /* PinView.swift in Sources */,
+				B74E88A02844828600DFF9FD /* PinDiff.swift in Sources */,
 				B70C4E9527953EE70010E119 /* WebView.swift in Sources */,
 				B72509C3275F2E8E00858384 /* LoginView.swift in Sources */,
 				B7A7328F2817B7AA0011FACE /* Model.xcdatamodeld in Sources */,
 				B704D66A284327FB00C7C874 /* PinsModelPinboard.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 				B704D66E2843379400C7C874 /* PINBOARD_API_TOKEN.swift in Sources */,
+				B74E88A22844910C00DFF9FD /* PinsModelMerge.swift in Sources */,
 				B7A732912817BBCF0011FACE /* PersistenceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,7 +427,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1653802642;
+				CURRENT_PROJECT_VERSION = 1653893579;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -450,7 +458,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1653802642;
+				CURRENT_PROJECT_VERSION = 1653893579;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;

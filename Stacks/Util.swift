@@ -67,8 +67,10 @@ extension Array {
 }
 
 extension Array where Element: Hashable {
+  // Preserves order
   func unique() -> Array<Element> {
-    return Array(Set(self))
+    var seen = Set<Element>()
+    return filter { seen.insert($0).inserted }
   }
 }
 
@@ -78,6 +80,11 @@ extension Dictionary {
       throw SimpleError("Key not found: key[\(key)], keys[\(keys)]")
     } else {
       return self[key]!
+    }
+  }
+  mutating func setDefault(_ key: Key, _ value: Value) {
+    if !keys.contains(key) {
+      self[key] = value
     }
   }
 }
@@ -108,7 +115,6 @@ extension Withable {
     return copy
   }
 }
-
 
 // // Wrap types that aren't already ObservableObject
 // //  - e.g. Optional/Array for .environmentObject
