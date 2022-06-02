@@ -1,31 +1,6 @@
 import GameplayKit // For GKMersenneTwisterRandomSource
 import SwiftUI
 
-// TODO TODO YOU ARE HERE
-//  - Sync is working (+ learned that you must explicitly check that icloud is logged in, else silent failures)
-//  - 2022-05-27
-//    - Next: Adding duplicate tags/pins (by name/url) creates multiple cloudkit records (by id)
-//      - I think unique constraints aren't supported in cloudkit? -- need to add our own layer to read/upsert
-//    - Next: How to add/delete records from swiftui views
-//      - See the two open tabs in "read next"
-//    - Next: Import pinboard/firebase pins into cloudkit records
-//      - This will require both of the above
-//    - Maybe do all of these in tandem?
-//  - 2022-05-28
-//    - Added PinsModelPinboard
-//    - Next: Add pin merging for PinsModelPinboard + PinsModelFirestore
-//    - Next: Add pin updates for PinsModelPinboard + PinsModelFirestore -> Core Data
-//    - Next: Add pin edits for PinEditView -> Core Data
-//    - Next: Fix app crashing on phone (but not simulator)
-//  - 2022-05-29
-//    - Added PinsModelMerge (w/ firestore + pinboard)
-//    - Added CorePinDiff
-//    - Next: Add a CorePin model to PinsModelMerge (call it just 'PinsModel'?)
-//      - Define Pin.fromCore
-//    - Next: Store PinDiff's
-//      - Bound at n=1000
-//    - Next: How to avoid emitting ~44 duplicate PinDiff's on every app launch?
-//      - Or is this not worth the complexity, and we just let the n=1000 trimming keep it bounded (but noisy)?
 struct HACK_CorePin_list: View {
 
   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest
