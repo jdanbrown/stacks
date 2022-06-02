@@ -53,8 +53,8 @@
 		B704D66B284334DE00C7C874 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 		B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINBOARD_API_TOKEN.swift; sourceTree = "<group>"; };
 		B70C4E8A2793E7AB0010E119 /* personal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = personal; path = "../../../stacks/Stacks/Preview Content/personal"; sourceTree = "<group>"; };
-		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = ../../stacks/Stacks/PinView.swift; sourceTree = "<group>"; };
-		B70C4E9427953EE70010E119 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebView.swift; path = ../../stacks/Stacks/WebView.swift; sourceTree = "<group>"; };
+		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
+		B70C4E9427953EE70010E119 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		B711EC5F27686C86005223A2 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		B71EC964279D2B0100CE9472 /* FlexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexView.swift; sourceTree = "<group>"; };
 		B71EC966279D2B0B00CE9472 /* _FlexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FlexView.swift; sourceTree = "<group>"; };
@@ -115,6 +115,69 @@
 			path = FlexView;
 			sourceTree = "<group>";
 		};
+		B74E88A32848697100DFF9FD /* views */ = {
+			isa = PBXGroup;
+			children = (
+				B75B469E275B3FC700923DE1 /* AppMain.swift */,
+				B72509C2275F2E8E00858384 /* LoginView.swift */,
+				B7777A39279616B600372937 /* ReaderView.swift */,
+				B727DDF027A517E100FF3242 /* PinEditView.swift */,
+				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
+				B70C4E8C2793F6B70010E119 /* PinView.swift */,
+				B72509BE275F2E4200858384 /* RootView.swift */,
+				B70C4E9427953EE70010E119 /* WebView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		B74E88A428486A3700DFF9FD /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */,
+				B711EC5F27686C86005223A2 /* Util.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		B74E88A528486A4700DFF9FD /* datatypes */ = {
+			isa = PBXGroup;
+			children = (
+				B72509AB275DE50D00858384 /* Pin.swift */,
+				B74E889F2844828600DFF9FD /* PinDiff.swift */,
+				B704D66B284334DE00C7C874 /* Tags.swift */,
+				B7856B9527704C3400A87DDA /* User.swift */,
+			);
+			path = datatypes;
+			sourceTree = "<group>";
+		};
+		B74E88A628486A8600DFF9FD /* services */ = {
+			isa = PBXGroup;
+			children = (
+				B72509B6275F2E0800858384 /* AuthService.swift */,
+				B72509BA275F2E3900858384 /* FirestoreService.swift */,
+				B7A732902817BBCF0011FACE /* PersistenceController.swift */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		B74E88A728486AE300DFF9FD /* models */ = {
+			isa = PBXGroup;
+			children = (
+				B72509AF275DE68B00858384 /* PinsModelFirestore.swift */,
+				B74E88A12844910C00DFF9FD /* PinsModelMerge.swift */,
+				B704D669284327FB00C7C874 /* PinsModelPinboard.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		B74E88A828486AFB00DFF9FD /* secrets */ = {
+			isa = PBXGroup;
+			children = (
+				B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */,
+			);
+			path = secrets;
+			sourceTree = "<group>";
+		};
 		B75B4692275B3FC700923DE1 = {
 			isa = PBXGroup;
 			children = (
@@ -136,32 +199,17 @@
 		B75B469D275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXGroup;
 			children = (
-				B7777A3827960D9C00372937 /* Stacks.entitlements */,
-				B72509C927607F0E00858384 /* Info.plist */,
-				B75B469E275B3FC700923DE1 /* AppMain.swift */,
-				B7A732902817BBCF0011FACE /* PersistenceController.swift */,
-				B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */,
-				B72509AB275DE50D00858384 /* Pin.swift */,
-				B74E889F2844828600DFF9FD /* PinDiff.swift */,
-				B704D66B284334DE00C7C874 /* Tags.swift */,
-				B72509AF275DE68B00858384 /* PinsModelFirestore.swift */,
-				B74E88A12844910C00DFF9FD /* PinsModelMerge.swift */,
-				B704D669284327FB00C7C874 /* PinsModelPinboard.swift */,
-				B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */,
-				B72509B6275F2E0800858384 /* AuthService.swift */,
-				B7856B9527704C3400A87DDA /* User.swift */,
-				B711EC5F27686C86005223A2 /* Util.swift */,
-				B72509BA275F2E3900858384 /* FirestoreService.swift */,
-				B72509BE275F2E4200858384 /* RootView.swift */,
-				B72509C2275F2E8E00858384 /* LoginView.swift */,
-				B75B46A0275B3FC700923DE1 /* PinListView.swift */,
-				B70C4E9427953EE70010E119 /* WebView.swift */,
-				B70C4E8C2793F6B70010E119 /* PinView.swift */,
-				B727DDF027A517E100FF3242 /* PinEditView.swift */,
-				B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */,
-				B71EC963279D2AEE00CE9472 /* FlexView */,
-				B7777A39279616B600372937 /* ReaderView.swift */,
+				B74E88A528486A4700DFF9FD /* datatypes */,
+				B74E88A728486AE300DFF9FD /* models */,
+				B74E88A828486AFB00DFF9FD /* secrets */,
+				B74E88A628486A8600DFF9FD /* services */,
+				B74E88A428486A3700DFF9FD /* utils */,
+				B74E88A32848697100DFF9FD /* views */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
+				B72509C927607F0E00858384 /* Info.plist */,
+				B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */,
+				B7777A3827960D9C00372937 /* Stacks.entitlements */,
+				B71EC963279D2AEE00CE9472 /* FlexView */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
 			path = Stacks;
