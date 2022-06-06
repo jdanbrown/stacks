@@ -190,15 +190,16 @@ struct NotesEditView: View {
 //   )
 // }
 
-struct PinEditView_Previews: PreviewProvider {
-  static var previews: some View {
-    let pins = Pin.previewPins
-    Group {
-      NavWrap { PinEditView(pin: pins[0], dismiss: {}) }
-      ForEach(pins[0..<3]) { pin in
-        PinEditView(pin: pin, dismiss: {})
-      }
-    }
-      .previewLayout(.sizeThatFits)
-  }
-}
+// TODO Update for Core Data
+// struct PinEditView_Previews: PreviewProvider {
+//   static var previews: some View {
+//     let pins = Pin.previewPins
+//     Group {
+//       NavWrap { PinEditView(pin: pins[0], dismiss: {}) }
+//       ForEach(pins[0..<3]) { pin in
+//         PinEditView(pin: pin, dismiss: {})
+//       }
+//     }
+//       .previewLayout(.sizeThatFits)
+//   }
+// }

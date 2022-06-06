@@ -15,7 +15,7 @@ class PinsModelPinboard: ObservableObject {
     log.info()
     let url = URL(string: "https://api.pinboard.in/v1/posts/all")!
     let data = try await httpGet(url, queryParams: ["format": "json", "auth_token": apiToken])
-    let posts: [[String: String]] = try fromJson(data) // TODO
+    let posts: [[String: String]] = try fromJson(data)
     log.info("Got posts: count[\(posts.count)]")
     self.pins = try posts.map(pinboardPostToPin)
   }
@@ -25,8 +25,8 @@ class PinsModelPinboard: ObservableObject {
 func pinboardPostToPin(post: [String: String]) throws -> Pin {
   return Pin(
     // Map data that's present in pinboard
-    tombstone:  false,
     url:        try post.getOrThrow("href"),
+    tombstone:  false,
     title:      try post.getOrThrow("description"),
     tags:       (try post.getOrThrow("tags")).split(separator: " ").map { String($0) },
     notes:      try post.getOrThrow("extended"),

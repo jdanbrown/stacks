@@ -1,46 +1,47 @@
 import GameplayKit // For GKMersenneTwisterRandomSource
 import SwiftUI
 
-struct HACK_CorePin_list: View {
-
-  // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest
-  // https://www.hackingwithswift.com/quick-start/swiftui/how-to-limit-the-number-of-items-in-a-fetch-request
-  @FetchRequest(
-    entity: CorePin.entity(),
-    sortDescriptors: [
-      NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
-      // Use .absoluteString because URL isn't Comparable
-      //  - https://stackoverflow.com/questions/66056599/sorting-urls-with-fetchrequest-crashes-when-new-content-is-saved
-      //  - https://developer.apple.com/documentation/foundation/nssortdescriptor?language=objc
-      NSSortDescriptor(key: "url.absoluteString", ascending: true),
-    ]
-  ) var corePins: FetchedResults<CorePin>
-
-  var body: some View {
-
-    // XXX
-    let _ = {
-      print("corePins: length[\(corePins.count)]")
-      for corePin in corePins {
-        print("  corePin[\(corePin)]")
-      }
-    }()
-    List {
-      ForEach(corePins) { corePin in
-        Text(corePin.title ?? "[no-title]")
-        Text(corePin.tags ?? "[no-tags]")
-      }
-    }
-
-  }
-
-}
+// struct HACK_CorePin_list: View {
+//
+//   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest
+//   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-limit-the-number-of-items-in-a-fetch-request
+//   // https://www.hackingwithswift.com/read/38/5/loading-core-data-objects-using-nsfetchrequest-and-nssortdescriptor
+//   @FetchRequest(
+//     entity: CorePin.entity(),
+//     sortDescriptors: [
+//       NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
+//       // Use .absoluteString because URL isn't Comparable
+//       //  - https://stackoverflow.com/questions/66056599/sorting-urls-with-fetchrequest-crashes-when-new-content-is-saved
+//       //  - https://developer.apple.com/documentation/foundation/nssortdescriptor?language=objc
+//       NSSortDescriptor(key: "url.absoluteString", ascending: true),
+//     ]
+//   ) var corePins: FetchedResults<CorePin>
+//
+//   var body: some View {
+//
+//     // XXX
+//     let _ = {
+//       print("corePins: length[\(corePins.count)]")
+//       for corePin in corePins {
+//         print("  corePin[\(corePin)]")
+//       }
+//     }()
+//     List {
+//       ForEach(corePins) { corePin in
+//         Text(corePin.title ?? "[no-title]")
+//         Text(corePin.tags ?? "[no-tags]")
+//       }
+//     }
+//
+//   }
+//
+// }
 
 struct PinListView: View {
 
   var logout: () async -> ()
   var user: User
-  var pins: [Pin]
+  var pins: [CorePin]
 
   @State private var order: Order = .desc
 
@@ -55,13 +56,13 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  init(logout: @escaping () async -> (), user: User, pins: [Pin]) {
+  init(logout: @escaping () async -> (), user: User, pins: [CorePin]) {
     self.logout = logout
     self.user = user
     self.pins = pins
   }
 
-  init(logout: @escaping () async -> (), user: User, pins: [Pin], tagFilter: String?) {
+  init(logout: @escaping () async -> (), user: User, pins: [CorePin], tagFilter: String?) {
     self.init(logout: logout, user: user, pins: pins)
     self.tagFilter = tagFilter
   }
@@ -100,7 +101,7 @@ struct PinListView: View {
         //    - https://stackoverflow.com/questions/64573755/swiftui-scrollview-with-tap-and-drag-gesture
         List {
           ForEach(pins) { pin in
-            pinRow(pin: pin, pins: pins)
+            pinRow(pin: pin.toPin(), pins: pins)
           }
         }
           // Use .id to force-rebuild the ScrollView when order changes, to jump to top when cycling order
@@ -149,9 +150,8 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func pinRow(pin: Pin, pins: [Pin]) -> some View {
-
-    let isLast = pin.id == pins.last?.id
+  func pinRow(pin: Pin, pins: [CorePin]) -> some View {
+    let isLast = pin.id == pins.last?.toPin().id
     PinView(pin: pin, navigationPushTag: navigationPushTag)
 
       // Replace List separators with custom separators
@@ -285,28 +285,28 @@ struct PinListView: View {
     }
   }
 
-  func pinsForView() -> [Pin] {
+  func pinsForView() -> [CorePin] {
     var pins = self.pins
     // Filter
     if let tagFilter = tagFilter {
-      pins = pins.filter { $0.tags.contains(tagFilter) }
+      pins = pins.filter { $0.tagsList.contains(tagFilter) }
     }
     if var searchFilter = searchFilter, searchFilter != "" {
       searchFilter = searchFilter.lowercased()
       pins = pins.filter { pin in
         // TODO Probably slow, but a very simple first implementation
-        ((try? toJson(pin)) ?? "").lowercased().contains(searchFilter)
+        ((try? toJson(pin.toPin())) ?? "").lowercased().contains(searchFilter)
       }
     }
     // Order
     switch order {
       case .desc:
-        pins = pins.sorted(key: \.createdAt, desc: true)
+        pins = pins.sorted(key: { $0.createdAt ?? Date.zero }, desc: true)
       case .asc:
-        pins = pins.sorted(key: \.createdAt, desc: false)
+        pins = pins.sorted(key: { $0.createdAt ?? Date.zero }, desc: false)
       case .shuffle(let seed):
         let generator = GKMersenneTwisterRandomSource(seed: seed)
-        pins = generator.arrayByShufflingObjects(in: pins) as! [Pin]
+        pins = generator.arrayByShufflingObjects(in: pins) as! [CorePin]
     }
     return pins
   }
@@ -356,15 +356,16 @@ struct PinListView: View {
 
 }
 
-struct PinListView_Previews: PreviewProvider {
-  static var previews: some View {
-    let logout: () async -> () = {}
-    let user = User.previewUser0
-    let pins = Pin.previewPins
-    // HACK Split in two to workaround xcode previews not letting you focus views inside a NavigationView
-    // HACK Wrap each in ZStack to avoid FocusState crashing previews
-    //  - https://stackoverflow.com/questions/70430440/why-focusstate-crashing-swiftui-preview
-    ZStack { NavWrap { PinListView(logout: logout, user: user, pins: pins) } }
-    ZStack { PinListView(logout: logout, user: user, pins: pins) }
-  }
-}
+// TODO Update for Core Data
+// struct PinListView_Previews: PreviewProvider {
+//   static var previews: some View {
+//     let logout: () async -> () = {}
+//     let user = User.previewUser0
+//     let pins = Pin.previewPins
+//     // HACK Split in two to workaround xcode previews not letting you focus views inside a NavigationView
+//     // HACK Wrap each in ZStack to avoid FocusState crashing previews
+//     //  - https://stackoverflow.com/questions/70430440/why-focusstate-crashing-swiftui-preview
+//     ZStack { NavWrap { PinListView(logout: logout, user: user, pins: pins) } }
+//     ZStack { PinListView(logout: logout, user: user, pins: pins) }
+//   }
+// }

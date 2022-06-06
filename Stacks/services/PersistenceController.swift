@@ -19,6 +19,10 @@ class PersistenceController {
 
   let container: NSPersistentCloudKitContainer
 
+  var managedObjectContext: NSManagedObjectContext {
+    return container.viewContext
+  }
+
   init(preview: Bool = false) {
     log.info()
 
@@ -80,8 +84,13 @@ class PersistenceController {
 
   func save() {
     log.info()
-    let context = container.viewContext
+    saveWith(context: managedObjectContext)
+  }
+
+  func saveWith(context: NSManagedObjectContext) {
+    log.info()
     if context.hasChanges {
+      log.info("Saving: hasChanges[\(context.hasChanges)]")
       do {
         try context.save()
       } catch {
@@ -104,11 +113,11 @@ class PersistenceController {
     let controller = PersistenceController(preview: true)
 
     let pin0 = CorePin(context: controller.container.viewContext)
-    pin0.url = URL(string: "http://foo.one")
+    pin0.url = "http://foo.one"
     pin0.title = "Foo One"
 
     let pin1 = CorePin(context: controller.container.viewContext)
-    pin1.url = URL(string: "http://foo.two")
+    pin1.url = "http://foo.two"
     pin1.title = "Foo Two"
 
     return controller

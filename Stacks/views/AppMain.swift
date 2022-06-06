@@ -14,7 +14,7 @@ struct AppMain: App {
 
   let pinsModelPinboard: PinsModelPinboard
 
-  let pinsModelMerge: PinsModelMerge
+  let pinsModel: PinsModel
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
@@ -59,18 +59,32 @@ struct AppMain: App {
     // Pinboard
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
-    let pinsModelMerge = PinsModelMerge(pinsModelFirestore: pinsModelFirestore, pinsModelPinboard: pinsModelPinboard)
+    // PinsModel (Core Data)
+    let pinsModel = PinsModel(
+      persistenceController: persistenceController,
+      pinsPublishers: [
+        pinsModelFirestore.$pins, // TODO Restore
+        pinsModelPinboard.$pins, // TODO Restore
+      ]
+    )
+    pinsModel.load()
 
     // Initialize fields
     self.auth = auth
     self.firestore = firestore
     self.pinsModelFirestore = pinsModelFirestore
     self.pinsModelPinboard = pinsModelPinboard
-    self.pinsModelMerge = pinsModelMerge
+    self.pinsModel = pinsModel
 
   }
 
   func initAsync() async {
+    log.info()
+    await initAsyncPinboard()
+  }
+
+  // Fetch pinboard once at startup (http get)
+  func initAsyncPinboard() async {
     log.info()
     do {
       // TODO Integrate this with ProgressView() at startup
@@ -90,7 +104,7 @@ struct AppMain: App {
       auth: auth,
       // pinsModelFirestore: pinsModelFirestore,
       // pinsModelPinboard: pinsModelPinboard
-      pinsModelMerge: pinsModelMerge
+      pinsModel: pinsModel
     )
   }
 
@@ -105,7 +119,7 @@ struct AppScene: Scene {
   @ObservedObject var auth: AuthService
   // @ObservedObject var pinsModelFirestore: PinsModelFirestore
   // @ObservedObject var pinsModelPinboard: PinsModelPinboard
-  @ObservedObject var pinsModelMerge: PinsModelMerge
+  @ObservedObject var pinsModel: PinsModel
 
   // Docs
   //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
@@ -122,14 +136,15 @@ struct AppScene: Scene {
           authState: auth.authState,
           login: auth.login,
           logout: auth.logout,
-          // TODO TODO
-          pins: pinsModelMerge.pins
+          // TODO Add the proper PinsModel
+          pins: pinsModel.corePins
+          // pins: pinsModel.pins
           // pins: pinsModelFirestore.pins
           // pins: pinsModelPinboard.pins
           // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
-        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        .environment(\.managedObjectContext, persistenceController.managedObjectContext)
         .task { await initAsync() }
         .onOpenURL { auth.onOpenURL($0) }
     }

@@ -256,6 +256,8 @@ extension Date {
     return calendar.component(component, from: self)
   }
 
+  static let zero: Date = Date(timeIntervalSince1970: 0)
+
   // Docs
   //  - https://www.datetimeformatter.com/how-to-format-date-time-in-swift/
   //  - https://nsdateformatter.com/

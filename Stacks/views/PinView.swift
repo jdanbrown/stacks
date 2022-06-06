@@ -110,38 +110,39 @@ struct PinView: View {
 
 }
 
-struct PinView_Previews: PreviewProvider {
-  static var previews: some View {
-    let pins = Pin.previewPins
-    Group {
-
-      // TODO Down
-      //  - TODO Why does this display nothing inside the box?
-      //  - TODO How to size the frame to fit the content?
-      // HTML("<html><body><h1>bar</h1><div>foo</div></body></html>")
-        // .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-        // .frame(height: 300) // XXX Hack
-
-      // TODO MarkdownUI
-      // Text(Pin.previewMarkdown)
-      // Text(.init(Pin.previewMarkdown))
-      // let exmd0 = Pin.previewMarkdown
-      // let exmd1 = "This is **bold** and *italic*!"
-      // Text(.init(exmd0))
-      // Text(.init(exmd1))
-      // Markdown(exmd0)
-      // Markdown(Document(exmd1))
-      // Markdown(Document("This is **bold** and *italic*!"))
-      // Markdown(Document(Pin.previewMarkdown))
-
-      ForEach(pins[0..<15]) { pin in
-        PinView(pin: pin, navigationPushTag: { tag in () })
-      }
-
-    }
-      .previewLayout(.sizeThatFits)
-  }
-}
+// TODO Update for Core Data
+// struct PinView_Previews: PreviewProvider {
+//   static var previews: some View {
+//     let pins = Pin.previewPins
+//     Group {
+//
+//       // TODO Down
+//       //  - TODO Why does this display nothing inside the box?
+//       //  - TODO How to size the frame to fit the content?
+//       // HTML("<html><body><h1>bar</h1><div>foo</div></body></html>")
+//         // .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+//         // .frame(height: 300) // XXX Hack
+//
+//       // TODO MarkdownUI
+//       // Text(Pin.previewMarkdown)
+//       // Text(.init(Pin.previewMarkdown))
+//       // let exmd0 = Pin.previewMarkdown
+//       // let exmd1 = "This is **bold** and *italic*!"
+//       // Text(.init(exmd0))
+//       // Text(.init(exmd1))
+//       // Markdown(exmd0)
+//       // Markdown(Document(exmd1))
+//       // Markdown(Document("This is **bold** and *italic*!"))
+//       // Markdown(Document(Pin.previewMarkdown))
+//
+//       ForEach(pins[0..<15]) { pin in
+//         PinView(pin: pin, navigationPushTag: { tag in () })
+//       }
+//
+//     }
+//       .previewLayout(.sizeThatFits)
+//   }
+// }
 
 func showUrlForTimeline(_ url: String) -> String {
   return url.replacingOccurrences(of: #"^https?://"#, with: "", options: [.regularExpression])

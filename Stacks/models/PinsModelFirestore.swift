@@ -17,7 +17,7 @@ class PinsModelFirestore: ObservableObject {
   var firestore: FirestoreService
 
   private var listeners: [ListenerRegistration] = []
-  private var cancellables: [Cancellable] = [] // NOTE Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
+  private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
 
   init(auth: AuthService, firestore: FirestoreService) {
     self.auth = auth
@@ -75,7 +75,6 @@ class PinsModelFirestore: ObservableObject {
         }
 
         // HACK Uncomment this to dump data to the Xcode console to copy/paste out for Previews
-        //  - How can we make this a cli script or something?
         // let pinsJson = try! toJson(self.pins, pretty: true)
         // log.info("Dumping all pins: count[\(self.pins.count)], pins[\(pinsJson)]")
 

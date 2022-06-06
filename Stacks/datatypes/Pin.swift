@@ -1,3 +1,4 @@
+import CoreData
 import Firebase
 import FirebaseFirestoreSwift
 import SwiftUI
@@ -11,9 +12,40 @@ import XCGLogger
 //  - Requires all let's be var's (ugh)
 //  - How will PinEditView work? -- that's all that should matter
 
+extension CorePin {
+
+  var tagsList: [String] {
+    // TODO Cache
+    return Tags.decode(tags ?? "")
+  }
+
+  func toPin() -> Pin {
+    return Pin(
+      url: self.url ?? "[null-url]",
+      tombstone: self.tombstone,
+      title: self.title ?? "[null-title]",
+      tags: Tags.decode(self.tags ?? "[null-tags]"),
+      notes: self.notes ?? "[null-notes]",
+      createdAt: self.createdAt ?? Date.zero,
+      modifiedAt: self.modifiedAt ?? Date.zero,
+      accessedAt: self.accessedAt ?? Date.zero,
+      isRead: self.isRead,
+      progressPageScroll: 0, // TODO
+      progressPageScrollMax: 0, // TODO
+      progressPdfPage: 0, // TODO
+      progressPdfPageMax: 0 // TODO
+    )
+  }
+
+}
+
 // Codable enabled by `import FirebaseFirestoreSwift`
 //  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 struct Pin: Codable, Identifiable, Equatable {
+
+  // TODO or XXX
+  //  - Used in PinsModel.update
+  var managedObjectID: NSManagedObjectID? = nil
 
   // id is determined by url
   var id: String {
@@ -21,8 +53,8 @@ struct Pin: Codable, Identifiable, Equatable {
   }
 
   let schemaVersion: String = "v1"
-  let tombstone: Bool
   let url: String // NOTE When we need it: URL.absoluteString -> String
+  let tombstone: Bool
   let title: String
   let tags: [String]
   let notes: String
@@ -46,8 +78,8 @@ struct Pin: Codable, Identifiable, Equatable {
 
   enum CodingKeys: String, CodingKey {
     case schemaVersion = "schema_version"
-    case tombstone
     case url
+    case tombstone
     case title
     case tags
     case notes
@@ -143,8 +175,8 @@ struct Pin: Codable, Identifiable, Equatable {
     let earlier = x.modifiedAt <= y.modifiedAt ? x : y
     let later   = x.modifiedAt >  y.modifiedAt ? x : y
     return Pin(
-      tombstone:             later.tombstone,
       url:                   url,
+      tombstone:             later.tombstone,
       title:                 later.title,
       tags:                  (x.tags + y.tags).unique(),
       notes:                 later.notes,
@@ -164,39 +196,39 @@ struct Pin: Codable, Identifiable, Equatable {
 
 class Pins {
 
-  // Properties
-  //  - Idempotent
-  //  - Minimally destructive / maximally recoverable
-  //
-  // Examples
-  //  - Merge pinboard/firestore/stacks -> edit url X->Y in stacks -> merge pinboard/firestore/stacks
-  //    - Don't recreate pin with url X that was already moved to Y
-  //  - Merge pinboard/firestore/stacks -> manually de-dupe notes text in stacks -> merge pinboard/firestore/stacks
-  //    - Don't junk up notes text with more '==='
-  //    - Don't endlessly append '===' conflicts onto the already conflict-annotated notes text
-  //
-  static func merge(_ xs: [Pin], _ ys: [Pin]) -> ([Pin], [PinDiff]) {
-    let xd = Dictionary(uniqueKeysWithValues: xs.map { ($0.url, $0) }) // Fails if duplicates url's
-    let yd = Dictionary(uniqueKeysWithValues: ys.map { ($0.url, $0) }) // Fails if duplicates url's
-    var zs: [Pin] = []
-    var diffs: [PinDiff] = []
-    for k in Set(xd.keys).union(yd.keys) {
-      let x = xd[k]
-      let y = yd[k]
-      if y == nil {
-        zs.append(x!)
-      } else if x == nil {
-        zs.append(y!)
-      } else if x == y {
-        zs.append(x!)
-      } else {
-        let z = Pin.merge(x!, y!)
-        zs.append(z)
-        diffs.append(PinDiff(before: [x!, y!], after: z))
-      }
-    }
-    log.info("xs.count[\(xs.count)], ys.count[\(ys.count)] -> zs.count[\(zs.count)], diffs.count[\(diffs.count)]")
-    return (zs, diffs)
-  }
+  // // Properties
+  // //  - Idempotent
+  // //  - Minimally destructive / maximally recoverable
+  // //
+  // // Examples
+  // //  - Merge pinboard/firestore/stacks -> edit url X->Y in stacks -> merge pinboard/firestore/stacks
+  // //    - Don't recreate pin with url X that was already moved to Y
+  // //  - Merge pinboard/firestore/stacks -> manually de-dupe notes text in stacks -> merge pinboard/firestore/stacks
+  // //    - Don't junk up notes text with more '==='
+  // //    - Don't endlessly append '===' conflicts onto the already conflict-annotated notes text
+  // //
+  // static func merge(_ xs: [Pin], _ ys: [Pin]) -> ([Pin], [PinDiff]) {
+  //   let xd = Dictionary(uniqueKeysWithValues: xs.map { ($0.url, $0) }) // Fails if duplicates url's
+  //   let yd = Dictionary(uniqueKeysWithValues: ys.map { ($0.url, $0) }) // Fails if duplicates url's
+  //   var zs: [Pin] = []
+  //   var diffs: [PinDiff] = []
+  //   for k in Set(xd.keys).union(yd.keys) {
+  //     let x = xd[k]
+  //     let y = yd[k]
+  //     if y == nil {
+  //       zs.append(x!)
+  //     } else if x == nil {
+  //       zs.append(y!)
+  //     } else if x == y {
+  //       zs.append(x!)
+  //     } else {
+  //       let z = Pin.merge(x!, y!)
+  //       zs.append(z)
+  //       diffs.append(PinDiff(before: [x!, y!], after: z))
+  //     }
+  //   }
+  //   log.info("xs.count[\(xs.count)], ys.count[\(ys.count)] -> zs.count[\(zs.count)], diffs.count[\(diffs.count)]")
+  //   return (zs, diffs)
+  // }
 
 }
