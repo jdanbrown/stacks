@@ -21,20 +21,28 @@ class StorageProvider {
     log.info()
 
     // Make NSPersistentCloudKitContainer with name of .xcdatamodeld
+    //  - Practical Core Data (p18)
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     persistentContainer = NSPersistentCloudKitContainer(name: "Model")
 
-    // Don't persist saves in Previews
+    // In Xcode Previews, use a throwaway store (no initial state + writes don't persist)
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
     if preview {
       persistentContainer.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
 
-    // Both agree on this
+    // Load Core Data stores
+    //  - Practical Core Data (p18)
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     persistentContainer.loadPersistentStores { storeDescription, error in
       if let error = error {
+        // TODO Handle errors more gracefully
+        //  - Practical Core Data (p18-19)
+        //    - "Note that I am not handling any errors that might occur when loading my persistent store. At this point
+        //      in the book and in the context of this chapter, a failure to load the persistent store is a programming
+        //      error and not a recoverable situation. When your app is in production there are various reasons for the
+        //      persistent container to fail loading your persistent stores."
         fatalError("Failed to load Core Data store: \(error)")
       }
     }
