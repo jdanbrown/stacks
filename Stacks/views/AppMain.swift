@@ -6,7 +6,7 @@ import XCGLogger
 struct AppMain: App {
 
   let hasICloud: Bool
-  let persistenceController: PersistenceController
+  let storageProvider: StorageProvider
 
   let firestore: FirestoreService
   let auth: AuthService
@@ -43,9 +43,9 @@ struct AppMain: App {
     //    - https://stackoverflow.com/questions/59138880/nspersistentcloudkitcontainer-how-to-check-if-data-is-synced-to-cloudkit
     self.hasICloud = FileManager.default.ubiquityIdentityToken != nil
 
-    // PersistenceController for CloudKit + Core Data
+    // StorageProvider for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    self.persistenceController = PersistenceController.shared
+    self.storageProvider = StorageProvider.shared
 
     // Firestore
     //  - Must call configure() before AuthService()
@@ -61,7 +61,7 @@ struct AppMain: App {
 
     // PinsModel (Core Data)
     let pinsModel = PinsModel(
-      persistenceController: persistenceController,
+      storageProvider: storageProvider,
       pinsPublishers: [
         pinsModelFirestore.$pins, // TODO Restore
         pinsModelPinboard.$pins, // TODO Restore
@@ -104,7 +104,7 @@ struct AppMain: App {
     AppScene(
       initAsync: initAsync,
       hasICloud: hasICloud,
-      persistenceController: persistenceController,
+      storageProvider: storageProvider,
       auth: auth,
       // pinsModelFirestore: pinsModelFirestore,
       // pinsModelPinboard: pinsModelPinboard
@@ -118,7 +118,7 @@ struct AppScene: Scene {
 
   let initAsync: () async -> ()
   let hasICloud: Bool
-  let persistenceController: PersistenceController
+  let storageProvider: StorageProvider
 
   @ObservedObject var auth: AuthService
   // @ObservedObject var pinsModelFirestore: PinsModelFirestore
@@ -150,14 +150,14 @@ struct AppScene: Scene {
           // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
-        .environment(\.managedObjectContext, persistenceController.managedObjectContext)
+        .environment(\.managedObjectContext, storageProvider.managedObjectContext)
         .task { await initAsync() }
         .onOpenURL { auth.onOpenURL($0) }
     }
       .onChange(of: scenePhase) { phase in
         log.info("onChange: scenephase[\(phase)]")
         if [.inactive, .background].contains(phase) {
-          persistenceController.save()
+          storageProvider.save()
         }
       }
   }

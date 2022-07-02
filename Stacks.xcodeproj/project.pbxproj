@@ -44,7 +44,7 @@
 		B79A4E2027E8368300E7483B /* AutoNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */; };
 		B7A7328C2817B5650011FACE /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A7328B2817B5650011FACE /* CloudKit.framework */; };
 		B7A7328F2817B7AA0011FACE /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */; };
-		B7A732912817BBCF0011FACE /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A732902817BBCF0011FACE /* PersistenceController.swift */; };
+		B7A732912817BBCF0011FACE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A732902817BBCF0011FACE /* StorageProvider.swift */; };
 		B7A732932817C4930011FACE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7A732922817C4930011FACE /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -80,7 +80,7 @@
 		B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoNavigationLink.swift; sourceTree = "<group>"; };
 		B7A7328B2817B5650011FACE /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B7A7328E2817B7AA0011FACE /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		B7A732902817BBCF0011FACE /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		B7A732902817BBCF0011FACE /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
 		B7A732922817C4930011FACE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,7 +155,7 @@
 			children = (
 				B72509B6275F2E0800858384 /* AuthService.swift */,
 				B72509BA275F2E3900858384 /* FirestoreService.swift */,
-				B7A732902817BBCF0011FACE /* PersistenceController.swift */,
+				B7A732902817BBCF0011FACE /* StorageProvider.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -345,7 +345,7 @@
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 				B704D66E2843379400C7C874 /* PINBOARD_API_TOKEN.swift in Sources */,
 				B74E88A22844910C00DFF9FD /* PinsModel.swift in Sources */,
-				B7A732912817BBCF0011FACE /* PersistenceController.swift in Sources */,
+				B7A732912817BBCF0011FACE /* StorageProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

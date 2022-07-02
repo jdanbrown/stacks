@@ -16,16 +16,16 @@ class PinsModel: ObservableObject {
   @Published var corePins: [CorePin] = []
   @Published var pins: [Pin] = []
 
-  let persistenceController: PersistenceController
+  let storageProvider: StorageProvider
   let pinsPublishers: [Published<[Pin]>.Publisher]
 
   private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
 
   init(
-    persistenceController: PersistenceController,
+    storageProvider: StorageProvider,
     pinsPublishers: [Published<[Pin]>.Publisher]
   ) {
-    self.persistenceController = persistenceController
+    self.storageProvider = storageProvider
     self.pinsPublishers = pinsPublishers
 
     // XXX Hmm, try doing this _after_ load() from CloudKit, to see if that fixes the duplicate-insert races
@@ -49,7 +49,7 @@ class PinsModel: ObservableObject {
     //   self,
     //   selector: #selector(self.load),
     //   name: .NSManagedObjectContextDidSave,
-    //   object: self.persistenceController.managedObjectContext
+    //   object: self.storageProvider.managedObjectContext
     // )
 
   }
@@ -66,7 +66,7 @@ class PinsModel: ObservableObject {
       ]
       do {
         log.info("Fetching req[\(req)]")
-        self.corePins = try self.persistenceController.managedObjectContext.fetch(req)
+        self.corePins = try self.storageProvider.managedObjectContext.fetch(req)
         log.info("Fetched corePins[\(self.corePins.count)]")
         self.pins = self.corePins.map { $0.toPin() }
       } catch {
@@ -87,7 +87,7 @@ class PinsModel: ObservableObject {
       self,
       selector: #selector(self.load),
       name: .NSManagedObjectContextDidSave,
-      object: self.persistenceController.managedObjectContext
+      object: self.storageProvider.managedObjectContext
     )
   }
 
@@ -120,10 +120,10 @@ class PinsModel: ObservableObject {
     //  - https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/Concurrency.html
     //  - https://developer.apple.com/documentation/coredata/using_core_data_in_the_background
     //  - https://cocoacasts.com/three-common-core-data-mistakes-to-avoid
-    //  - I previously tried persistenceController.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
+    //  - I previously tried storageProvider.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
     //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
     DispatchQueue.main.async {
-      let context = self.persistenceController.managedObjectContext
+      let context = self.storageProvider.managedObjectContext
       log.info("pins[\(pins.count)]")
       for pin in pins {
         if let corePin = self._fetchCorePin(url: pin.url) {
@@ -131,7 +131,7 @@ class PinsModel: ObservableObject {
         } else {
           self._insert(context, pin)
         }
-        self.persistenceController.saveWith(context: context)
+        self.storageProvider.saveWith(context: context)
       }
       log.info("Done: pins[\(pins.count)]")
     }
@@ -142,7 +142,7 @@ class PinsModel: ObservableObject {
     req.predicate = NSPredicate(format: "url = %@", url)
     do {
       log.info("Fetching req[\(req)]")
-      let corePins = try self.persistenceController.managedObjectContext.fetch(req)
+      let corePins = try self.storageProvider.managedObjectContext.fetch(req)
       if corePins.count == 0 {
         log.info("Fetched no corePins")
         return nil
@@ -167,10 +167,10 @@ class PinsModel: ObservableObject {
   //   //  - https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/Concurrency.html
   //   //  - https://developer.apple.com/documentation/coredata/using_core_data_in_the_background
   //   //  - https://cocoacasts.com/three-common-core-data-mistakes-to-avoid
-  //   //  - I previously tried persistenceController.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
+  //   //  - I previously tried storageProvider.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
   //   //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
   //   DispatchQueue.main.async {
-  //     let context = self.persistenceController.managedObjectContext
+  //     let context = self.storageProvider.managedObjectContext
   //     log.info("pins[\(pins.count)]")
   //     // If multiple pins have the same url, upsert into the first pin and (silently) ignore the rest
   //     //  - Leave it to the user to notice and manually clean up
@@ -220,7 +220,7 @@ class PinsModel: ObservableObject {
   //           self._insert(context, pin)
   //         }
   //       }
-  //       self.persistenceController.saveWith(context: context)
+  //       self.storageProvider.saveWith(context: context)
   //     }
   //
   //     log.info("Done: pins[\(pins.count)]")
@@ -300,11 +300,11 @@ class PinsModel: ObservableObject {
   // // TODO Call from callers
   // func insert(_ pin: Pin) {
   //   log.info("pin[\(pin)]")
-  //   let m = CorePin(context: persistenceController.managedObjectContext)
+  //   let m = CorePin(context: storageProvider.managedObjectContext)
   //   // TODO Assign all the fields
   //   m.title = pin.title
   //   // ...
-  //   persistenceController.save()
+  //   storageProvider.save()
   // }
 
   // // TODO Call from callers
@@ -313,7 +313,7 @@ class PinsModel: ObservableObject {
   //   if let mid = pin.managedObjectID {
   //     var m: CorePin?
   //     do {
-  //       m = try persistenceController.managedObjectContext.existingObject(with: mid) as! CorePin?
+  //       m = try storageProvider.managedObjectContext.existingObject(with: mid) as! CorePin?
   //     } catch {
   //       m = nil
   //     }
@@ -321,7 +321,7 @@ class PinsModel: ObservableObject {
   //       // TODO Assign all the fiels
   //       m.title = pin.title
   //       // ...
-  //       persistenceController.save()
+  //       storageProvider.save()
   //     } else {
   //       throw SimpleError("Pin not found: pin[\(pin)]")
   //     }

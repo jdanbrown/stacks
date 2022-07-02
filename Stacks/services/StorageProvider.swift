@@ -12,10 +12,10 @@ import CoreData
 // Based on:
 //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
 //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
-class PersistenceController {
+class StorageProvider {
 
   // Singleton
-  static let shared = PersistenceController()
+  static let shared = StorageProvider()
 
   let container: NSPersistentCloudKitContainer
 
@@ -108,19 +108,19 @@ class PersistenceController {
     // TODO In case we need to do anything on updates, beyond @State which will already update our Views
   }
 
-  // Mock controller for previews
-  static var preview: PersistenceController = {
-    let controller = PersistenceController(preview: true)
+  // Mock for previews
+  static var preview: StorageProvider = {
+    let storageProvider = StorageProvider(preview: true)
 
-    let pin0 = CorePin(context: controller.container.viewContext)
+    let pin0 = CorePin(context: storageProvider.container.viewContext)
     pin0.url = "http://foo.one"
     pin0.title = "Foo One"
 
-    let pin1 = CorePin(context: controller.container.viewContext)
+    let pin1 = CorePin(context: storageProvider.container.viewContext)
     pin1.url = "http://foo.two"
     pin1.title = "Foo Two"
 
-    return controller
+    return storageProvider
   }()
 
 }
