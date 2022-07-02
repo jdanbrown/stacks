@@ -90,16 +90,16 @@ class StorageProvider {
     // junk0.url = URL(string: "http://junk.one/\(now)")
     // junk0.title = "Junk One - \(now)"
     // junk0.tags = "tag-0,tag-1"
-    // save()
+    // saveViewContext()
 
   }
 
-  func save() {
+  func saveViewContext() {
     log.info()
-    saveWith(context: viewContext)
+    save(context: viewContext)
   }
 
-  func saveWith(context: NSManagedObjectContext) {
+  func save(context: NSManagedObjectContext) {
     log.info()
     if context.hasChanges {
       log.info("Saving: hasChanges[\(context.hasChanges)]")

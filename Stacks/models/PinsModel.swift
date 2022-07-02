@@ -131,7 +131,7 @@ class PinsModel: ObservableObject {
         } else {
           self._insert(context, pin)
         }
-        self.storageProvider.saveWith(context: context)
+        self.storageProvider.save(context: context)
       }
       log.info("Done: pins[\(pins.count)]")
     }
@@ -220,7 +220,7 @@ class PinsModel: ObservableObject {
   //           self._insert(context, pin)
   //         }
   //       }
-  //       self.storageProvider.saveWith(context: context)
+  //       self.storageProvider.save(context: context)
   //     }
   //
   //     log.info("Done: pins[\(pins.count)]")
@@ -304,7 +304,7 @@ class PinsModel: ObservableObject {
   //   // TODO Assign all the fields
   //   m.title = pin.title
   //   // ...
-  //   storageProvider.save()
+  //   storageProvider.saveViewContext()
   // }
 
   // // TODO Call from callers
@@ -321,7 +321,7 @@ class PinsModel: ObservableObject {
   //       // TODO Assign all the fiels
   //       m.title = pin.title
   //       // ...
-  //       storageProvider.save()
+  //       storageProvider.saveViewContext()
   //     } else {
   //       throw SimpleError("Pin not found: pin[\(pin)]")
   //     }

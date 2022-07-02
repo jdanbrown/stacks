@@ -157,7 +157,7 @@ struct AppScene: Scene {
       .onChange(of: scenePhase) { phase in
         log.info("onChange: scenephase[\(phase)]")
         if [.inactive, .background].contains(phase) {
-          storageProvider.save()
+          storageProvider.saveViewContext()
         }
       }
   }
