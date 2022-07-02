@@ -35,7 +35,7 @@ class StorageProvider {
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     persistentContainer.loadPersistentStores { storeDescription, error in
       if let error = error {
-        fatalError("\(error)")
+        fatalError("Failed to load Core Data store: \(error)")
       }
     }
 
