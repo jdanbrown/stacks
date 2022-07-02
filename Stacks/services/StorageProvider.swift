@@ -14,9 +14,6 @@ import CoreData
 //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
 class StorageProvider {
 
-  // Singleton
-  static let shared = StorageProvider()
-
   let persistentContainer: NSPersistentCloudKitContainer
   var managedObjectContext: NSManagedObjectContext { return persistentContainer.viewContext }
 

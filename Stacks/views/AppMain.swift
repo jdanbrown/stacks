@@ -45,7 +45,7 @@ struct AppMain: App {
 
     // StorageProvider for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    self.storageProvider = StorageProvider.shared
+    self.storageProvider = StorageProvider()
 
     // Firestore
     //  - Must call configure() before AuthService()
