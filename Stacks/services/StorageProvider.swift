@@ -15,7 +15,7 @@ import CoreData
 class StorageProvider {
 
   let persistentContainer: NSPersistentCloudKitContainer
-  var managedObjectContext: NSManagedObjectContext { return persistentContainer.viewContext }
+  var viewContext: NSManagedObjectContext { return persistentContainer.viewContext }
 
   init(preview: Bool = false) {
     log.info()
@@ -96,7 +96,7 @@ class StorageProvider {
 
   func save() {
     log.info()
-    saveWith(context: managedObjectContext)
+    saveWith(context: viewContext)
   }
 
   func saveWith(context: NSManagedObjectContext) {

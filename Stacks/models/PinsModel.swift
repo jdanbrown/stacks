@@ -49,7 +49,7 @@ class PinsModel: ObservableObject {
     //   self,
     //   selector: #selector(self.load),
     //   name: .NSManagedObjectContextDidSave,
-    //   object: self.storageProvider.managedObjectContext
+    //   object: self.storageProvider.viewContext
     // )
 
   }
@@ -66,7 +66,7 @@ class PinsModel: ObservableObject {
       ]
       do {
         log.info("Fetching req[\(req)]")
-        self.corePins = try self.storageProvider.managedObjectContext.fetch(req)
+        self.corePins = try self.storageProvider.viewContext.fetch(req)
         log.info("Fetched corePins[\(self.corePins.count)]")
         self.pins = self.corePins.map { $0.toPin() }
       } catch {
@@ -87,7 +87,7 @@ class PinsModel: ObservableObject {
       self,
       selector: #selector(self.load),
       name: .NSManagedObjectContextDidSave,
-      object: self.storageProvider.managedObjectContext
+      object: self.storageProvider.viewContext
     )
   }
 
@@ -123,7 +123,7 @@ class PinsModel: ObservableObject {
     //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
     //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
     DispatchQueue.main.async {
-      let context = self.storageProvider.managedObjectContext
+      let context = self.storageProvider.viewContext
       log.info("pins[\(pins.count)]")
       for pin in pins {
         if let corePin = self._fetchCorePin(url: pin.url) {
@@ -142,7 +142,7 @@ class PinsModel: ObservableObject {
     req.predicate = NSPredicate(format: "url = %@", url)
     do {
       log.info("Fetching req[\(req)]")
-      let corePins = try self.storageProvider.managedObjectContext.fetch(req)
+      let corePins = try self.storageProvider.viewContext.fetch(req)
       if corePins.count == 0 {
         log.info("Fetched no corePins")
         return nil
@@ -170,7 +170,7 @@ class PinsModel: ObservableObject {
   //   //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
   //   //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
   //   DispatchQueue.main.async {
-  //     let context = self.storageProvider.managedObjectContext
+  //     let context = self.storageProvider.viewContext
   //     log.info("pins[\(pins.count)]")
   //     // If multiple pins have the same url, upsert into the first pin and (silently) ignore the rest
   //     //  - Leave it to the user to notice and manually clean up
@@ -289,7 +289,7 @@ class PinsModel: ObservableObject {
   // //  - upsert(pins)
   // func upsert(_ pin: Pin) throws {
   //   log.info("pin[\(pin)]")
-  //   // TODO Hmm, is this actually a good way to detect insert-vs-update, or should we drop down to managedObjectContext.existingObject?
+  //   // TODO Hmm, is this actually a good way to detect insert-vs-update, or should we drop down to viewContext.existingObject?
   //   if !self.pins.map({ $0.url} ).contains(pin.url) {
   //     self.insert(pin)
   //   } else {
@@ -300,7 +300,7 @@ class PinsModel: ObservableObject {
   // // TODO Call from callers
   // func insert(_ pin: Pin) {
   //   log.info("pin[\(pin)]")
-  //   let m = CorePin(context: storageProvider.managedObjectContext)
+  //   let m = CorePin(context: storageProvider.viewContext)
   //   // TODO Assign all the fields
   //   m.title = pin.title
   //   // ...
@@ -313,7 +313,7 @@ class PinsModel: ObservableObject {
   //   if let mid = pin.managedObjectID {
   //     var m: CorePin?
   //     do {
-  //       m = try storageProvider.managedObjectContext.existingObject(with: mid) as! CorePin?
+  //       m = try storageProvider.viewContext.existingObject(with: mid) as! CorePin?
   //     } catch {
   //       m = nil
   //     }

@@ -150,7 +150,7 @@ struct AppScene: Scene {
           // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
-        .environment(\.managedObjectContext, storageProvider.managedObjectContext)
+        .environment(\.managedObjectContext, storageProvider.viewContext)
         .task { await initAsync() }
         .onOpenURL { auth.onOpenURL($0) }
     }
