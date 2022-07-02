@@ -6,9 +6,10 @@ struct RootView: View {
   var authState: AuthState
   var login: () async -> ()
   var logout: () async -> ()
-  var pins: [CorePin]
+  var pins: [Pin]
 
   var body: some View {
+    // let _ = log.warning("pins[].tags[\(pins.map { $0.tags })]") // XXX Debug
     VStack {
       if !hasICloud {
         Text("Please log into iCloud (in the Settings app), and then restart this app")

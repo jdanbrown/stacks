@@ -67,7 +67,11 @@ struct AppMain: App {
         pinsModelPinboard.$pins, // TODO Restore
       ]
     )
+    // TODO TODO Try loading Pinboard/Firestore _after_ CloudKit, to see if that fixes the duplicate-insert races
+    //  - Both call into DispatchQueue.main.async, so they _should_ synchronize
     pinsModel.load()
+    pinsModel.addObserverToLoadOnSave() // After CoreData/CloudKit (load) + before Pinboard/Firestore (loadPinsPublishers)
+    pinsModel.loadPinsPublishers()
 
     // Initialize fields
     self.auth = auth
@@ -129,6 +133,7 @@ struct AppScene: Scene {
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
+    // let _ = log.warning("pinsModel.corePins[].tagsList[\(pinsModel.corePins.map { $0.tagsList })]") // XXX Debug
     WindowGroup {
       Group {
         RootView(
@@ -137,7 +142,8 @@ struct AppScene: Scene {
           login: auth.login,
           logout: auth.logout,
           // TODO Add the proper PinsModel
-          pins: pinsModel.corePins
+          pins: pinsModel.pins
+          // pins: pinsModel.corePins,
           // pins: pinsModel.pins
           // pins: pinsModelFirestore.pins
           // pins: pinsModelPinboard.pins

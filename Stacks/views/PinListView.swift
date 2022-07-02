@@ -41,7 +41,7 @@ struct PinListView: View {
 
   var logout: () async -> ()
   var user: User
-  var pins: [CorePin]
+  var pins: [Pin]
 
   @State private var order: Order = .desc
 
@@ -56,13 +56,13 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  init(logout: @escaping () async -> (), user: User, pins: [CorePin]) {
+  init(logout: @escaping () async -> (), user: User, pins: [Pin]) {
     self.logout = logout
     self.user = user
     self.pins = pins
   }
 
-  init(logout: @escaping () async -> (), user: User, pins: [CorePin], tagFilter: String?) {
+  init(logout: @escaping () async -> (), user: User, pins: [Pin], tagFilter: String?) {
     self.init(logout: logout, user: user, pins: pins)
     self.tagFilter = tagFilter
   }
@@ -78,6 +78,7 @@ struct PinListView: View {
   var body: some View {
 
     let pins = pinsForView()
+    // let _ = log.warning("pins[].tags[\(pins.map { $0.tags })]") // XXX Debug
 
     ZStack {
       AutoNavigationLink(model: navigation)
@@ -101,7 +102,7 @@ struct PinListView: View {
         //    - https://stackoverflow.com/questions/64573755/swiftui-scrollview-with-tap-and-drag-gesture
         List {
           ForEach(pins) { pin in
-            pinRow(pin: pin.toPin(), pins: pins)
+            pinRow(pin: pin, pins: pins)
           }
         }
           // Use .id to force-rebuild the ScrollView when order changes, to jump to top when cycling order
@@ -150,8 +151,8 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func pinRow(pin: Pin, pins: [CorePin]) -> some View {
-    let isLast = pin.id == pins.last?.toPin().id
+  func pinRow(pin: Pin, pins: [Pin]) -> some View {
+    let isLast = pin.id == pins.last?.id
     PinView(pin: pin, navigationPushTag: navigationPushTag)
 
       // Replace List separators with custom separators
@@ -285,17 +286,17 @@ struct PinListView: View {
     }
   }
 
-  func pinsForView() -> [CorePin] {
+  func pinsForView() -> [Pin] {
     var pins = self.pins
     // Filter
     if let tagFilter = tagFilter {
-      pins = pins.filter { $0.tagsList.contains(tagFilter) }
+      pins = pins.filter { $0.tags.contains(tagFilter) }
     }
     if var searchFilter = searchFilter, searchFilter != "" {
       searchFilter = searchFilter.lowercased()
       pins = pins.filter { pin in
         // TODO Probably slow, but a very simple first implementation
-        ((try? toJson(pin.toPin())) ?? "").lowercased().contains(searchFilter)
+        ((try? toJson(pin)) ?? "").lowercased().contains(searchFilter)
       }
     }
     // Order
@@ -306,7 +307,7 @@ struct PinListView: View {
         pins = pins.sorted(key: { $0.createdAt ?? Date.zero }, desc: false)
       case .shuffle(let seed):
         let generator = GKMersenneTwisterRandomSource(seed: seed)
-        pins = generator.arrayByShufflingObjects(in: pins) as! [CorePin]
+        pins = generator.arrayByShufflingObjects(in: pins) as! [Pin]
     }
     return pins
   }

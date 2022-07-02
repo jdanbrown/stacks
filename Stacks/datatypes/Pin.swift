@@ -37,6 +37,14 @@ extension CorePin {
     )
   }
 
+  // Override NSManagedObject.description to not include newlines
+  //  - Else log filtering in xcode is impossible, because you don't get complete lines
+  override public var description: String {
+    get {
+      return super.description.replacingOccurrences(of: #"\s*\n\s*"#, with: " ", options: [.regularExpression])
+    }
+  }
+
 }
 
 // Codable enabled by `import FirebaseFirestoreSwift`

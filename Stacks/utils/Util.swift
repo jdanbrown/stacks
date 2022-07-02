@@ -61,8 +61,14 @@ extension String {
 }
 
 extension Array {
-  func sorted<K: Comparable>(key: (Element) -> K, desc: Bool = false) -> Array<Element> {
+  func sorted<K: Comparable>(key: (Element) -> K, desc: Bool = false) -> [Element] {
     return sorted(by: { x, y in !desc ? key(x) < key(y) : key(y) < key(x) })
+  }
+
+  func chunked(size: Int) -> [[Element]] {
+    return stride(from: 0, to: count, by: size).map {
+      Array(self[$0 ..< Swift.min($0 + size, count)])
+    }
   }
 }
 
