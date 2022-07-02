@@ -17,10 +17,10 @@ class StorageProvider {
   // Singleton
   static let shared = StorageProvider()
 
-  let container: NSPersistentCloudKitContainer
+  let persistentContainer: NSPersistentCloudKitContainer
 
   var managedObjectContext: NSManagedObjectContext {
-    return container.viewContext
+    return persistentContainer.viewContext
   }
 
   init(preview: Bool = false) {
@@ -28,18 +28,18 @@ class StorageProvider {
 
     // Make NSPersistentCloudKitContainer with name of .xcdatamodeld
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
-    container = NSPersistentCloudKitContainer(name: "Model")
+    persistentContainer = NSPersistentCloudKitContainer(name: "Model")
 
     // Don't persist saves in Previews
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
     if preview {
-      container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+      persistentContainer.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
 
     // Both agree on this
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
-    container.loadPersistentStores { storeDescription, error in
+    persistentContainer.loadPersistentStores { storeDescription, error in
       if let error = error {
         fatalError("\(error)")
       }
@@ -50,10 +50,10 @@ class StorageProvider {
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     //  - TODO Change this to handle merges manually so we can union/max/join each field
     //    - Use Pins.merge(xs, ys)
-    container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     // "Without this, changes will not be pulled down from the iCloud to your phone"
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
-    container.viewContext.automaticallyMergesChangesFromParent = true
+    persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
 
     // Observe remote change notifications
     //  - Example
@@ -64,17 +64,22 @@ class StorageProvider {
     //    - https://developer.apple.com/documentation/coredata/core_data_constants
     //  - TODO Is this working? -- onRemoteChange didn't log when I created a CorePin in the web console (using the blue plus icon)
     //    - Update: Yes, I think it's working
-    guard let storeDescription = container.persistentStoreDescriptions.first else {
+    guard let storeDescription = persistentContainer.persistentStoreDescriptions.first else {
       fatalError("Failed to retrieve persistentStoreDescription")
     }
     storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-    NotificationCenter.default.addObserver(self, selector: #selector(self.onRemoteChange), name: .NSPersistentStoreRemoteChange, object: nil)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.onRemoteChange),
+      name: .NSPersistentStoreRemoteChange,
+      object: nil
+    )
 
     // // XXX Insert some junk data, to test local/cloud sync
     // //  - Ok this is working: https://icloud.developer.apple.com/dashboard/database/teams/6S8S88RYPG/containers/iCloud.org.jdanbrown.stacks/environments/DEVELOPMENT/records?using=fetchChanges&database=private&zone=_com.apple.coredata.cloudkit.zone%3A_90b123e5f9d07fb5fc4ea4dfb7d19705%3AREGULAR_CUSTOM_ZONE
     // log.warning("Inserting junk data")
     // let now = NSDate().timeIntervalSince1970
-    // let junk0 = CorePin(context: container.viewContext)
+    // let junk0 = CorePin(context: persistentContainer.viewContext)
     // junk0.url = URL(string: "http://junk.one/\(now)")
     // junk0.title = "Junk One - \(now)"
     // junk0.tags = "tag-0,tag-1"
@@ -112,11 +117,11 @@ class StorageProvider {
   static var preview: StorageProvider = {
     let storageProvider = StorageProvider(preview: true)
 
-    let pin0 = CorePin(context: storageProvider.container.viewContext)
+    let pin0 = CorePin(context: storageProvider.persistentContainer.viewContext)
     pin0.url = "http://foo.one"
     pin0.title = "Foo One"
 
-    let pin1 = CorePin(context: storageProvider.container.viewContext)
+    let pin1 = CorePin(context: storageProvider.persistentContainer.viewContext)
     pin1.url = "http://foo.two"
     pin1.title = "Foo Two"
 

@@ -120,7 +120,7 @@ class PinsModel: ObservableObject {
     //  - https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/Concurrency.html
     //  - https://developer.apple.com/documentation/coredata/using_core_data_in_the_background
     //  - https://cocoacasts.com/three-common-core-data-mistakes-to-avoid
-    //  - I previously tried storageProvider.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
+    //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
     //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
     DispatchQueue.main.async {
       let context = self.storageProvider.managedObjectContext
@@ -167,7 +167,7 @@ class PinsModel: ObservableObject {
   //   //  - https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/Concurrency.html
   //   //  - https://developer.apple.com/documentation/coredata/using_core_data_in_the_background
   //   //  - https://cocoacasts.com/three-common-core-data-mistakes-to-avoid
-  //   //  - I previously tried storageProvider.container.performBackgroundTask, but that crashed with "all that is left to us is honor"
+  //   //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
   //   //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
   //   DispatchQueue.main.async {
   //     let context = self.storageProvider.managedObjectContext
