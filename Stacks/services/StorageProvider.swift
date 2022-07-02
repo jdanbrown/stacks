@@ -18,10 +18,7 @@ class StorageProvider {
   static let shared = StorageProvider()
 
   let persistentContainer: NSPersistentCloudKitContainer
-
-  var managedObjectContext: NSManagedObjectContext {
-    return persistentContainer.viewContext
-  }
+  var managedObjectContext: NSManagedObjectContext { return persistentContainer.viewContext }
 
   init(preview: Bool = false) {
     log.info()
@@ -45,12 +42,17 @@ class StorageProvider {
       }
     }
 
-    // How to merge on conflict: by field + local overrides remote
+    // Pick policy for how to merge on record conflict
     //  - https://developer.apple.com/documentation/coredata/nsmergepolicy/merge_policies
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     //  - TODO Change this to handle merges manually so we can union/max/join each field
     //    - Use Pins.merge(xs, ys)
-    persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    // persistentContainer.viewContext.mergePolicy = NSErrorMergePolicy                       // Raise error, handle manually in code
+    persistentContainer.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy      // Remote overrides local, per field within the record
+    // persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy  // Local overrides remote, per field within the record
+    // persistentContainer.viewContext.mergePolicy = NSOverwriteMergePolicy                   // Local overrides remote, for the entire record
+    // persistentContainer.viewContext.mergePolicy = NSRollbackMergePolicy                    // Remote overrides local, for the entire record
+
     // "Without this, changes will not be pulled down from the iCloud to your phone"
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
