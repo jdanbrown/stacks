@@ -102,11 +102,19 @@ class StorageProvider {
   func save(context: NSManagedObjectContext) {
     log.info()
     if context.hasChanges {
-      log.info("Saving: hasChanges[\(context.hasChanges)]")
+      log.info("Saving context[\(context)]: hasChanges[\(context.hasChanges)]")
       do {
+        // Try to save all changes since the last save()
         try context.save()
+        log.info("Saved context[\(context)]")
       } catch {
-        log.error("Failed to save: \(error)")
+        // Rollback all changes since the last save()
+        //  - Else subsequent saves will keep failing the same way
+        //  - e.g. Core Data entity validation errors (e.g. nil value in required field, because lots of room between swift types and core data)
+        //  - Practical Core Data (p28)
+        log.error("Failed to save context[\(context)]: \(error)")
+        context.rollback()
+        log.error("Rolled back context[\(context)]")
       }
     }
   }
