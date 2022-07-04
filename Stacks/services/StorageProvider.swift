@@ -32,7 +32,7 @@ class StorageProvider {
     }
 
     // Load Core Data stores
-    //  - Practical Core Data (p18)
+    //  - Practical Core Data (p18, p35)
     //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
     persistentContainer.loadPersistentStores { storeDescription, error in
