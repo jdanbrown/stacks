@@ -139,7 +139,7 @@ class PinsModel: ObservableObject {
 
   private func _fetchCorePin(url: String) -> CorePin? {
     let req = CorePin.fetchRequest()
-    req.predicate = NSPredicate(format: "url = %@", url)
+    req.predicate = NSPredicate(format: "%K = %@", #keyPath(CorePin.url), url)
     do {
       log.info("Fetching req[\(req)]")
       let corePins = try self.storageProvider.viewContext.fetch(req)
