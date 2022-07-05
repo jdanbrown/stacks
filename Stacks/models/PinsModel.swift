@@ -17,16 +17,16 @@ class PinsModel: ObservableObject {
   @Published var pins: [Pin] = []
 
   let storageProvider: StorageProvider
-  let pinsPublishers: [Published<[Pin]>.Publisher]
+  // let pinsPublishers: [Published<[Pin]>.Publisher]
 
-  private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
+  // private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
 
   init(
-    storageProvider: StorageProvider,
-    pinsPublishers: [Published<[Pin]>.Publisher]
+    storageProvider: StorageProvider
+    // pinsPublishers: [Published<[Pin]>.Publisher]
   ) {
     self.storageProvider = storageProvider
-    self.pinsPublishers = pinsPublishers
+    // self.pinsPublishers = pinsPublishers
 
     // XXX Hmm, try doing this _after_ load() from CloudKit, to see if that fixes the duplicate-insert races
     // self.cancellables += pinsPublishers.map { pinsPublisher in
@@ -54,55 +54,70 @@ class PinsModel: ObservableObject {
 
   }
 
-  @objc
-  func load() {
-    // Stay on main thread else risk of EXC_BREAKPOINT when called via NotificationCenter.default.addObserver
-    //  - https://stackoverflow.com/questions/59300223/violate-core-data-s-threading-contractexc-breakpoint-code-1-subcode-0x1f0ad1c8
-    DispatchQueue.main.async {
-      let req = CorePin.fetchRequest()
-      req.sortDescriptors = [
-        NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
-        NSSortDescriptor(keyPath: \CorePin.url,       ascending: true),
-      ]
-      do {
-        log.info("Fetching req[\(req)]")
-        self.corePins = try self.storageProvider.viewContext.fetch(req)
-        log.info("Fetched corePins[\(self.corePins.count)]")
-        self.pins = self.corePins.map { $0.toPin() }
-      } catch {
-        // TODO Show error msg to user
-        log.error("Failed to fetch: \(error)")
-      }
-    }
+  func update(corePins: [CorePin]) {
+    log.info("corePins[\(corePins.count)]")
+    self.corePins = corePins
+    self.pins = self.corePins.map { $0.toPin() }
   }
 
-  func addObserverToLoadOnSave() {
-    // Manually subscribe load() to Core Data changes
-    //  - "Normal" swiftui would put a @FetchRequest in a View and this would be handled automatically
-    //  - But @FetchRequest _requires_ being inside a View, so we can't do that here (we're a ~Model thing)
-    //  - Instead, manually subscribe to changes to the Core Data store and update self.corePins via load()
-    //    - https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
-    //    - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(self.load),
-      name: .NSManagedObjectContextDidSave,
-      object: self.storageProvider.viewContext
-    )
-  }
-
-  // XXX after we remove Pinboard/Firestore
-  func loadPinsPublishers() {
-    self.cancellables += pinsPublishers.map { pinsPublisher in
-      pinsPublisher.receive(on: RunLoop.main).sink { pins in
-        self.upsert(pins) // TODO Restore
-        // self.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
-        // self.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
-        // self.upsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
-        // self.upsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
-      }
-    }
-  }
+  // XXX Moved to StorageProvider (to resolve cyclic dependencies)
+  // @objc
+  // func load() {
+  //   // Stay on main thread else risk of EXC_BREAKPOINT when called via NotificationCenter.default.addObserver
+  //   //  - https://stackoverflow.com/questions/59300223/violate-core-data-s-threading-contractexc-breakpoint-code-1-subcode-0x1f0ad1c8
+  //   DispatchQueue.main.async {
+  //     let req = CorePin.fetchRequest()
+  //     req.sortDescriptors = [
+  //       NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
+  //       NSSortDescriptor(keyPath: \CorePin.url,       ascending: true),
+  //     ]
+  //     do {
+  //       log.info("Fetching req[\(req)]")
+  //       self.corePins = try self.storageProvider.viewContext.fetch(req)
+  //       log.info("Fetched corePins[\(self.corePins.count)]")
+  //       self.pins = self.corePins.map { $0.toPin() }
+  //     } catch {
+  //       // TODO Show error msg to user
+  //       log.error("Failed to fetch: \(error)")
+  //     }
+  //   }
+  // }
+  //
+  // XXX Moved to StorageProvider (to resolve cyclic dependencies)
+  // @objc
+  // // TODO TODO Disabled to eliminate weird stuff to debug duplicate writes
+  // //  - (They still happen with this disabled)
+  // func addObserverToLoadOnSave() {
+  //   // Manually subscribe load() to Core Data changes
+  //   //  - "Normal" swiftui would put a @FetchRequest in a View and this would be handled automatically
+  //   //  - But @FetchRequest _requires_ being inside a View, so we can't do that here (we're a ~Model thing)
+  //   //  - Instead, manually subscribe to changes to the Core Data store and update self.corePins via load()
+  //   //    - https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
+  //   //    - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext
+  //   NotificationCenter.default.addObserver(
+  //     self,
+  //     selector: #selector(self.load),
+  //     name: .NSManagedObjectContextDidSave,
+  //     object: self.storageProvider.viewContext
+  //   )
+  // }
+  //
+  // XXX Moved to StorageProvider (to resolve cyclic dependencies)
+  // @objc
+  // // XXX after we remove Pinboard/Firestore
+  // func loadPinsPublishers() {
+  //   log.info("pinsPublishers[\(pinsPublishers)]")
+  //   self.cancellables += pinsPublishers.map { pinsPublisher in
+  //     pinsPublisher.receive(on: RunLoop.main).sink { pins in
+  //       self.upsert(pins) // TODO Restore
+  //       // self.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
+  //       // self.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
+  //       // self.upsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
+  //       // self.upsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
+  //       self.load() // Load 3/3 from Pinboard/Firestore -- TODO TODO TODO [dupes/races] Solution
+  //     }
+  //   }
+  // }
 
   // TODO TODO To avoid duplicate-insert races, try fetch-and-save for _every_ pin we upsert
   //  - Example
@@ -123,15 +138,18 @@ class PinsModel: ObservableObject {
     //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
     //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
     DispatchQueue.main.async {
-      let context = self.storageProvider.viewContext
+      let viewContext = self.storageProvider.viewContext
       log.info("pins[\(pins.count)]")
+      // TODO TODO TODO [dupes/races] Does this force a container->context sync?
+      // log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
+      // viewContext.refreshAllObjects()
       for pin in pins {
         if let corePin = self._fetchCorePin(url: pin.url) {
           self._update(corePin, pin)
         } else {
-          self._insert(context, pin)
+          self._insert(viewContext, pin)
         }
-        self.storageProvider.save(context: context)
+        self.storageProvider.save(context: viewContext)
       }
       log.info("Done: pins[\(pins.count)]")
     }
@@ -142,6 +160,8 @@ class PinsModel: ObservableObject {
     req.predicate = NSPredicate(format: "%K = %@", #keyPath(CorePin.url), url)
     do {
       log.info("Fetching req[\(req)]")
+      // TODO TODO TODO [dupes/races] Strong hypothesis: This fetch is the problem!
+      //  - (See notes in https://paper.dropbox.com/doc/stacks-Stacks-Work-Log--BjRYdvSYu8Uf2T8Bwer3dErkAg-2lFy6eRwjkTArJ4uafMIM)
       let corePins = try self.storageProvider.viewContext.fetch(req)
       if corePins.count == 0 {
         log.info("Fetched no corePins")
@@ -170,7 +190,7 @@ class PinsModel: ObservableObject {
   //   //  - I previously tried storageProvider.persistentContainer.performBackgroundTask, but that crashed with "all that is left to us is honor"
   //   //    - https://stackoverflow.com/questions/41176098/is-this-a-valid-way-of-debugging-coredata-concurrency-issues
   //   DispatchQueue.main.async {
-  //     let context = self.storageProvider.viewContext
+  //     let viewContext = self.storageProvider.viewContext
   //     log.info("pins[\(pins.count)]")
   //     // If multiple pins have the same url, upsert into the first pin and (silently) ignore the rest
   //     //  - Leave it to the user to notice and manually clean up
@@ -217,10 +237,10 @@ class PinsModel: ObservableObject {
   //           // Hmm, removing the check appears to just work, let's see if we can go with that
   //           self._update(corePin, pin)
   //         } else {
-  //           self._insert(context, pin)
+  //           self._insert(viewContext, pin)
   //         }
   //       }
-  //       self.storageProvider.save(context: context)
+  //       self.storageProvider.save(context: viewContext)
   //     }
   //
   //     log.info("Done: pins[\(pins.count)]")
@@ -239,6 +259,15 @@ class PinsModel: ObservableObject {
     corePin.modifiedAt = pin.modifiedAt
     corePin.accessedAt = pin.accessedAt
     corePin.isRead     = pin.isRead
+    // TODO TODO [dupes/races] Investigating if "temporary objectID" is the problem
+    //  - https://developer.apple.com/documentation/coredata/nsmanagedobjectid/1391691-temporaryid
+    //  - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext/1506793-obtainpermanentids
+    do {
+      try context.obtainPermanentIDs(for: [corePin])
+    } catch {
+      // TODO Better error handling (only if this approach works out)
+      fatalError("Failed to context[\(context)].obtainPermanentIDs([\(corePin)]): \(error)")
+    }
   }
 
   // Idempotent

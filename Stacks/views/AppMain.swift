@@ -1,3 +1,4 @@
+import Combine
 import Firebase
 import SwiftUI
 import XCGLogger
@@ -15,6 +16,8 @@ struct AppMain: App {
   let pinsModelPinboard: PinsModelPinboard
 
   let pinsModel: PinsModel
+
+  private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
@@ -43,10 +46,6 @@ struct AppMain: App {
     //    - https://stackoverflow.com/questions/59138880/nspersistentcloudkitcontainer-how-to-check-if-data-is-synced-to-cloudkit
     self.hasICloud = FileManager.default.ubiquityIdentityToken != nil
 
-    // StorageProvider for CloudKit + Core Data
-    //  - Touch to init (lazy static let)
-    self.storageProvider = StorageProvider()
-
     // Firestore
     //  - Must call configure() before AuthService()
     //    - https://peterfriese.dev/swiftui-new-app-lifecycle-firebase/
@@ -59,19 +58,32 @@ struct AppMain: App {
     // Pinboard
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
+    // Pins publishersA for Pinboard + Firestore
+    let pinsPublishers = [
+      pinsModelFirestore.$pins, // TODO Restore
+      pinsModelPinboard.$pins, // TODO Restore
+    ]
+
+    // StorageProvider for CloudKit + Core Data
+    //  - Touch to init (lazy static let)
+    self.storageProvider = StorageProvider(
+      pinsPublishers: pinsPublishers
+    )
+
     // PinsModel (Core Data)
     let pinsModel = PinsModel(
-      storageProvider: storageProvider,
-      pinsPublishers: [
-        pinsModelFirestore.$pins, // TODO Restore
-        pinsModelPinboard.$pins, // TODO Restore
-      ]
+      storageProvider: storageProvider
+      // pinsPublishers: pinsPublishers
     )
+    storageProvider.pinsModel = pinsModel // HACK Cyclic dependency
+
     // TODO TODO Try loading Pinboard/Firestore _after_ CloudKit, to see if that fixes the duplicate-insert races
     //  - Both call into DispatchQueue.main.async, so they _should_ synchronize
-    pinsModel.load()
-    pinsModel.addObserverToLoadOnSave() // After CoreData/CloudKit (load) + before Pinboard/Firestore (loadPinsPublishers)
-    pinsModel.loadPinsPublishers()
+    storageProvider.load() // Load 1/3 from Core Data -- TODO TODO TODO [dupes/races] Solution
+    // TODO TODO Disabled to eliminate weird stuff to debug duplicate writes
+    //  - (They still happen with this disabled)
+    // storageProvider.addObserverToLoadOnSave() // After CoreData/CloudKit (load) + before Pinboard/Firestore (loadPinsPublishers)
+    // storageProvider.loadPinsPublishers() // XXX Now called in storageProvider.onCloudKitImportSucceeded(), via NSPersistentCloudKitContainer.eventChangedNotification
 
     // Initialize fields
     self.auth = auth

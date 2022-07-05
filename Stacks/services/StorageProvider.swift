@@ -1,3 +1,4 @@
+import Combine
 import CoreData
 
 // TODO Popup + exit button i/o fatalError
@@ -17,8 +18,17 @@ class StorageProvider {
   let persistentContainer: NSPersistentCloudKitContainer
   var viewContext: NSManagedObjectContext { return persistentContainer.viewContext }
 
-  init(preview: Bool = false) {
+  var cloudKitImportHasSucceededOnce: Bool = false
+
+  let pinsPublishers: [Published<[Pin]>.Publisher]
+  var pinsModel: PinsModel? = nil
+
+  var cancellables = Set<AnyCancellable>()
+
+  init(pinsPublishers: [Published<[Pin]>.Publisher], preview: Bool = false) {
     log.info()
+
+    self.pinsPublishers = pinsPublishers
 
     // Make NSPersistentCloudKitContainer with name of .xcdatamodeld
     //  - Practical Core Data (p18)
@@ -30,6 +40,28 @@ class StorageProvider {
     if preview {
       persistentContainer.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
+
+    // TODO TODO TODO [dupes/races] Solution: Listen to notifications from the CloudKit sync
+    //  - Based on: https://github.com/ggruen/CloudKitSyncMonitor/blob/1.1.1/Sources/CloudKitSyncMonitor/SyncMonitor.swift#L404
+    NotificationCenter.default
+      .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
+      .sink(receiveValue: { notification in
+        // log.info("NSPersistentCloudKitContainer.eventChangedNotification: notification[\(notification)]")
+        if let ckEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+          // log.info("NSPersistentCloudKitContainer.eventChangedNotification: notification[\(notification)] -> ckEvent[\(ckEvent)]")
+          log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)]")
+          if (ckEvent.type == .import && ckEvent.succeeded) {
+            log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)] -> BINGO") // XXX
+            DispatchQueue.main.async {
+              // HACK Adding refreshAllObjects() for good measure, in case container->context sync is another source of inconsistency
+              log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
+              self.viewContext.refreshAllObjects()
+              self.onCloudKitImportSucceeded()
+            }
+          }
+        }
+      })
+      .store(in: &cancellables)
 
     // Load Core Data stores
     //  - Practical Core Data (p18, p35)
@@ -94,6 +126,72 @@ class StorageProvider {
 
   }
 
+  // TODO: TODO TODO [dupes/races] Solution
+  func onCloudKitImportSucceeded() {
+    log.info("cloudKitImportHasSucceededOnce[\(cloudKitImportHasSucceededOnce)]")
+    if !cloudKitImportHasSucceededOnce {
+      load() // Load 2/3 from Cloud Kit -- TODO TODO TODO [dupes/races] Solution
+      loadPinsPublishers()
+    }
+    cloudKitImportHasSucceededOnce = true
+  }
+
+  @objc
+  func load() {
+    // Stay on main thread else risk of EXC_BREAKPOINT when called via NotificationCenter.default.addObserver
+    //  - https://stackoverflow.com/questions/59300223/violate-core-data-s-threading-contractexc-breakpoint-code-1-subcode-0x1f0ad1c8
+    DispatchQueue.main.async {
+      let req = CorePin.fetchRequest()
+      req.sortDescriptors = [
+        NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
+        NSSortDescriptor(keyPath: \CorePin.url,       ascending: true),
+      ]
+      do {
+        log.info("Fetching req[\(req)]")
+        let corePins = try self.viewContext.fetch(req)
+        log.info("Fetched corePins[\(corePins.count)]")
+        self.pinsModel!.update(corePins: corePins)
+      } catch {
+        // TODO Show error msg to user
+        log.error("Failed to fetch: \(error)")
+      }
+    }
+  }
+
+  // XXX after we remove Pinboard/Firestore
+  func loadPinsPublishers() {
+    log.info("pinsPublishers[\(pinsPublishers)]")
+    pinsPublishers.forEach { $0
+      .receive(on: RunLoop.main)
+      .sink { pins in
+        self.pinsModel!.upsert(pins) // TODO Restore
+        // self.pinsModel!.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
+        // self.pinsModel!.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
+        // self.pinsModel!.upsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
+        // self.pinsModel!.upsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
+        self.load() // Load 3/3 from Pinboard/Firestore -- TODO TODO TODO [dupes/races] Solution
+      }
+      .store(in: &cancellables)
+    }
+  }
+
+  // TODO TODO Disabled to eliminate weird stuff to debug duplicate writes
+  //  - (They still happen with this disabled)
+  // func addObserverToLoadOnSave() {
+  //   // Manually subscribe load() to Core Data changes
+  //   //  - "Normal" swiftui would put a @FetchRequest in a View and this would be handled automatically
+  //   //  - But @FetchRequest _requires_ being inside a View, so we can't do that here (we're a ~Model thing)
+  //   //  - Instead, manually subscribe to changes to the Core Data store and update self.corePins via load()
+  //   //    - https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
+  //   //    - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext
+  //   NotificationCenter.default.addObserver(
+  //     self,
+  //     selector: #selector(load),
+  //     name: .NSManagedObjectContextDidSave,
+  //     object: viewContext
+  //   )
+  // }
+
   func saveViewContext() {
     log.info()
     save(context: viewContext)
@@ -130,7 +228,7 @@ class StorageProvider {
 
   // Mock for previews
   static var preview: StorageProvider = {
-    let storageProvider = StorageProvider(preview: true)
+    let storageProvider = StorageProvider(pinsPublishers: [], preview: true)
 
     let pin0 = CorePin(context: storageProvider.persistentContainer.viewContext)
     pin0.url = "http://foo.one"

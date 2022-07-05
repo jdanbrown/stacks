@@ -43,6 +43,7 @@ struct PinListView: View {
   var user: User
   var pins: [Pin]
 
+  @State private var dupesOnly: Bool = false // XXX [dupes/races] Debug
   @State private var order: Order = .desc
 
   // tagFilter is the tag (optional) to filter our pins to
@@ -124,6 +125,7 @@ struct PinListView: View {
           buttonOrderCycleDescAscShuffle()
           // buttonOrderToggleDescAsc()
           // buttonOrderShuffle()
+          buttonDupesOnlyToggle() // XXX [dupes/races] Debug
         }
       )
 
@@ -219,6 +221,17 @@ struct PinListView: View {
     }
   }
 
+  // XXX [dupes/races] Debug
+  @ViewBuilder
+  func buttonDupesOnlyToggle() -> some View {
+    Button(action: {
+      self.dupesOnly = !self.dupesOnly
+    }) {
+      Image(systemName: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
+        .font(.body)
+    }
+  }
+
   @ViewBuilder
   func buttonSearch() -> some View {
     // Keyboard management
@@ -288,6 +301,11 @@ struct PinListView: View {
 
   func pinsForView() -> [Pin] {
     var pins = self.pins
+    // XXX [dupes/races] Debug
+    if dupesOnly {
+      let urlCounts = Dictionary(grouping: pins, by: { $0.url }).mapValues { $0.count }
+      pins = pins.filter { (urlCounts[$0.url] ?? 0) > 1 }
+    }
     // Filter
     if let tagFilter = tagFilter {
       pins = pins.filter { $0.tags.contains(tagFilter) }
