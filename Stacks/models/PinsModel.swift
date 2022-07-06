@@ -259,15 +259,6 @@ class PinsModel: ObservableObject {
     corePin.modifiedAt = pin.modifiedAt
     corePin.accessedAt = pin.accessedAt
     corePin.isRead     = pin.isRead
-    // TODO TODO [dupes/races] Investigating if "temporary objectID" is the problem
-    //  - https://developer.apple.com/documentation/coredata/nsmanagedobjectid/1391691-temporaryid
-    //  - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext/1506793-obtainpermanentids
-    do {
-      try context.obtainPermanentIDs(for: [corePin])
-    } catch {
-      // TODO Better error handling (only if this approach works out)
-      fatalError("Failed to context[\(context)].obtainPermanentIDs([\(corePin)]): \(error)")
-    }
   }
 
   // Idempotent
