@@ -239,4 +239,19 @@ class Pins {
   //   return (zs, diffs)
   // }
 
+  // // TODO Store the PinDiff's
+  // //  - Just printing them for now
+  // static func printMergeDiffs(_ xs: [Pin], _ ys: [Pin]) {
+  //   let (zs, diffs) = Pins.merge(xs, ys)
+  //   log.info("diffs[\(diffs.count)]")
+  //   for (i, diff) in diffs.enumerated() {
+  //     print("  diff[\(i)].before")
+  //     for x in diff.before {
+  //       print("    \(x)")
+  //     }
+  //     print("  diff[\(i)].after")
+  //     print("    \(diff.after)")
+  //   }
+  // }
+
 }

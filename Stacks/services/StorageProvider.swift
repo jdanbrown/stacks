@@ -41,19 +41,16 @@ class StorageProvider {
       persistentContainer.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
 
-    // TODO TODO TODO [dupes/races] Solution: Listen to notifications from the CloudKit sync
+    // Listen to notifications from the CloudKit sync
     //  - Based on: https://github.com/ggruen/CloudKitSyncMonitor/blob/1.1.1/Sources/CloudKitSyncMonitor/SyncMonitor.swift#L404
     NotificationCenter.default
       .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
       .sink(receiveValue: { notification in
-        // log.info("NSPersistentCloudKitContainer.eventChangedNotification: notification[\(notification)]")
         if let ckEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
-          // log.info("NSPersistentCloudKitContainer.eventChangedNotification: notification[\(notification)] -> ckEvent[\(ckEvent)]")
           log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)]")
           if (ckEvent.type == .import && ckEvent.succeeded) {
-            log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)] -> BINGO") // XXX
             DispatchQueue.main.async {
-              // HACK Adding refreshAllObjects() for good measure, in case container->context sync is another source of inconsistency
+              // HACK Adding refreshAllObjects() for good measure, in case container->context sync is a source of inconsistency/races
               log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
               self.viewContext.refreshAllObjects()
               self.onCloudKitImportSucceeded()
@@ -92,6 +89,7 @@ class StorageProvider {
 
     // "Without this, changes will not be pulled down from the iCloud to your phone"
     //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
+    //  - TODO Add reference from Practical Core Data (cmd-f the pdf to remember where this was discussed)
     persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
 
     // Observe remote change notifications
@@ -101,8 +99,6 @@ class StorageProvider {
     //    - https://developer.apple.com/documentation/coredata/nspersistentstoredescription/1640574-setoption
     //    - https://developer.apple.com/documentation/coredata/nspersistentstorecoordinator
     //    - https://developer.apple.com/documentation/coredata/core_data_constants
-    //  - TODO Is this working? -- onRemoteChange didn't log when I created a CorePin in the web console (using the blue plus icon)
-    //    - Update: Yes, I think it's working
     guard let storeDescription = persistentContainer.persistentStoreDescriptions.first else {
       fatalError("Failed to retrieve persistentStoreDescription")
     }
@@ -114,23 +110,12 @@ class StorageProvider {
       object: nil
     )
 
-    // // XXX Insert some junk data, to test local/cloud sync
-    // //  - Ok this is working: https://icloud.developer.apple.com/dashboard/database/teams/6S8S88RYPG/containers/iCloud.org.jdanbrown.stacks/environments/DEVELOPMENT/records?using=fetchChanges&database=private&zone=_com.apple.coredata.cloudkit.zone%3A_90b123e5f9d07fb5fc4ea4dfb7d19705%3AREGULAR_CUSTOM_ZONE
-    // log.warning("Inserting junk data")
-    // let now = NSDate().timeIntervalSince1970
-    // let junk0 = CorePin(context: persistentContainer.viewContext)
-    // junk0.url = URL(string: "http://junk.one/\(now)")
-    // junk0.title = "Junk One - \(now)"
-    // junk0.tags = "tag-0,tag-1"
-    // saveViewContext()
-
   }
 
-  // TODO: TODO TODO [dupes/races] Solution
   func onCloudKitImportSucceeded() {
     log.info("cloudKitImportHasSucceededOnce[\(cloudKitImportHasSucceededOnce)]")
     if !cloudKitImportHasSucceededOnce {
-      load() // Load 2/3 from Cloud Kit -- TODO TODO TODO [dupes/races] Solution
+      load() // Load 2/3 from Cloud Kit
       loadPinsPublishers()
     }
     cloudKitImportHasSucceededOnce = true
@@ -164,19 +149,19 @@ class StorageProvider {
     pinsPublishers.forEach { $0
       .receive(on: RunLoop.main)
       .sink { pins in
-        self.pinsModel!.upsert(pins) // TODO Restore
-        // self.pinsModel!.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
-        // self.pinsModel!.upsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
-        // self.pinsModel!.upsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
-        // self.pinsModel!.upsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
-        self.load() // Load 3/3 from Pinboard/Firestore -- TODO TODO TODO [dupes/races] Solution
+        self.pinsModel!.batchUpsert(pins) // TODO Restore
+        // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
+        // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
+        // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
+        // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
+        self.load() // Load 3/3 from Pinboard/Firestore
       }
       .store(in: &cancellables)
     }
   }
 
-  // TODO TODO Disabled to eliminate weird stuff to debug duplicate writes
-  //  - (They still happen with this disabled)
+  // TODO Redo this a different way, after deleting Pinboard/Firestore
+  //  - We don't actually rely on it right now anyway
   // func addObserverToLoadOnSave() {
   //   // Manually subscribe load() to Core Data changes
   //   //  - "Normal" swiftui would put a @FetchRequest in a View and this would be handled automatically

@@ -60,32 +60,20 @@ struct AppMain: App {
 
     // Pins publishersA for Pinboard + Firestore
     let pinsPublishers = [
-      pinsModelFirestore.$pins, // TODO Restore
-      pinsModelPinboard.$pins, // TODO Restore
+      pinsModelFirestore.$pins,
+      pinsModelPinboard.$pins,
     ]
 
     // StorageProvider for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    self.storageProvider = StorageProvider(
-      pinsPublishers: pinsPublishers
-    )
+    self.storageProvider = StorageProvider(pinsPublishers: pinsPublishers)
 
     // PinsModel (Core Data)
-    let pinsModel = PinsModel(
-      storageProvider: storageProvider
-      // pinsPublishers: pinsPublishers
-    )
+    let pinsModel = PinsModel(storageProvider: storageProvider)
     storageProvider.pinsModel = pinsModel // HACK Cyclic dependency
+    storageProvider.load() // Load 1/3 from Core Data
 
-    // TODO TODO Try loading Pinboard/Firestore _after_ CloudKit, to see if that fixes the duplicate-insert races
-    //  - Both call into DispatchQueue.main.async, so they _should_ synchronize
-    storageProvider.load() // Load 1/3 from Core Data -- TODO TODO TODO [dupes/races] Solution
-    // TODO TODO Disabled to eliminate weird stuff to debug duplicate writes
-    //  - (They still happen with this disabled)
-    // storageProvider.addObserverToLoadOnSave() // After CoreData/CloudKit (load) + before Pinboard/Firestore (loadPinsPublishers)
-    // storageProvider.loadPinsPublishers() // XXX Now called in storageProvider.onCloudKitImportSucceeded(), via NSPersistentCloudKitContainer.eventChangedNotification
-
-    // Initialize fields
+    // Set fields
     self.auth = auth
     self.firestore = firestore
     self.pinsModelFirestore = pinsModelFirestore
@@ -96,19 +84,7 @@ struct AppMain: App {
 
   func initAsync() async {
     log.info()
-    await initAsyncPinboard()
-  }
-
-  // Fetch pinboard once at startup (http get)
-  func initAsyncPinboard() async {
-    log.info()
-    do {
-      // TODO Integrate this with ProgressView() at startup
-      //  - Maybe wait until we get Firestore/AuthService out of the picture
-      try await pinsModelPinboard.fetch()
-    } catch  {
-      log.error("Failed to fetch pinboard posts, ignoring: \(error)")
-    }
+    await pinsModelPinboard.initAsync() // Fetch pinboard pins once at startup (http get)
   }
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
@@ -118,8 +94,6 @@ struct AppMain: App {
       hasICloud: hasICloud,
       storageProvider: storageProvider,
       auth: auth,
-      // pinsModelFirestore: pinsModelFirestore,
-      // pinsModelPinboard: pinsModelPinboard
       pinsModel: pinsModel
     )
   }
@@ -133,8 +107,6 @@ struct AppScene: Scene {
   let storageProvider: StorageProvider
 
   @ObservedObject var auth: AuthService
-  // @ObservedObject var pinsModelFirestore: PinsModelFirestore
-  // @ObservedObject var pinsModelPinboard: PinsModelPinboard
   @ObservedObject var pinsModel: PinsModel
 
   // Docs
@@ -153,13 +125,7 @@ struct AppScene: Scene {
           authState: auth.authState,
           login: auth.login,
           logout: auth.logout,
-          // TODO Add the proper PinsModel
           pins: pinsModel.pins
-          // pins: pinsModel.corePins,
-          // pins: pinsModel.pins
-          // pins: pinsModelFirestore.pins
-          // pins: pinsModelPinboard.pins
-          // pins: pinsModelFirestore.pins.filter { $0.url.starts(with: "http:") } // XXX Debug http:// issues
         )
       }
         .environment(\.managedObjectContext, storageProvider.viewContext)

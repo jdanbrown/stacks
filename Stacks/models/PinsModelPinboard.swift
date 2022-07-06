@@ -11,6 +11,18 @@ class PinsModelPinboard: ObservableObject {
     self.apiToken = apiToken
   }
 
+  // Fetch pins once at startup (http get)
+  func initAsync() async {
+    log.info()
+    do {
+      // TODO Integrate this with ProgressView() at startup
+      //  - Maybe wait until we get Firestore/AuthService out of the picture
+      try await fetch()
+    } catch  {
+      log.error("Failed to fetch pinboard posts, ignoring: \(error)")
+    }
+  }
+
   func fetch() async throws {
     log.info()
     let url = URL(string: "https://api.pinboard.in/v1/posts/all")!

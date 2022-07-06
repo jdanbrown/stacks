@@ -1,42 +1,6 @@
 import GameplayKit // For GKMersenneTwisterRandomSource
 import SwiftUI
 
-// struct HACK_CorePin_list: View {
-//
-//   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-core-data-fetch-request-using-fetchrequest
-//   // https://www.hackingwithswift.com/quick-start/swiftui/how-to-limit-the-number-of-items-in-a-fetch-request
-//   // https://www.hackingwithswift.com/read/38/5/loading-core-data-objects-using-nsfetchrequest-and-nssortdescriptor
-//   @FetchRequest(
-//     entity: CorePin.entity(),
-//     sortDescriptors: [
-//       NSSortDescriptor(keyPath: \CorePin.createdAt, ascending: false),
-//       // Use .absoluteString because URL isn't Comparable
-//       //  - https://stackoverflow.com/questions/66056599/sorting-urls-with-fetchrequest-crashes-when-new-content-is-saved
-//       //  - https://developer.apple.com/documentation/foundation/nssortdescriptor?language=objc
-//       NSSortDescriptor(key: "url.absoluteString", ascending: true),
-//     ]
-//   ) var corePins: FetchedResults<CorePin>
-//
-//   var body: some View {
-//
-//     // XXX
-//     let _ = {
-//       print("corePins: length[\(corePins.count)]")
-//       for corePin in corePins {
-//         print("  corePin[\(corePin)]")
-//       }
-//     }()
-//     List {
-//       ForEach(corePins) { corePin in
-//         Text(corePin.title ?? "[no-title]")
-//         Text(corePin.tags ?? "[no-tags]")
-//       }
-//     }
-//
-//   }
-//
-// }
-
 struct PinListView: View {
 
   var logout: () async -> ()
