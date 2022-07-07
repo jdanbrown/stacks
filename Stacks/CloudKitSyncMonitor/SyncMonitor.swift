@@ -358,7 +358,7 @@ public class SyncMonitor: ObservableObject {
   // Listeners
   //
 
-  private var disposables = Set<AnyCancellable>()
+  private var cancellables = Set<AnyCancellable>()
 
   // Network path monitor that's used to track whether we can reach the network at all
   private let monitor = NWPathMonitor()
@@ -393,20 +393,19 @@ public class SyncMonitor: ObservableObject {
     }
 
     // Monitor NSPersistentCloudKitContainer sync events
-    if #available(iOS 14.0, macCatalyst 14.0, *) { // Crashes on 13.7 w/o this, even though we have @available
-      NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
-        .sink(receiveValue: { notification in
-          if let cloudEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
-            let event = SyncEvent(from: cloudEvent) // To make testing possible
-            // Properties need to be set on the main thread for SwiftUI, so we'll do that here
-            // instead of maing setProperties run async code, which is inconvenient for testing.
-            DispatchQueue.main.async {
-              self.setProperties(from: event)
-            }
+    // if #available(iOS 14.0, macCatalyst 14.0, *) { // Crashes on 13.7 w/o this, even though we have @available
+    NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
+      .sink(receiveValue: { notification in
+        if let cloudEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+          let event = SyncEvent(from: cloudEvent) // To make testing possible
+          // Properties need to be set on the main thread for SwiftUI, so we'll do that here
+          // instead of maing setProperties run async code, which is inconvenient for testing.
+          DispatchQueue.main.async {
+            self.setProperties(from: event)
           }
-        })
-        .store(in: &disposables)
-    }
+        }
+      })
+      .store(in: &cancellables)
 
     // Update the network status when the OS reports a change. Note that we ignore whether the connection is
     // expensive or not -- we just care whether iCloud is _able_ to sync. If there's no network,
@@ -433,7 +432,7 @@ public class SyncMonitor: ObservableObject {
       .sink(receiveValue: { notification in
         self.updateiCloudAccountStatus()
       })
-      .store(in: &disposables)
+      .store(in: &cancellables)
 
   }
 
@@ -537,11 +536,13 @@ public class SyncMonitor: ObservableObject {
     }
 
     init(from cloudKitEvent: NSPersistentCloudKitContainer.Event) {
-      self.type = cloudKitEvent.type
-      self.startDate = cloudKitEvent.startDate
-      self.endDate = cloudKitEvent.endDate
-      self.succeeded = cloudKitEvent.succeeded
-      self.error = cloudKitEvent.error
+      self.init(
+        type: cloudKitEvent.type,
+        startDate: cloudKitEvent.startDate,
+        endDate: cloudKitEvent.endDate,
+        succeeded: cloudKitEvent.succeeded,
+        error: cloudKitEvent.error
+      )
     }
 
   }
@@ -574,8 +575,8 @@ public class SyncMonitor: ObservableObject {
     // See also `SyncMonitor.importError` and `SyncMonitor.exportError` for more intelligent error reporting.
     //
     var error: Error? {
-      if case let .failed(_, _, error) = self, let e = error {
-        return e
+      if case let .failed(_, _, error) = self {
+        return error
       } else {
         return nil
       }
