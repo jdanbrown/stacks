@@ -272,6 +272,9 @@ struct PinListView: View {
     }
   }
 
+  // TODO Can we change all of this logic into a @FetchRequest?
+  //  - Need a dynamic predicate (https://paper.dropbox.com/doc/Book-Practical-Core-Data-2021--Bkr684S2XUvs4CwBekORjii0Ag-2oNrbw8DeArsQeJx5B9fP)
+  //  - Will have trouble with some parts (e.g. dupesOnly)
   func pinsForView() -> [Pin] {
     var pins = self.pinsModel.pins
     if dupesOnly {
