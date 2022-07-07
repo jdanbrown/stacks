@@ -90,6 +90,16 @@ import SwiftUI
 @available(iOS 14.0, macCatalyst 14.0, OSX 11, tvOS 14.0, watchOS 7, *)
 class CloudKitSyncMonitor: ObservableObject {
 
+  var description: String {
+    return [
+      "syncStateSummary": syncStateSummary,
+      "setupState": setupState,
+      "importState": importState,
+      "exportState": exportState,
+      "lastError": (lastError as Any),
+    ].description
+  }
+
   //
   // Summary properties
   //
