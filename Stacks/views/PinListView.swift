@@ -3,6 +3,8 @@ import SwiftUI
 
 struct PinListView: View {
 
+  @ObservedObject var cloudKitSyncMonitor: CloudKitSyncMonitor
+
   var logout: () async -> ()
   var user: User
   var pins: [Pin]
@@ -21,14 +23,15 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  init(logout: @escaping () async -> (), user: User, pins: [Pin]) {
+  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pins: [Pin]) {
+    self.cloudKitSyncMonitor = cloudKitSyncMonitor
     self.logout = logout
     self.user = user
     self.pins = pins
   }
 
-  init(logout: @escaping () async -> (), user: User, pins: [Pin], tagFilter: String?) {
-    self.init(logout: logout, user: user, pins: pins)
+  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pins: [Pin], tagFilter: String?) {
+    self.init(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pins: pins)
     self.tagFilter = tagFilter
   }
 
@@ -37,7 +40,7 @@ struct PinListView: View {
   }
 
   func withTagFilter(tagFilter: String?) -> PinListView {
-    return PinListView(logout: logout, user: user, pins: pins, tagFilter: tagFilter)
+    return PinListView(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pins: pins, tagFilter: tagFilter)
   }
 
   var body: some View {
@@ -82,6 +85,7 @@ struct PinListView: View {
       .navigationBarItems(
         leading: HStack {
           buttonProfilePhoto()
+          statusCloudKitSync()
         },
         trailing: HStack {
           buttonSearch()
@@ -183,6 +187,13 @@ struct PinListView: View {
         }
       }
     }
+  }
+
+  @ViewBuilder
+  func statusCloudKitSync() -> some View {
+    Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
+      .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
+      .font(.body)
   }
 
   // XXX [dupes/races] Debug

@@ -6,6 +6,7 @@ import XCGLogger
 @main
 struct AppMain: App {
 
+  let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
   let storageProvider: StorageProvider
 
@@ -35,6 +36,9 @@ struct AppMain: App {
     )
     log.formatters = [CustomLogFormatter()]
     log.logAppDetails()
+
+    self.cloudKitSyncMonitor = CloudKitSyncMonitor()
+    self.cloudKitSyncMonitor.start()
 
     // Check if the user is logged into iCloud, else we'll refuse to load (in RootView, with a helpful error msg)
     //  - https://developer.apple.com/documentation/foundation/nsfilemanager/1408036-ubiquityidentitytoken
@@ -91,6 +95,7 @@ struct AppMain: App {
   var body: some Scene {
     AppScene(
       initAsync: initAsync,
+      cloudKitSyncMonitor: cloudKitSyncMonitor,
       hasICloud: hasICloud,
       storageProvider: storageProvider,
       auth: auth,
@@ -103,6 +108,7 @@ struct AppMain: App {
 struct AppScene: Scene {
 
   let initAsync: () async -> ()
+  let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
   let storageProvider: StorageProvider
 
@@ -121,6 +127,7 @@ struct AppScene: Scene {
     WindowGroup {
       Group {
         RootView(
+          cloudKitSyncMonitor: cloudKitSyncMonitor,
           hasICloud: hasICloud,
           authState: auth.authState,
           login: auth.login,

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
 
+  let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
   var authState: AuthState
   var login: () async -> ()
@@ -22,6 +23,7 @@ struct RootView: View {
           case .LoggedIn(let user):
             NavWrap {
               PinListView(
+                cloudKitSyncMonitor: cloudKitSyncMonitor,
                 logout: logout,
                 user: user,
                 pins: pins
