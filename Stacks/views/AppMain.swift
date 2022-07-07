@@ -123,7 +123,6 @@ struct AppScene: Scene {
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
-    // let _ = log.warning("pinsModel.corePins[].tagsList[\(pinsModel.corePins.map { $0.tagsList })]") // XXX Debug
     WindowGroup {
       Group {
         RootView(

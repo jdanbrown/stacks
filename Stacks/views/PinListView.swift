@@ -10,7 +10,7 @@ struct PinListView: View {
   // var pins: [Pin]
   @ObservedObject var pinsModel: PinsModel
 
-  @State private var dupesOnly: Bool = false // XXX [dupes/races] Debug
+  @State private var dupesOnly: Bool = false
   @State private var order: Order = .desc
 
   // tagFilter is the tag (optional) to filter our pins to
@@ -47,12 +47,10 @@ struct PinListView: View {
   var body: some View {
 
     let pins = pinsForView()
-    // let _ = log.warning("pins[].tags[\(pins.map { $0.tags })]") // XXX Debug
 
     ZStack {
       AutoNavigationLink(model: navigation)
       VStack(spacing: 5) {
-        // HACK_CorePin_list() // XXX Dev
         searchBar()
         // Using List instead of ScrollView so that swipe gestures work
         //  - Gestures in List
@@ -94,7 +92,7 @@ struct PinListView: View {
           buttonOrderCycleDescAscShuffle()
           // buttonOrderToggleDescAsc()
           // buttonOrderShuffle()
-          buttonDupesOnlyToggle() // XXX [dupes/races] Debug
+          buttonDupesOnlyToggle()
         }
       )
 
@@ -197,7 +195,6 @@ struct PinListView: View {
       .font(.body)
   }
 
-  // XXX [dupes/races] Debug
   @ViewBuilder
   func buttonDupesOnlyToggle() -> some View {
     Button(action: {
@@ -277,7 +274,6 @@ struct PinListView: View {
 
   func pinsForView() -> [Pin] {
     var pins = self.pinsModel.pins
-    // XXX [dupes/races] Debug
     if dupesOnly {
       let urlCounts = Dictionary(grouping: pins, by: { $0.url }).mapValues { $0.count }
       pins = pins.filter { (urlCounts[$0.url] ?? 0) > 1 }
