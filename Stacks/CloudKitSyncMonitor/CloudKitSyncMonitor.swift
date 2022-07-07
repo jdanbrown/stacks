@@ -6,6 +6,7 @@ import Combine
 import CoreData
 import Network
 import SwiftUI
+import XCGLogger
 
 // An object, usually used as a singleton, that provides, and publishes, the current state of `NSPersistentCloudKitContainer`'s sync
 //
@@ -421,11 +422,14 @@ class CloudKitSyncMonitor: ObservableObject {
 
   func start() {
 
+    log.info()
+
     // Monitor NSPersistentCloudKitContainer sync events
     // if #available(iOS 14.0, macCatalyst 14.0, *) { // Crashes on 13.7 w/o this, even though we have @available
     NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
       .sink(receiveValue: { notification in
         if let cloudEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+          log.info("NSPersistentCloudKitContainer.eventChangedNotification: cloudEvent[\(cloudEvent)]")
           let event = SyncEvent(from: cloudEvent) // To make testing possible
           // Properties need to be set on the main thread for SwiftUI, so we'll do that here
           // instead of maing setProperties run async code, which is inconvenient for testing.
@@ -444,6 +448,7 @@ class CloudKitSyncMonitor: ObservableObject {
     // allowing syncing over cellular connections), NSPersistentCloudKitContainer won't try to sync.
     // If that assumption is incorrect, we'll need to update the logic in this class.
     monitor.pathUpdateHandler = { path in
+      log.info("monitor.pathUpdateHandler: path[\(path)]")
       DispatchQueue.main.async {
         #if os(watchOS)
           self.networkAvailable = (path.availableInterfaces.count > 0)
@@ -459,6 +464,7 @@ class CloudKitSyncMonitor: ObservableObject {
     NotificationCenter.default.publisher(for: .CKAccountChanged)
       .debounce(for: 0.5, scheduler: DispatchQueue.main)
       .sink(receiveValue: { notification in
+        log.info("CKAccountChanged: notification[\(notification)]")
         self.updateiCloudAccountStatus()
       })
       .store(in: &cancellables)
@@ -470,6 +476,7 @@ class CloudKitSyncMonitor: ObservableObject {
   // When SyncMonitor is listening to notifications (which it does unless you tell it not to when initializing), this method is called each time CKContainer
   // fires off a `.CKAccountChanged` notification.
   private func updateiCloudAccountStatus() {
+    log.info()
     CKContainer.default().accountStatus { accountStatus, error in
       DispatchQueue.main.async {
         if let e = error {
@@ -487,6 +494,7 @@ class CloudKitSyncMonitor: ObservableObject {
 
   // Set the appropriate State property (importState, exportState, setupState) based on the provided event
   func setProperties(from event: SyncEvent) {
+    log.info("event[\(event)]")
 
     // First, set the SyncState for the event
     var state: SyncState = .notStarted
