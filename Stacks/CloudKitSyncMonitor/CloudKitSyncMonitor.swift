@@ -88,7 +88,7 @@ import SwiftUI
 //     }
 //
 @available(iOS 14.0, macCatalyst 14.0, OSX 11, tvOS 14.0, watchOS 7, *)
-public class SyncMonitor: ObservableObject {
+public class CloudKitSyncMonitor: ObservableObject {
 
   // A singleton to use
   public static let shared = SyncMonitor()

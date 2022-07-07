@@ -36,7 +36,7 @@
 		B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46C9275B493D00923DE1 /* FirebaseAnalytics */; };
 		B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CB275B493D00923DE1 /* FirebaseAuth */; };
 		B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CD275B493D00923DE1 /* FirebaseFirestore */; };
-		B76DCDA9287692FF0049EB14 /* SyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76DCDA8287692FF0049EB14 /* SyncMonitor.swift */; };
+		B76DCDA9287692FF0049EB14 /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76DCDA8287692FF0049EB14 /* CloudKitSyncMonitor.swift */; };
 		B7777A3A279616B600372937 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7777A39279616B600372937 /* ReaderView.swift */; };
 		B7856B9627704C3400A87DDA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7856B9527704C3400A87DDA /* User.swift */; };
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
@@ -75,7 +75,7 @@
 		B75B46A0275B3FC700923DE1 /* PinListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinListView.swift; sourceTree = "<group>"; };
 		B75B46A2275B3FC900923DE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B76DCDA8287692FF0049EB14 /* SyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncMonitor.swift; sourceTree = "<group>"; };
+		B76DCDA8287692FF0049EB14 /* CloudKitSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncMonitor.swift; sourceTree = "<group>"; };
 		B7777A3827960D9C00372937 /* Stacks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stacks.entitlements; sourceTree = "<group>"; };
 		B7777A39279616B600372937 /* ReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
 		B7856B9527704C3400A87DDA /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -230,7 +230,7 @@
 		B76DCDA7287692E50049EB14 /* CloudKitSyncMonitor */ = {
 			isa = PBXGroup;
 			children = (
-				B76DCDA8287692FF0049EB14 /* SyncMonitor.swift */,
+				B76DCDA8287692FF0049EB14 /* CloudKitSyncMonitor.swift */,
 			);
 			path = CloudKitSyncMonitor;
 			sourceTree = "<group>";
@@ -355,7 +355,7 @@
 				B704D66A284327FB00C7C874 /* PinsModelPinboard.swift in Sources */,
 				B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */,
 				B704D66E2843379400C7C874 /* PINBOARD_API_TOKEN.swift in Sources */,
-				B76DCDA9287692FF0049EB14 /* SyncMonitor.swift in Sources */,
+				B76DCDA9287692FF0049EB14 /* CloudKitSyncMonitor.swift in Sources */,
 				B74E88A22844910C00DFF9FD /* PinsModel.swift in Sources */,
 				B7A732912817BBCF0011FACE /* StorageProvider.swift in Sources */,
 			);
