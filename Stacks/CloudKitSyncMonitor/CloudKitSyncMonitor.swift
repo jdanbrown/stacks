@@ -382,22 +382,44 @@ class CloudKitSyncMonitor: ObservableObject {
     exportState: SyncState = .notStarted,
     networkAvailable: Bool? = nil,
     iCloudAccountStatus: CKAccountStatus? = nil,
-    lastErrorText: String? = nil,
-    listen: Bool = true
+    lastErrorText: String? = nil
   ) {
-
     self.setupState = setupState
     self.importState = importState
     self.exportState = exportState
     self.networkAvailable = networkAvailable
     self.iCloudAccountStatus = iCloudAccountStatus
-
     if let e = lastErrorText {
       self.lastError = NSError(domain: e, code: 0, userInfo: nil)
     }
-    guard listen else {
-      return
+  }
+
+  // Convenience initializer that creates a SyncMonitor with preset state values for testing or previews
+  //
+  //     let syncMonitor = SyncMonitor(importSuccessful: false, errorText: "Cloud distrupted by weather net")
+  //
+  init(
+    setupSuccessful:  Bool = true,
+    importSuccessful: Bool = true,
+    exportSuccessful: Bool = true,
+    networkAvailable: Bool = true,
+    iCloudAccountStatus: CKAccountStatus = .available,
+    errorText: String?
+  ) {
+    var error: Error?
+    if let errorText = errorText {
+      error = NSError(domain: errorText, code: 0, userInfo: nil)
     }
+    let startDate = Date(timeIntervalSinceNow: -15) // a 15 second sync. :o
+    let endDate   = Date()
+    self.setupState  = setupSuccessful  ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
+    self.importState = importSuccessful ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
+    self.exportState = exportSuccessful ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
+    self.networkAvailable = networkAvailable
+    self.iCloudAccountStatus = iCloudAccountStatus
+  }
+
+  func start() {
 
     // Monitor NSPersistentCloudKitContainer sync events
     // if #available(iOS 14.0, macCatalyst 14.0, *) { // Crashes on 13.7 w/o this, even though we have @available
@@ -441,31 +463,6 @@ class CloudKitSyncMonitor: ObservableObject {
       })
       .store(in: &cancellables)
 
-  }
-
-  // Convenience initializer that creates a SyncMonitor with preset state values for testing or previews
-  //
-  //     let syncMonitor = SyncMonitor(importSuccessful: false, errorText: "Cloud distrupted by weather net")
-  //
-  init(
-    setupSuccessful:  Bool = true,
-    importSuccessful: Bool = true,
-    exportSuccessful: Bool = true,
-    networkAvailable: Bool = true,
-    iCloudAccountStatus: CKAccountStatus = .available,
-    errorText: String?
-  ) {
-    var error: Error?
-    if let errorText = errorText {
-      error = NSError(domain: errorText, code: 0, userInfo: nil)
-    }
-    let startDate = Date(timeIntervalSinceNow: -15) // a 15 second sync. :o
-    let endDate   = Date()
-    self.setupState  = setupSuccessful  ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
-    self.importState = importSuccessful ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
-    self.exportState = exportSuccessful ? .succeeded(started: startDate, ended: endDate) : .failed(started: startDate, ended: endDate, error: error)
-    self.networkAvailable = networkAvailable
-    self.iCloudAccountStatus = iCloudAccountStatus
   }
 
   // Checks the current status of the user's iCloud account and updates our iCloudAccountStatus property
