@@ -7,7 +7,7 @@ struct RootView: View {
   var authState: AuthState
   var login: () async -> ()
   var logout: () async -> ()
-  var pins: [Pin]
+  var pinsModel: PinsModel
 
   var body: some View {
     // let _ = log.warning("pins[].tags[\(pins.map { $0.tags })]") // XXX Debug
@@ -26,7 +26,7 @@ struct RootView: View {
                 cloudKitSyncMonitor: cloudKitSyncMonitor,
                 logout: logout,
                 user: user,
-                pins: pins
+                pinsModel: pinsModel
               )
             }
         }

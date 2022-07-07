@@ -5,6 +5,12 @@ import XCGLogger
 
 class PinsModel: ObservableObject {
 
+  // TODO We can simplify this now that we pass pinsModel directly (because it's observable)
+  //  - Try getting rid of Pin entirely -- just use CorePin!
+  //  - Then add existing Pin operations onto a CorePin extension
+  //  - And rename CorePin -> Pin
+  //  - Boom, simplified
+  //
   // HACK Keep both corePins + pins
   //  - Passing corePins to a View doesn't update the View on e.g. tag changes, whereas passing pins does
   //    - I _think_ because NSManagedObject compares by .objectID (e.g. isEqual docs say it doesn't fault)

@@ -7,7 +7,8 @@ struct PinListView: View {
 
   var logout: () async -> ()
   var user: User
-  var pins: [Pin]
+  // var pins: [Pin]
+  @ObservedObject var pinsModel: PinsModel
 
   @State private var dupesOnly: Bool = false // XXX [dupes/races] Debug
   @State private var order: Order = .desc
@@ -23,15 +24,15 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pins: [Pin]) {
+  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pinsModel: PinsModel) {
     self.cloudKitSyncMonitor = cloudKitSyncMonitor
     self.logout = logout
     self.user = user
-    self.pins = pins
+    self.pinsModel = pinsModel
   }
 
-  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pins: [Pin], tagFilter: String?) {
-    self.init(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pins: pins)
+  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pinsModel: PinsModel, tagFilter: String?) {
+    self.init(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pinsModel: pinsModel)
     self.tagFilter = tagFilter
   }
 
@@ -40,7 +41,7 @@ struct PinListView: View {
   }
 
   func withTagFilter(tagFilter: String?) -> PinListView {
-    return PinListView(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pins: pins, tagFilter: tagFilter)
+    return PinListView(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pinsModel: pinsModel, tagFilter: tagFilter)
   }
 
   var body: some View {
@@ -275,7 +276,7 @@ struct PinListView: View {
   }
 
   func pinsForView() -> [Pin] {
-    var pins = self.pins
+    var pins = self.pinsModel.pins
     // XXX [dupes/races] Debug
     if dupesOnly {
       let urlCounts = Dictionary(grouping: pins, by: { $0.url }).mapValues { $0.count }

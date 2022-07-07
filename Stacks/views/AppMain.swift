@@ -132,7 +132,7 @@ struct AppScene: Scene {
           authState: auth.authState,
           login: auth.login,
           logout: auth.logout,
-          pins: pinsModel.pins
+          pinsModel: pinsModel
         )
       }
         .environment(\.managedObjectContext, storageProvider.viewContext)
