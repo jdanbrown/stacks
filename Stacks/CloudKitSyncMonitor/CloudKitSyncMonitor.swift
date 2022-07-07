@@ -88,7 +88,7 @@ import SwiftUI
 //     }
 //
 @available(iOS 14.0, macCatalyst 14.0, OSX 11, tvOS 14.0, watchOS 7, *)
-public class CloudKitSyncMonitor: ObservableObject {
+class CloudKitSyncMonitor: ObservableObject {
 
   //
   // Summary properties
@@ -130,7 +130,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //             .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
   //     }
   //
-  public var syncStateSummary: SyncSummaryStatus {
+  var syncStateSummary: SyncSummaryStatus {
     if networkAvailable == false {
       return .noNetwork
     }
@@ -162,13 +162,13 @@ public class CloudKitSyncMonitor: ObservableObject {
   }
 
   // Possible values for the summary of the state of iCloud sync
-  public enum SyncSummaryStatus {
+  enum SyncSummaryStatus {
 
     case noNetwork, accountNotAvailable, error, notSyncing, notStarted, inProgress, succeeded, unknown
 
-    public var inProgress: Bool { if case .inProgress = self { return true } else { return false } }
+    var inProgress: Bool { if case .inProgress = self { return true } else { return false } }
 
-    public var symbolName: String {
+    var symbolName: String {
       switch self {
         case .noNetwork:           return "bolt.horizontal.icloud"
         case .accountNotAvailable: return "lock.icloud"
@@ -181,7 +181,7 @@ public class CloudKitSyncMonitor: ObservableObject {
       }
     }
 
-    public var symbolColor: Color {
+    var symbolColor: Color {
       switch self {
         case .noNetwork:           return .gray
         case .accountNotAvailable: return .gray
@@ -194,7 +194,7 @@ public class CloudKitSyncMonitor: ObservableObject {
       }
     }
 
-    public var isBroken: Bool {
+    var isBroken: Bool {
       switch self {
         case .noNetwork:           return false
         case .accountNotAvailable: return false
@@ -229,7 +229,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
   // `syncError` being `true` means that `NSPersistentCloudKitContainer` sent a notification that included an error.
   //
-  public var syncError: Bool {
+  var syncError: Bool {
     return setupError != nil || importError != nil || exportError != nil
   }
 
@@ -238,7 +238,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //  - The network is available
   //  - There are no recorded sync errors
   //  - And setup is complete and succeeded
-  public var shouldBeSyncing: Bool {
+  var shouldBeSyncing: Bool {
     if case .available = iCloudAccountStatus, self.networkAvailable == true, !syncError, case .succeeded = setupState {
       return true
     } else {
@@ -267,7 +267,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   // this condition, and those like it. If you see `notSyncing` being triggered, I'd recommend isolating the issue (e.g. the one above) and filing a FB about it
   // to Apple.
   //
-  public var notSyncing: Bool {
+  var notSyncing: Bool {
     if case .notStarted = importState, shouldBeSyncing {
       return true
     } else {
@@ -283,7 +283,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
   // You should examime the error for the cause. You may then be able to at least report it to the user, if not automate a "fix" in your app.
   //
-  public var setupError: Error? {
+  var setupError: Error? {
     if networkAvailable == true, let error = setupState.error {
       return error
     } else {
@@ -292,7 +292,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   }
 
   // If not `nil`, there is a problem with CloudKit's import
-  public var importError: Error? {
+  var importError: Error? {
     if networkAvailable == true, let error = importState.error {
       return error
     } else {
@@ -313,7 +313,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   // the moment it happens. It specifically tests that the network is available and that an error was reported (including error text). This means that sync
   // _should_ be working (that is, they're online), but failed. The user, or your application, will likely need to take action to correct the problem.
   //
-  public var exportError: Error? {
+  var exportError: Error? {
     if networkAvailable == true, let error = exportState.error {
       return error
     } else {
@@ -366,7 +366,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
 
   // Creates a new sync monitor and sets up listeners to sync and network changes
-  public init(
+  init(
     setupState:  SyncState = .notStarted,
     importState: SyncState = .notStarted,
     exportState: SyncState = .notStarted,
@@ -437,7 +437,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
   //     let syncMonitor = SyncMonitor(importSuccessful: false, errorText: "Cloud distrupted by weather net")
   //
-  public init(
+  init(
     setupSuccessful:  Bool = true,
     importSuccessful: Bool = true,
     exportSuccessful: Bool = true,
@@ -479,7 +479,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
 
   // Set the appropriate State property (importState, exportState, setupState) based on the provided event
-  internal func setProperties(from event: SyncEvent) {
+  func setProperties(from event: SyncEvent) {
 
     // First, set the SyncState for the event
     var state: SyncState = .notStarted
@@ -510,7 +510,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   }
 
   // A sync event containing the values from NSPersistentCloudKitContainer.Event that we track
-  internal struct SyncEvent {
+  struct SyncEvent {
 
     var type: NSPersistentCloudKitContainer.EventType
     var startDate: Date?
@@ -549,7 +549,7 @@ public class CloudKitSyncMonitor: ObservableObject {
   //
 
   // The state of a CloudKit import, export, or setup event as reported by an `NSPersistentCloudKitContainer` notification
-  public enum SyncState {
+  enum SyncState {
 
     case notStarted                                        // No events received
     case inProgress(started: Date)                         // Received an event with startDate + endDate=nil
