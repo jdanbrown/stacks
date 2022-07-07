@@ -359,7 +359,7 @@ class CloudKitSyncMonitor: ObservableObject {
 
   // Network path monitor that's used to track whether we can reach the network at all
   private let monitor = NWPathMonitor()
-  private let monitorQueue = DispatchQueue(label: "NetworkMonitor")
+  private let monitorQueue = DispatchQueue(label: "CloudKitSyncMonitor.monitor")
 
   //
   // Initializers
@@ -500,7 +500,7 @@ class CloudKitSyncMonitor: ObservableObject {
       case .setup:      setupState  = state
       case .import:     importState = state
       case .export:     exportState = state
-      @unknown default: assertionFailure("NSPersistentCloudKitContainer added a new event type.")
+      @unknown default: assertionFailure("Unknown event.type[\(event.type)]")
     }
 
     if event.error != nil {
