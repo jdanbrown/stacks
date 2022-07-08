@@ -4,6 +4,7 @@ import SwiftUI
 struct PinListView: View {
 
   @ObservedObject var cloudKitSyncMonitor: CloudKitSyncMonitor
+  @State private var showingPopoverForCloudKitSyncMonitor = false
 
   var logout: () async -> ()
   var user: User
@@ -190,9 +191,25 @@ struct PinListView: View {
 
   @ViewBuilder
   func statusCloudKitSync() -> some View {
-    Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
-      .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
-      .font(.body)
+    Button(action: {
+      showingPopoverForCloudKitSyncMonitor = true
+    }) {
+      Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
+        .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
+        .font(.body)
+    }
+      .popover(isPresented: $showingPopoverForCloudKitSyncMonitor) {
+        VStack(alignment: .leading) {
+          Text("CloudKit Sync Status")
+            .font(.title)
+            .padding()
+          let lines = cloudKitSyncMonitor.descriptionDictionary.map { "\($0.key): \($0.value)" }
+          ForEach(lines, id: \.self) { line in
+            Text(line)
+              .padding()
+          }
+        }
+      }
   }
 
   @ViewBuilder
