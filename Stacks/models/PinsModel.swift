@@ -5,12 +5,6 @@ import XCGLogger
 
 class PinsModel: ObservableObject {
 
-  // TODO We can simplify this now that we pass pinsModel directly (because it's observable)
-  //  - Try getting rid of Pin entirely -- just use CorePin!
-  //  - Then add existing Pin operations onto a CorePin extension
-  //  - And rename CorePin -> Pin
-  //  - Boom, simplified
-  //
   // HACK Keep both corePins + pins
   //  - Passing corePins to a View doesn't update the View on e.g. tag changes, whereas passing pins does
   //    - I _think_ because NSManagedObject compares by .objectID (e.g. isEqual docs say it doesn't fault)
@@ -102,7 +96,7 @@ class PinsModel: ObservableObject {
   private func _update(_ corePin: CorePin, _ pin: Pin) {
     // TODO Do we need to manually detect writes to skip? Or will Core Data magically figure it out for us?
     log.info("corePin[\(corePin)], pin[\(pin)]")
-    let merged = Pin.merge(corePin.toPin(), pin)
+    let merged = Pins.merge(corePin.toPin(), pin)
     assert(corePin.url == pin.url, "corePin.url[\(opt: corePin.url)] == pin.url[\(pin.url)]")
     corePin.tombstone             = merged.tombstone
     corePin.title                 = merged.title

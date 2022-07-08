@@ -4,14 +4,6 @@ import FirebaseFirestoreSwift
 import SwiftUI
 import XCGLogger
 
-// TODO Don't do Pin vs. PurePin! -- DocumentReference doesn't need to be stored!
-//  - A DocumentReference is 1-1 with the document path, and can be recreated from it
-//  - https://firebase.google.com/docs/firestore/data-model#references
-
-// TODO Do we want Withable here?
-//  - Requires all let's be var's (ugh)
-//  - How will PinEditView work? -- that's all that should matter
-
 extension CorePin {
 
   var tagsList: [String] {
@@ -40,9 +32,7 @@ extension CorePin {
   // Override NSManagedObject.description to not include newlines
   //  - Else log filtering in xcode is impossible, because you don't get complete lines
   override public var description: String {
-    get {
-      return super.description.replacingOccurrences(of: #"\s*\n\s*"#, with: " ", options: [.regularExpression])
-    }
+    return super.description.replacingOccurrences(of: #"\s*\n\s*"#, with: " ", options: [.regularExpression])
   }
 
 }
@@ -51,16 +41,9 @@ extension CorePin {
 //  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 struct Pin: Codable, Identifiable, Equatable {
 
-  // TODO or XXX
-  //  - Used in PinsModel.update
-  var managedObjectID: NSManagedObjectID? = nil
+  var id: String { return url }
 
-  // id is determined by url
-  var id: String {
-    get { return Pin.idFromUrl(url) }
-  }
-
-  let schemaVersion: String = "v1"
+  let schemaVersion: String = "v1" // XXX Safe to remove after we remove Fireestore
   let url: String // NOTE When we need it: URL.absoluteString -> String
   let tombstone: Bool
   let title: String
@@ -99,38 +82,6 @@ struct Pin: Codable, Identifiable, Equatable {
     case progressPageScrollMax = "progress_page_scroll_max"
     case progressPdfPage = "progress_pdf_page"
     case progressPdfPageMax = "progress_pdf_page_max"
-  }
-
-  // Returns nil if document does not exist, throws if decoding fails
-  static func fromDoc(_ doc: DocumentSnapshot) throws -> Pin? {
-    // Reimplement `try doc.data(as: Pin.self)`, but add default values
-    //  - https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
-    guard var data = doc.data() else {
-      log.error("Null doc, returning nil")
-      return nil
-    }
-    // Set defaults for keys that aren't present in firestore
-    data.setDefault("tombstone", false)
-    // HACK Be more aggressive than setDefault for these, since some firestore docs contain null for some of these keys
-    for k in ["progress_page_scroll", "progress_page_scroll_max", "progress_pdf_page", "progress_pdf_page_max"] {
-      if data[k] == nil || data[k] is NSNull {
-        data[k] = 0
-      }
-    }
-    return try Firestore.Decoder().decode(Pin.self, from: data, in: doc.reference)
-  }
-
-  static func idFromUrl(_ url: String) -> String {
-    return sha1hex(normalizeUrlForId(url))
-  }
-
-  static func normalizeUrlForId(_ url: String) -> String {
-    return (url
-      // Treat http:// and https:// urls the same
-      //  - To avoid duplicate pins if the user saves a link before opening, and then again after opening and the link
-      //    was an http:// link that redirects to an https:// link
-      .replacingOccurrences(of: #"^https?://"#, with: "https?://", options: [.regularExpression])
-    )
   }
 
   // lazy because static [https://docs.swift.org/swift-book/LanguageGuide/Properties.html]
@@ -176,6 +127,10 @@ struct Pin: Codable, Identifiable, Equatable {
     ```
     """
 
+}
+
+class Pins {
+
   // Idempotent
   static func merge(_ x: Pin, _ y: Pin) -> Pin {
     assert(x.url == y.url, "x.url[\(x.url)] == y.url[\(y.url)]")
@@ -197,12 +152,7 @@ struct Pin: Codable, Identifiable, Equatable {
       progressPdfPage:       [x.progressPdfPage,       y.progressPdfPage]       .max() ?? 0,
       progressPdfPageMax:    [x.progressPdfPageMax,    y.progressPdfPageMax]    .max() ?? 0
     )
-
   }
-
-}
-
-class Pins {
 
   // // Properties
   // //  - Idempotent
@@ -215,7 +165,7 @@ class Pins {
   // //    - Don't junk up notes text with more '==='
   // //    - Don't endlessly append '===' conflicts onto the already conflict-annotated notes text
   // //
-  // static func merge(_ xs: [Pin], _ ys: [Pin]) -> ([Pin], [PinDiff]) {
+  // static func mergeWithDiffs(_ xs: [Pin], _ ys: [Pin]) -> ([Pin], [PinDiff]) {
   //   let xd = Dictionary(uniqueKeysWithValues: xs.map { ($0.url, $0) }) // Fails if duplicates url's
   //   let yd = Dictionary(uniqueKeysWithValues: ys.map { ($0.url, $0) }) // Fails if duplicates url's
   //   var zs: [Pin] = []
@@ -230,7 +180,7 @@ class Pins {
   //     } else if x == y {
   //       zs.append(x!)
   //     } else {
-  //       let z = Pin.merge(x!, y!)
+  //       let z = Pins.merge(x!, y!)
   //       zs.append(z)
   //       diffs.append(PinDiff(before: [x!, y!], after: z))
   //     }
@@ -252,6 +202,17 @@ class Pins {
   //     print("  diff[\(i)].after")
   //     print("    \(diff.after)")
   //   }
+  // }
+
+  // TODO Where to slot this back in?
+  //  - Also, are there any http urls that aren't safe to rewrite to https?
+  // static func normalizeUrlForId(_ url: String) -> String {
+  //   return (url
+  //     // Treat http:// and https:// urls the same
+  //     //  - To avoid duplicate pins if the user saves a link before opening, and then again after opening and the link
+  //     //    was an http:// link that redirects to an https:// link
+  //     .replacingOccurrences(of: #"^https?://"#, with: "https?://", options: [.regularExpression])
+  //   )
   // }
 
 }

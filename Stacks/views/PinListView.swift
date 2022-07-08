@@ -312,9 +312,9 @@ struct PinListView: View {
     // Order
     switch order {
       case .desc:
-        pins = pins.sorted(key: { $0.createdAt ?? Date.zero }, desc: true)
+        pins = pins.sorted(key: { $0.createdAt }, desc: true)
       case .asc:
-        pins = pins.sorted(key: { $0.createdAt ?? Date.zero }, desc: false)
+        pins = pins.sorted(key: { $0.createdAt }, desc: false)
       case .shuffle(let seed):
         let generator = GKMersenneTwisterRandomSource(seed: seed)
         pins = generator.arrayByShufflingObjects(in: pins) as! [Pin]

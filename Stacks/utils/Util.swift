@@ -1,4 +1,5 @@
 import Combine
+import CoreData
 import CryptoKit
 import Foundation
 import SwiftUI
@@ -333,6 +334,23 @@ func urlWithQueryParams(_ url: URL, queryParams: [String: String] = [:]) throws 
   }
   return url
 }
+
+//
+// Core Data
+//
+
+extension NSManagedObject {
+
+  func toDict() -> [String: Any] {
+    return self.dictionaryWithValues(forKeys: Array(self.entity.attributesByName.keys))
+  }
+
+  func toJson() throws -> String {
+    return try toJsonNoCodable(toDict())
+  }
+
+}
+
 
 //
 // swiftui

@@ -62,7 +62,7 @@ class PinsModelFirestore: ObservableObject {
         }
         log.info("Got snapshot: documents[\(documents.count)]")
         self.pins = documents.compactMap { queryDocumentSnapshot -> Pin? in
-          switch (Result { try Pin.fromDoc(queryDocumentSnapshot) }) {
+          switch (Result { try PinsModelFirestore.pinFromDoc(queryDocumentSnapshot) }) {
             case .failure(let e):
               log.error("Failed to parse document, skipping: queryDocumentSnapshot[\(queryDocumentSnapshot)], error[\(e)]")
               return nil
@@ -80,6 +80,25 @@ class PinsModelFirestore: ObservableObject {
 
       }
     )
+  }
+
+  // Returns nil if document does not exist, throws if decoding fails
+  static func pinFromDoc(_ doc: DocumentSnapshot) throws -> Pin? {
+    // Reimplement `try doc.data(as: Pin.self)`, but add default values
+    //  - https://github.com/firebase/firebase-ios-sdk/blob/v8.10.0/Firestore/Swift/Source/Codable/DocumentSnapshot+ReadDecodable.swift
+    guard var data = doc.data() else {
+      log.error("Null doc, returning nil")
+      return nil
+    }
+    // Set defaults for keys that aren't present in firestore
+    data.setDefault("tombstone", false)
+    // HACK Be more aggressive than setDefault for these, since some firestore docs contain null for some of these keys
+    for k in ["progress_page_scroll", "progress_page_scroll_max", "progress_pdf_page", "progress_pdf_page_max"] {
+      if data[k] == nil || data[k] is NSNull {
+        data[k] = 0
+      }
+    }
+    return try Firestore.Decoder().decode(Pin.self, from: data, in: doc.reference)
   }
 
   // TODO Add pins stuff from firestore.dart
