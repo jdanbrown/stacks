@@ -5,6 +5,7 @@ import CloudKit
 import Combine
 import CoreData
 import Network
+import OrderedCollections
 import SwiftUI
 import XCGLogger
 
@@ -92,13 +93,17 @@ import XCGLogger
 class CloudKitSyncMonitor: ObservableObject {
 
   var description: String {
+    return descriptionDictionary.description
+  }
+
+  var descriptionDictionary: OrderedDictionary<String, Any> {
     return [
       "syncStateSummary": syncStateSummary,
       "setupState": setupState,
       "importState": importState,
       "exportState": exportState,
       "lastError": (lastError as Any),
-    ].description
+    ]
   }
 
   //

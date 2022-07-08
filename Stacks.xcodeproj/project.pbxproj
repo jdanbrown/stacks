@@ -37,6 +37,7 @@
 		B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CB275B493D00923DE1 /* FirebaseAuth */; };
 		B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B75B46CD275B493D00923DE1 /* FirebaseFirestore */; };
 		B76DCDA9287692FF0049EB14 /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76DCDA8287692FF0049EB14 /* CloudKitSyncMonitor.swift */; };
+		B76DCDAC2877E57B0049EB14 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B76DCDAB2877E57B0049EB14 /* OrderedCollections */; };
 		B7777A3A279616B600372937 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7777A39279616B600372937 /* ReaderView.swift */; };
 		B7856B9627704C3400A87DDA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7856B9527704C3400A87DDA /* User.swift */; };
 		B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */; };
@@ -91,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B76DCDAC2877E57B0049EB14 /* OrderedCollections in Frameworks */,
 				B75B46CA275B493D00923DE1 /* FirebaseAnalytics in Frameworks */,
 				B7856B99277457A200A87DDA /* FirebaseAuthCombine-Community in Frameworks */,
 				B70C4E93279403530010E119 /* Down in Frameworks */,
@@ -269,6 +271,7 @@
 				B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */,
 				B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */,
 				B70C4E92279403530010E119 /* Down */,
+				B76DCDAB2877E57B0049EB14 /* OrderedCollections */,
 			);
 			productName = Stacks;
 			productReference = B75B469B275B3FC700923DE1 /* Stacks.app */;
@@ -303,6 +306,7 @@
 				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */,
 				B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */,
+				B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -598,6 +602,14 @@
 				minimumVersion = 8.10.0;
 			};
 		};
+		B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -630,6 +642,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		B76DCDAB2877E57B0049EB14 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */ = {
 			isa = XCSwiftPackageProductDependency;
