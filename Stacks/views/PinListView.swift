@@ -3,8 +3,8 @@ import SwiftUI
 
 struct PinListView: View {
 
+  let storageProvider: StorageProvider
   @ObservedObject var cloudKitSyncMonitor: CloudKitSyncMonitor
-  @State private var showingPopoverForCloudKitSyncMonitor = false
 
   var logout: () async -> ()
   var user: User
@@ -25,24 +25,56 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pinsModel: PinsModel) {
+  @State private var showAlertSaveBackup = false
+  @State private var showAlertSaveBackupMessage = ""
+
+  @State private var showingPopoverForCloudKitSyncMonitor = false
+
+  init(
+    storageProvider: StorageProvider,
+    cloudKitSyncMonitor: CloudKitSyncMonitor,
+    logout: @escaping () async -> (),
+    user: User,
+    pinsModel: PinsModel
+  ) {
+    self.storageProvider = storageProvider
     self.cloudKitSyncMonitor = cloudKitSyncMonitor
     self.logout = logout
     self.user = user
     self.pinsModel = pinsModel
   }
 
-  init(cloudKitSyncMonitor: CloudKitSyncMonitor, logout: @escaping () async -> (), user: User, pinsModel: PinsModel, tagFilter: String?) {
-    self.init(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pinsModel: pinsModel)
+  init(
+    storageProvider: StorageProvider,
+    cloudKitSyncMonitor: CloudKitSyncMonitor,
+    logout: @escaping () async -> (),
+    user: User,
+    pinsModel: PinsModel,
+    tagFilter: String?
+  ) {
+    self.init(
+      storageProvider: storageProvider,
+      cloudKitSyncMonitor: cloudKitSyncMonitor,
+      logout: logout,
+      user: user,
+      pinsModel: pinsModel
+    )
     self.tagFilter = tagFilter
+  }
+
+  func withTagFilter(tagFilter: String?) -> PinListView {
+    return PinListView(
+      storageProvider: storageProvider,
+      cloudKitSyncMonitor: cloudKitSyncMonitor,
+      logout: logout,
+      user: user,
+      pinsModel: pinsModel,
+      tagFilter: tagFilter
+    )
   }
 
   func navigationPushTag(_ tag: String) {
     navigation.push(withTagFilter(tagFilter: tag))
-  }
-
-  func withTagFilter(tagFilter: String?) -> PinListView {
-    return PinListView(cloudKitSyncMonitor: cloudKitSyncMonitor, logout: logout, user: user, pinsModel: pinsModel, tagFilter: tagFilter)
   }
 
   var body: some View {
@@ -84,8 +116,9 @@ struct PinListView: View {
       .navigationBarTitleDisplayMode(.inline)
       .navigationBarItems(
         leading: HStack {
-          buttonProfilePhoto()
+          // buttonProfilePhoto()
           statusCloudKitSync()
+          buttonSaveBackup()
         },
         trailing: HStack {
           buttonSearch()
@@ -209,6 +242,27 @@ struct PinListView: View {
               .padding()
           }
         }
+      }
+  }
+
+  @ViewBuilder
+  func buttonSaveBackup() -> some View {
+    Button(action: {
+      do {
+        try storageProvider.saveBackup()
+      } catch {
+        showAlertSaveBackup = true
+        showAlertSaveBackupMessage = "\(error)"
+      }
+    }) {
+      Image(systemName: "folder")
+        .font(.body)
+    }
+      .alert(isPresented: $showAlertSaveBackup) {
+        Alert(
+          title: Text("Failed to save backup"),
+          message: Text(showAlertSaveBackupMessage)
+        )
       }
   }
 

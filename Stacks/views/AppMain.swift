@@ -94,12 +94,12 @@ struct AppMain: App {
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
   var body: some Scene {
     AppScene(
-      initAsync: initAsync,
+      storageProvider: storageProvider,
       cloudKitSyncMonitor: cloudKitSyncMonitor,
       hasICloud: hasICloud,
-      storageProvider: storageProvider,
       auth: auth,
-      pinsModel: pinsModel
+      pinsModel: pinsModel,
+      initAsync: initAsync
     )
   }
 
@@ -107,13 +107,14 @@ struct AppMain: App {
 
 struct AppScene: Scene {
 
-  let initAsync: () async -> ()
+  let storageProvider: StorageProvider
   let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
-  let storageProvider: StorageProvider
 
   @ObservedObject var auth: AuthService
   @ObservedObject var pinsModel: PinsModel
+
+  let initAsync: () async -> ()
 
   // Docs
   //  - https://www.hackingwithswift.com/quick-start/swiftui/how-to-configure-core-data-to-work-with-swiftui
@@ -126,6 +127,7 @@ struct AppScene: Scene {
     WindowGroup {
       Group {
         RootView(
+          storageProvider: storageProvider,
           cloudKitSyncMonitor: cloudKitSyncMonitor,
           hasICloud: hasICloud,
           authState: auth.authState,

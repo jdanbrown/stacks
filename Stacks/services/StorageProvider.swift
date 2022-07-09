@@ -211,6 +211,26 @@ class StorageProvider {
     // TODO In case we need to do anything on updates, beyond @State which will already update our Views
   }
 
+  func saveBackup() throws {
+    let backupName = Date().format("yyyy-MM-dd HH.mm.ss") // ':' not allowed (on hfs)
+    guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+      throw SimpleError("Failed to open iCloud Drive directory")
+    }
+    let backupDir = iCloudDriveDir
+      .appendingPathComponent("Documents") // The "Documents/" dir (somehow) maps to "iCloud Drive" -> "Stacks/" in Files.app
+      .appendingPathComponent("Backups")
+      .appendingPathComponent(backupName)
+    log.info("backupDir[\(backupDir)]")
+    try persistentContainer.savePersistentStores(to: backupDir)
+  }
+
+  // NOTE Restoring is tricky! -- must drop references to all existing managed objects + re-fetch everything
+  //  - See: https://atomicbird.com/blog/core-data-back-up-store
+  //  - Maybe just alert the user to restart and then fatalError()? -- seems just fine to me
+  // func restoreFromBackup(backupDir: URL) {
+  //   ...
+  // }
+
   // Mock for previews
   static var preview: StorageProvider = {
     let storageProvider = StorageProvider(pinsPublishers: [], preview: true)
