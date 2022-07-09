@@ -208,13 +208,12 @@
 				B74E88A828486AFB00DFF9FD /* secrets */,
 				B74E88A628486A8600DFF9FD /* services */,
 				B74E88A428486A3700DFF9FD /* utils */,
+				B7EF27CD287935A3008448AA /* vendor */,
 				B74E88A32848697100DFF9FD /* views */,
 				B75B46A2275B3FC900923DE1 /* Assets.xcassets */,
 				B72509C927607F0E00858384 /* Info.plist */,
 				B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */,
 				B7777A3827960D9C00372937 /* Stacks.entitlements */,
-				B71EC963279D2AEE00CE9472 /* FlexView */,
-				B76DCDA7287692E50049EB14 /* CloudKitSyncMonitor */,
 				B75B46A4275B3FC900923DE1 /* Preview Content */,
 			);
 			path = Stacks;
@@ -243,6 +242,15 @@
 				B7A7328B2817B5650011FACE /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B7EF27CD287935A3008448AA /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+				B76DCDA7287692E50049EB14 /* CloudKitSyncMonitor */,
+				B71EC963279D2AEE00CE9472 /* FlexView */,
+			);
+			path = vendor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
