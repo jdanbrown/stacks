@@ -25,10 +25,12 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  @State private var showAlertSaveBackup = false
-  @State private var showAlertSaveBackupMessage = ""
+  @State private var showAlert = false
+  @State private var showAlertContent = (title: "", message: "")
 
   @State private var showingPopoverForCloudKitSyncMonitor = false
+
+  @State private var showDocumentPicker = false
 
   init(
     storageProvider: StorageProvider,
@@ -118,7 +120,7 @@ struct PinListView: View {
         leading: HStack {
           // buttonProfilePhoto()
           statusCloudKitSync()
-          buttonSaveBackup()
+          menuSaveRestore()
         },
         trailing: HStack {
           buttonSearch()
@@ -129,6 +131,64 @@ struct PinListView: View {
           buttonDupesOnlyToggle()
         }
       )
+
+      // Generic alerts
+      .alert(isPresented: $showAlert) {
+        Alert(
+          title: Text(showAlertContent.title),
+          message: Text(showAlertContent.message)
+        )
+      }
+
+      // Document picker
+      .sheet(isPresented: $showDocumentPicker) {
+        if let backupsDir = try? storageProvider.backupsDir() {
+          DocumentPicker(
+            forOpeningContentTypes: [
+              // .directory,
+              .folder,
+            ],
+            allowsMultipleSelection: false,
+            directoryURL: backupsDir
+          ) { urls in
+            let url = urls[0]
+            if url.deletingLastPathComponent() == backupsDir {
+              do {
+                try storageProvider.restoreFromBackup(backupDir: url)
+                showAlert = true
+                showAlertContent = (
+                  title: "Restored from backup",
+                  message: "\(url)"
+                )
+              } catch {
+                showAlert = true
+                showAlertContent = (
+                  title: "Failed to restore from backup",
+                  message: "\(error)"
+                )
+              }
+            } else {
+              let _ = {
+                showDocumentPicker = false
+                showAlert = true
+                showAlertContent = (
+                  title: "Invalid backup dir",
+                  message: "Must be a child of backupsDir[\(backupsDir)]"
+                )
+              }()
+            }
+          }
+        } else {
+          let _ = {
+            showDocumentPicker = false
+            showAlert = true
+            showAlertContent = (
+              title: "Failed to open iCloud Drive directory",
+              message: ""
+            )
+          }()
+        }
+      }
 
   }
 
@@ -246,24 +306,31 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func buttonSaveBackup() -> some View {
-    Button(action: {
-      do {
-        try storageProvider.saveBackup()
-      } catch {
-        showAlertSaveBackup = true
-        showAlertSaveBackupMessage = "\(error)"
+  func menuSaveRestore() -> some View {
+    Menu {
+      Button("Save to backup") {
+        do {
+          let (alreadyExists, backupDir) = try storageProvider.saveToBackup()
+          showAlert = true
+          showAlertContent = (
+            title: alreadyExists ? "Backup already exists" : "Saved to backup",
+            message: "\(backupDir.lastPathComponent)"
+          )
+        } catch {
+          showAlert = true
+          showAlertContent = (
+            title: "Failed to save backup",
+            message: "\(error)"
+          )
+        }
       }
-    }) {
+      Button("Restore from backup") {
+        showDocumentPicker = true
+      }
+    } label: {
       Image(systemName: "folder")
         .font(.body)
     }
-      .alert(isPresented: $showAlertSaveBackup) {
-        Alert(
-          title: Text("Failed to save backup"),
-          message: Text(showAlertSaveBackupMessage)
-        )
-      }
   }
 
   @ViewBuilder

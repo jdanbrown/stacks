@@ -43,8 +43,8 @@ func pinboardPostToPin(post: [String: String]) throws -> Pin {
     tags:       (try post.getOrThrow("tags")).split(separator: " ").map { String($0) },
     notes:      try post.getOrThrow("extended"),
     createdAt:  try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
-    modifiedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
-    accessedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat),
+    modifiedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat), // NOTE Pinboard doesn't track mtime
+    accessedAt: try parseDate(post.getOrThrow("time"), dateFormat: pinboardDateFormat), // NOTE Pinboard doesn't track atime
     isRead:     (try post.getOrThrow("toread")) == "no",
     // Default remaining data that isn't present in pinboard
     progressPageScroll:    0,

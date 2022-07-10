@@ -20,7 +20,7 @@ extension CorePin {
       notes: self.notes ?? "[null-notes]",
       createdAt: self.createdAt ?? Date.zero,
       modifiedAt: self.modifiedAt ?? Date.zero,
-      accessedAt: self.accessedAt ?? Date.zero,
+      accessedAt: self.accessedAt ?? Date.zero, // TODO Rename accessedAt -> openedAt after we delete Firestore (else confusing json compat)
       isRead: self.isRead,
       progressPageScroll: 0, // TODO
       progressPageScrollMax: 0, // TODO

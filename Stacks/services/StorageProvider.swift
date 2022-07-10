@@ -211,25 +211,69 @@ class StorageProvider {
     // TODO In case we need to do anything on updates, beyond @State which will already update our Views
   }
 
-  func saveBackup() throws {
-    let backupName = Date().format("yyyy-MM-dd HH.mm.ss") // ':' not allowed (on hfs)
+  func backupsDir() throws -> URL {
     guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
       throw SimpleError("Failed to open iCloud Drive directory")
     }
-    let backupDir = iCloudDriveDir
+    return iCloudDriveDir
       .appendingPathComponent("Documents") // The "Documents/" dir (somehow) maps to "iCloud Drive" -> "Stacks/" in Files.app
       .appendingPathComponent("Backups")
-      .appendingPathComponent(backupName)
-    log.info("backupDir[\(backupDir)]")
-    try persistentContainer.savePersistentStores(to: backupDir)
   }
 
-  // NOTE Restoring is tricky! -- must drop references to all existing managed objects + re-fetch everything
-  //  - See: https://atomicbird.com/blog/core-data-back-up-store
-  //  - Maybe just alert the user to restart and then fatalError()? -- seems just fine to me
-  // func restoreFromBackup(backupDir: URL) {
-  //   ...
-  // }
+  func saveToBackup() throws -> (alreadyExists: Bool, backupDir: URL) {
+    // Use a deterministic name for the backup
+    //  - Else autosave-before-restore will create a mess of extraneous backups when switching back and forth
+    //  - e.g. "Backups/modified[2022-07-09T05-12-43]-pins[1093]/"
+    let backupName = String(
+      format: "%@ (%d pins)",
+      pinsModel!.maxTimestamp.format("yyyyMMdd HHmmss.SSS"), // (Avoid ':', not allowed on hfs)
+      pinsModel!.numPins
+    )
+    // guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+    //   throw SimpleError("Failed to open iCloud Drive directory")
+    // }
+    // let backupDir = iCloudDriveDir
+    //   .appendingPathComponent("Documents") // The "Documents/" dir (somehow) maps to "iCloud Drive" -> "Stacks/" in Files.app
+    //   .appendingPathComponent("Backups")
+    //   .appendingPathComponent(backupName)
+    let backupDir = try backupsDir()
+      .appendingPathComponent(backupName)
+    if FileManager.default.fileExists(atPath: backupDir.path) {
+      log.info("Skipping, no changes since last save: backupDir[\(backupDir)]")
+      return (alreadyExists: true, backupDir: backupDir)
+    } else {
+      log.info("Saving (has changes): backupDir[\(backupDir)]")
+      try persistentContainer.savePersistentStores(to: backupDir)
+      return (alreadyExists: false, backupDir: backupDir)
+    }
+  }
+
+  func restoreFromBackup(backupDir: URL) throws {
+
+    // TODO First shot at the logic below didn't just work
+    //  - Behaved in at least two surprising ways
+    //  - This probably means there's a few subtle things to sort out here
+    //  - Let's punt and find a different approach for now
+    throw SimpleError("Unsupported: Haven't figured out how to make it work yet")
+
+    // // Auto-save before restore
+    // //  - Else we'll *lose* any active data that isn't in the version we're about to restore
+    // //  - This assumes saved backups are named deterministically, else this will create a mess of extraneous backups
+    // //    when switching back and forth
+    // let (alreadyExists, backupDir) = try saveToBackup()
+    // log.info("Autosave: alreadyExists[\(alreadyExists)], backupDir[\(backupDir)]")
+    //
+    // // Remove references to all managed objects + fetch requests
+    // //  - TODO How to keep this up to date?
+    // pinsModel!.corePins = []
+    //
+    // // Restore persistent stores from backup
+    // try persistentContainer.restorePersistentStores(from: backupDir)
+    //
+    // // Reload managed objects + fetched results controllers
+    // load()
+
+  }
 
   // Mock for previews
   static var preview: StorageProvider = {

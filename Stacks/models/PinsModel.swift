@@ -28,6 +28,22 @@ class PinsModel: ObservableObject {
     self.pins = self.corePins.map { $0.toPin() }
   }
 
+  var numPins: Int {
+    return corePins.count
+  }
+
+  var maxTimestamp: Date {
+    return corePins
+      .map { pin in
+        [
+          pin.accessedAt ?? Date.zero,
+          pin.createdAt  ?? Date.zero, // Unnecessary (always ≤modifiedAt), but conceptually simple to just list all the timestamps
+          pin.modifiedAt ?? Date.zero,
+        ].max() ?? Date.zero
+      }
+      .max() ?? Date.zero
+  }
+
   // Do a simplistic fetch-and-write for every pin in the batch
   //  - Performance won't matter after we drop Pinboard/Firestore because nothing will do giant batch upserts anymore
   //  - And it seems to run fast enough in practice anyway

@@ -49,6 +49,7 @@
 		B7A732912817BBCF0011FACE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A732902817BBCF0011FACE /* StorageProvider.swift */; };
 		B7A732932817C4930011FACE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7A732922817C4930011FACE /* GoogleService-Info.plist */; };
 		B7EF27D028793613008448AA /* NSPersistentContainer+CoreDataBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27CF28793613008448AA /* NSPersistentContainer+CoreDataBackup.swift */; };
+		B7EF27D3287A988C008448AA /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27D2287A988C008448AA /* DocumentPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,7 @@
 		B7A732902817BBCF0011FACE /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
 		B7A732922817C4930011FACE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B7EF27CF28793613008448AA /* NSPersistentContainer+CoreDataBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+CoreDataBackup.swift"; sourceTree = "<group>"; };
+		B7EF27D2287A988C008448AA /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +251,7 @@
 		B7EF27CD287935A3008448AA /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				B7EF27D1287A9881008448AA /* DocumentPicker */,
 				B7EF27CE287935E5008448AA /* CoreDataBackup */,
 				B76DCDA7287692E50049EB14 /* CloudKitSyncMonitor */,
 				B71EC963279D2AEE00CE9472 /* FlexView */,
@@ -262,6 +265,14 @@
 				B7EF27CF28793613008448AA /* NSPersistentContainer+CoreDataBackup.swift */,
 			);
 			path = CoreDataBackup;
+			sourceTree = "<group>";
+		};
+		B7EF27D1287A9881008448AA /* DocumentPicker */ = {
+			isa = PBXGroup;
+			children = (
+				B7EF27D2287A988C008448AA /* DocumentPicker.swift */,
+			);
+			path = DocumentPicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -367,6 +378,7 @@
 				B72509B0275DE68B00858384 /* PinsModelFirestore.swift in Sources */,
 				B72509AC275DE50D00858384 /* Pin.swift in Sources */,
 				B72509BF275F2E4200858384 /* RootView.swift in Sources */,
+				B7EF27D3287A988C008448AA /* DocumentPicker.swift in Sources */,
 				B75B46A1275B3FC700923DE1 /* PinListView.swift in Sources */,
 				B71EC969279D2B1400CE9472 /* SizeReader.swift in Sources */,
 				B71EC967279D2B0B00CE9472 /* _FlexView.swift in Sources */,
@@ -511,7 +523,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1657349012;
+				CURRENT_PROJECT_VERSION = 1657350245;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -543,7 +555,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1657349012;
+				CURRENT_PROJECT_VERSION = 1657350245;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
