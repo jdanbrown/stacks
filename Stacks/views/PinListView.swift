@@ -287,7 +287,7 @@ struct PinListView: View {
       Button(action: {
         showingPopoverForCloudKitSyncMonitor = true
       }) {
-        Label("iCloud status", systemImage: "info.circle")
+        Label("iCloud Status", systemImage: "info.circle")
       }
       Button(action: {
         Task {
@@ -356,11 +356,11 @@ struct PinListView: View {
   func menuOrder() -> some View {
     Menu {
       Button(action: { self.order = .desc }) {
-        Label("Newest first", systemImage: Order.desc.iconName())
+        Label("Newest First", systemImage: Order.desc.iconName())
           .font(.body)
       }
       Button(action: { self.order = .asc }) {
-        Label("Oldest first", systemImage: Order.asc.iconName())
+        Label("Oldest First", systemImage: Order.asc.iconName())
           .font(.body)
       }
       Button(action: { self.order = Order.shuffle() }) {
@@ -391,7 +391,7 @@ struct PinListView: View {
       Button(action: {
         self.dupesOnly = !self.dupesOnly
       }) {
-        Label("Dupes only", systemImage: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
+        Label("Dupes Only", systemImage: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
           .font(.body)
       }
     }
@@ -416,13 +416,13 @@ struct PinListView: View {
           )
         }
       }) {
-        Label("Save to backup", systemImage: "folder")
+        Label("Save to Backup", systemImage: "folder")
           .font(.body)
       }
       Button(action: {
         showDocumentPicker = true
       }) {
-        Label("Load from backup", systemImage: "folder.badge.plus")
+        Label("Load from Backup", systemImage: "folder.badge.plus")
           .font(.body)
       }
     }
