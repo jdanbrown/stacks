@@ -11,8 +11,7 @@ class PinsModelPinboard: ObservableObject {
     self.apiToken = apiToken
   }
 
-  // Fetch pins once at startup (http get)
-  func initAsync() async {
+  func fetchAsync() async {
     log.info()
     do {
       // TODO Integrate this with ProgressView() at startup

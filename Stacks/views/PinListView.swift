@@ -10,6 +10,7 @@ struct PinListView: View {
   var user: User
   // var pins: [Pin]
   @ObservedObject var pinsModel: PinsModel
+  let pinsModelPinboard: PinsModelPinboard
 
   @State private var dupesOnly: Bool = false
   @State private var order: Order = .desc
@@ -37,13 +38,15 @@ struct PinListView: View {
     cloudKitSyncMonitor: CloudKitSyncMonitor,
     logout: @escaping () async -> (),
     user: User,
-    pinsModel: PinsModel
+    pinsModel: PinsModel,
+    pinsModelPinboard: PinsModelPinboard
   ) {
     self.storageProvider = storageProvider
     self.cloudKitSyncMonitor = cloudKitSyncMonitor
     self.logout = logout
     self.user = user
     self.pinsModel = pinsModel
+    self.pinsModelPinboard = pinsModelPinboard
   }
 
   init(
@@ -52,6 +55,7 @@ struct PinListView: View {
     logout: @escaping () async -> (),
     user: User,
     pinsModel: PinsModel,
+    pinsModelPinboard: PinsModelPinboard,
     tagFilter: String?
   ) {
     self.init(
@@ -59,7 +63,8 @@ struct PinListView: View {
       cloudKitSyncMonitor: cloudKitSyncMonitor,
       logout: logout,
       user: user,
-      pinsModel: pinsModel
+      pinsModel: pinsModel,
+      pinsModelPinboard: pinsModelPinboard
     )
     self.tagFilter = tagFilter
   }
@@ -71,6 +76,7 @@ struct PinListView: View {
       logout: logout,
       user: user,
       pinsModel: pinsModel,
+      pinsModelPinboard: pinsModelPinboard,
       tagFilter: tagFilter
     )
   }
@@ -119,7 +125,7 @@ struct PinListView: View {
       .navigationBarItems(
         leading: HStack {
           // buttonProfilePhoto()
-          statusCloudKitSync()
+          menuCloudKitSync()
           menuSaveRestore()
         },
         trailing: HStack {
@@ -283,10 +289,17 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func statusCloudKitSync() -> some View {
-    Button(action: {
-      showingPopoverForCloudKitSyncMonitor = true
-    }) {
+  func menuCloudKitSync() -> some View {
+    Menu {
+      Button("Status") {
+        showingPopoverForCloudKitSyncMonitor = true
+      }
+      Button("Fetch Pinboard") {
+        Task {
+          await self.pinsModelPinboard.fetchAsync()
+        }
+      }
+    } label: {
       Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
         .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
         .font(.body)

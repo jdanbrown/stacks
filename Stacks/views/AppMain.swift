@@ -88,7 +88,7 @@ struct AppMain: App {
 
   func initAsync() async {
     log.info()
-    await pinsModelPinboard.initAsync() // Fetch pinboard pins once at startup (http get)
+    await pinsModelPinboard.fetchAsync() // Fetch pinboard pins once at startup (http get)
   }
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app
@@ -99,6 +99,7 @@ struct AppMain: App {
       hasICloud: hasICloud,
       auth: auth,
       pinsModel: pinsModel,
+      pinsModelPinboard: pinsModelPinboard,
       initAsync: initAsync
     )
   }
@@ -113,6 +114,7 @@ struct AppScene: Scene {
 
   @ObservedObject var auth: AuthService
   @ObservedObject var pinsModel: PinsModel
+  let pinsModelPinboard: PinsModelPinboard
 
   let initAsync: () async -> ()
 
@@ -133,7 +135,8 @@ struct AppScene: Scene {
           authState: auth.authState,
           login: auth.login,
           logout: auth.logout,
-          pinsModel: pinsModel
+          pinsModel: pinsModel,
+          pinsModelPinboard: pinsModelPinboard
         )
       }
         .environment(\.managedObjectContext, storageProvider.viewContext)

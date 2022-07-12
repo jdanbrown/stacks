@@ -9,6 +9,7 @@ struct RootView: View {
   var login: () async -> ()
   var logout: () async -> ()
   var pinsModel: PinsModel
+  var pinsModelPinboard: PinsModelPinboard
 
   var body: some View {
     VStack {
@@ -27,7 +28,8 @@ struct RootView: View {
                 cloudKitSyncMonitor: cloudKitSyncMonitor,
                 logout: logout,
                 user: user,
-                pinsModel: pinsModel
+                pinsModel: pinsModel,
+                pinsModelPinboard: pinsModelPinboard
               )
             }
         }
