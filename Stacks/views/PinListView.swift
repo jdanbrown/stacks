@@ -130,9 +130,7 @@ struct PinListView: View {
         },
         trailing: HStack {
           buttonSearch()
-          buttonOrderCycleDescAscShuffle()
-          // buttonOrderToggleDescAsc()
-          // buttonOrderShuffle()
+          menuOrder()
           buttonDupesOnlyToggle()
         }
       )
@@ -393,31 +391,22 @@ struct PinListView: View {
   // }
 
   @ViewBuilder
-  func buttonOrderCycleDescAscShuffle() -> some View {
-    Button(action: {
-      self.order = self.order.cycle()
-    }) {
+  func menuOrder() -> some View {
+    Menu {
+      Button(action: { self.order = .desc }) {
+        Label("Newest first", systemImage: Order.desc.iconName())
+          .font(.body)
+      }
+      Button(action: { self.order = .asc }) {
+        Label("Oldest first", systemImage: Order.asc.iconName())
+          .font(.body)
+      }
+      Button(action: { self.order = Order.shuffle() }) {
+        Label("Shuffle", systemImage: Order.shuffle().iconName())
+          .font(.body)
+      }
+    } label: {
       Image(systemName: self.order.iconName())
-        .font(.body)
-    }
-  }
-
-  @ViewBuilder
-  func buttonOrderToggleDescAsc() -> some View {
-    Button(action: {
-      self.order = self.order.toggleDescAsc()
-    }) {
-      Image(systemName: self.order.iconName())
-        .font(.body)
-    }
-  }
-
-  @ViewBuilder
-  func buttonOrderShuffle() -> some View {
-    Button(action: {
-      self.order = self.order.shuffle()
-    }) {
-      Image(systemName: self.order.shuffle().iconName())
         .font(.body)
     }
   }
@@ -479,7 +468,7 @@ struct PinListView: View {
     func cycle() -> Order {
       switch self {
         case .desc:    return .asc
-        case .asc:     return shuffle()
+        case .asc:     return Order.shuffle()
         case .shuffle: return .desc
       }
     }
@@ -492,7 +481,7 @@ struct PinListView: View {
       }
     }
 
-    func shuffle() -> Order {
+    static func shuffle() -> Order {
       let seed = UInt64(Date().timeIntervalSince1970)
       return .shuffle(seed: seed)
     }
