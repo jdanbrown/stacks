@@ -130,7 +130,6 @@ struct PinListView: View {
         },
         trailing: HStack {
           buttonSearch()
-          // buttonFilterReset()
           buttonOrderCycleDescAscShuffle()
           // buttonOrderToggleDescAsc()
           // buttonOrderShuffle()
@@ -369,7 +368,7 @@ struct PinListView: View {
         self.searchFilter = ""
         self.searchFilterIsFocused = true // TODO Not working (see above)
       }) {
-        Image(systemName: "magnifyingglass")
+        Image(systemName: "line.3.horizontal.decrease.circle")
           .font(.body)
       }
     } else {
@@ -377,21 +376,21 @@ struct PinListView: View {
       Button(action: {
         self.searchFilter = nil
       }) {
-        Image(systemName: "xmark.circle")
+        Image(systemName: "line.3.horizontal.decrease.circle.fill")
           .font(.body)
       }
     }
   }
 
-  @ViewBuilder
-  func buttonFilterReset() -> some View {
-    Button(action: {
-      self.tagFilter = nil
-    }) {
-      Image(systemName: "xmark")
-        .font(.body)
-    }
-  }
+  // @ViewBuilder
+  // func buttonFilterReset() -> some View {
+  //   Button(action: {
+  //     self.tagFilter = nil
+  //   }) {
+  //     Image(systemName: "xmark")
+  //       .font(.body)
+  //   }
+  // }
 
   @ViewBuilder
   func buttonOrderCycleDescAscShuffle() -> some View {
