@@ -18,7 +18,7 @@ class StorageProvider {
   let persistentContainer: NSPersistentCloudKitContainer
   var viewContext: NSManagedObjectContext { return persistentContainer.viewContext }
 
-  var cloudKitImportHasSucceededOnce: Bool = false
+  var awaitingFirstCloudKitImport: Bool = true
 
   let pinsPublishers: [Published<[Pin]>.Publisher]
   var pinsModel: PinsModel? = nil
@@ -53,7 +53,7 @@ class StorageProvider {
               // HACK Adding refreshAllObjects() for good measure, in case container->context sync is a source of inconsistency/races
               log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
               self.viewContext.refreshAllObjects()
-              self.onCloudKitImportSucceeded()
+              self.onCloudKitImport()
             }
           }
         }
@@ -112,17 +112,17 @@ class StorageProvider {
 
   }
 
-  func onCloudKitImportSucceeded() {
-    log.info("cloudKitImportHasSucceededOnce[\(cloudKitImportHasSucceededOnce)]")
-    if !cloudKitImportHasSucceededOnce {
-      load() // Load 2/3 from Cloud Kit
-      loadPinsPublishers()
+  func onCloudKitImport() {
+    log.info("awaitingFirstCloudKitImport[\(awaitingFirstCloudKitImport)]")
+    if awaitingFirstCloudKitImport {
+      fetchPinsFromCoreData() // Fetch 2/3 from Cloud Kit
+      upsertPinsFromPinsPublishers()
     }
-    cloudKitImportHasSucceededOnce = true
+    awaitingFirstCloudKitImport = false
   }
 
   @objc
-  func load() {
+  func fetchPinsFromCoreData() {
     // Stay on main thread else risk of EXC_BREAKPOINT when called via NotificationCenter.default.addObserver
     //  - https://stackoverflow.com/questions/59300223/violate-core-data-s-threading-contractexc-breakpoint-code-1-subcode-0x1f0ad1c8
     DispatchQueue.main.async {
@@ -144,29 +144,32 @@ class StorageProvider {
   }
 
   // XXX after we remove Pinboard/Firestore
-  func loadPinsPublishers() {
+  func upsertPinsFromPinsPublishers() {
     log.info("pinsPublishers[\(pinsPublishers)]")
     pinsPublishers.forEach { $0
       .receive(on: RunLoop.main)
       .sink { pins in
-        self.pinsModel!.batchUpsert(pins) // TODO Restore
-        // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
-        // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
-        // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
-        // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
-        self.load() // Load 3/3 from Pinboard/Firestore
+        self.upsertPins(pins)
       }
       .store(in: &cancellables)
     }
   }
 
-  // TODO Redo this a different way, after deleting Pinboard/Firestore
-  //  - We don't actually rely on it right now anyway
+  func upsertPins(_ pins: [Pin]) {
+    self.pinsModel!.batchUpsert(pins) // TODO Restore
+    // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
+    // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
+    // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
+    // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
+    self.fetchPinsFromCoreData() // Fetch 3/3 from Pinboard/Firestore
+  }
+
+  // TODO Revisit after deleting Pinboard/Firestore -- we don't need it anywhere yet
   // func addObserverToLoadOnSave() {
-  //   // Manually subscribe load() to Core Data changes
+  //   // Manually subscribe fetchPinsFromCoreData() to Core Data changes
   //   //  - "Normal" swiftui would put a @FetchRequest in a View and this would be handled automatically
   //   //  - But @FetchRequest _requires_ being inside a View, so we can't do that here (we're a ~Model thing)
-  //   //  - Instead, manually subscribe to changes to the Core Data store and update self.corePins via load()
+  //   //  - Instead, manually subscribe to changes to the Core Data store and update self.corePins via fetchPinsFromCoreData()
   //   //    - https://developer.apple.com/documentation/coredata/consuming_relevant_store_changes
   //   //    - https://developer.apple.com/documentation/coredata/nsmanagedobjectcontext
   //   NotificationCenter.default.addObserver(
@@ -176,6 +179,15 @@ class StorageProvider {
   //     object: viewContext
   //   )
   // }
+
+  // Observe remote change notifications
+  //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
+  //  - https://github.com/SchwiftyUI/OrderedList/blob/master/OrderedList/AppDelegate.swift
+  @objc
+  func onRemoteChange(notification: NSNotification) {
+    log.info("notification[\(notification)]")
+    // TODO In case we need to do anything on updates, beyond @State which will already update our Views
+  }
 
   func saveViewContext() {
     log.info()
@@ -202,24 +214,6 @@ class StorageProvider {
     }
   }
 
-  // Observe remote change notifications
-  //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
-  //  - https://github.com/SchwiftyUI/OrderedList/blob/master/OrderedList/AppDelegate.swift
-  @objc
-  func onRemoteChange(notification: NSNotification) {
-    log.info("notification[\(notification)]")
-    // TODO In case we need to do anything on updates, beyond @State which will already update our Views
-  }
-
-  func backupsDir() throws -> URL {
-    guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
-      throw SimpleError("Failed to open iCloud Drive directory")
-    }
-    return iCloudDriveDir
-      .appendingPathComponent("Documents") // The "Documents/" dir (somehow) maps to "iCloud Drive" -> "Stacks/" in Files.app
-      .appendingPathComponent("Backups")
-  }
-
   func saveToBackup() throws -> (alreadyExists: Bool, backupDir: URL) {
     // Use a deterministic name for the backup
     //  - Else autosave-before-restore will create a mess of extraneous backups when switching back and forth
@@ -229,50 +223,33 @@ class StorageProvider {
       pinsModel!.maxTimestamp.format("yyyyMMdd HHmmss.SSS"), // (Avoid ':', not allowed on hfs)
       pinsModel!.numPins
     )
-    // guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
-    //   throw SimpleError("Failed to open iCloud Drive directory")
-    // }
-    // let backupDir = iCloudDriveDir
-    //   .appendingPathComponent("Documents") // The "Documents/" dir (somehow) maps to "iCloud Drive" -> "Stacks/" in Files.app
-    //   .appendingPathComponent("Backups")
-    //   .appendingPathComponent(backupName)
-    let backupDir = try backupsDir()
+    let backupDir = try Backup.backupsDir()
       .appendingPathComponent(backupName)
     if FileManager.default.fileExists(atPath: backupDir.path) {
       log.info("Skipping, no changes since last save: backupDir[\(backupDir)]")
       return (alreadyExists: true, backupDir: backupDir)
     } else {
       log.info("Saving (has changes): backupDir[\(backupDir)]")
-      try persistentContainer.savePersistentStores(to: backupDir)
+      try Backup.save(backupDir, pins: pinsModel!.pins)
       return (alreadyExists: false, backupDir: backupDir)
     }
   }
 
-  func restoreFromBackup(backupDir: URL) throws {
-
-    // TODO First shot at the logic below didn't just work
-    //  - Behaved in at least two surprising ways
-    //  - This probably means there's a few subtle things to sort out here
-    //  - Let's punt and find a different approach for now
-    throw SimpleError("Unsupported: Haven't figured out how to make it work yet")
-
-    // // Auto-save before restore
-    // //  - Else we'll *lose* any active data that isn't in the version we're about to restore
-    // //  - This assumes saved backups are named deterministically, else this will create a mess of extraneous backups
-    // //    when switching back and forth
-    // let (alreadyExists, backupDir) = try saveToBackup()
-    // log.info("Autosave: alreadyExists[\(alreadyExists)], backupDir[\(backupDir)]")
-    //
-    // // Remove references to all managed objects + fetch requests
-    // //  - TODO How to keep this up to date?
-    // pinsModel!.corePins = []
-    //
-    // // Restore persistent stores from backup
-    // try persistentContainer.restorePersistentStores(from: backupDir)
-    //
-    // // Reload managed objects + fetched results controllers
-    // load()
-
+  // NOTE This doesn't remove any existing data, just upserts all the backup data into it
+  //  - If you need to clean out existing data, manually delete the app + reset the CloudKit env, then call this
+  //  - Cleaning out existing data is tricky because of CloudKit, and we don't really need it, so I stopped trying to make it work
+  func upsertFromBackup(backupDir: URL) throws {
+    // Auto-save before restore
+    //  - Else we'll *lose* any active data that isn't in the version we're about to restore
+    //  - This assumes saved backups are named deterministically, else this will create a mess of extraneous backups
+    //    when switching back and forth
+    let (alreadyExists, autosaveBackupDir) = try saveToBackup()
+    log.info("Autosave: alreadyExists[\(alreadyExists)], autosaveBackupDir[\(autosaveBackupDir)]")
+    // Load data
+    let pins = try Backup.load(backupDir)
+    // Upsert
+    log.info("Upserting: pins[\(pins.count)] from backupDir[\(backupDir)]")
+    upsertPins(pins)
   }
 
   // Mock for previews

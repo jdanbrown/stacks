@@ -75,7 +75,7 @@ struct AppMain: App {
     // PinsModel (Core Data)
     let pinsModel = PinsModel(storageProvider: storageProvider)
     storageProvider.pinsModel = pinsModel // HACK Cyclic dependency
-    storageProvider.load() // Load 1/3 from Core Data
+    storageProvider.fetchPinsFromCoreData() // Fetch 1/3 from Core Data
 
     // Set fields
     self.auth = auth

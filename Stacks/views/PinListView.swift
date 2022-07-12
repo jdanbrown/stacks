@@ -142,7 +142,7 @@ struct PinListView: View {
 
       // Document picker
       .sheet(isPresented: $showDocumentPicker) {
-        if let backupsDir = try? storageProvider.backupsDir() {
+        if let backupsDir = try? Backup.backupsDir() {
           DocumentPicker(
             forOpeningContentTypes: [
               // .directory,
@@ -151,14 +151,14 @@ struct PinListView: View {
             allowsMultipleSelection: false,
             directoryURL: backupsDir
           ) { urls in
-            let url = urls[0]
-            if url.deletingLastPathComponent() == backupsDir {
+            let backupDir = urls[0]
+            if backupDir.deletingLastPathComponent() == backupsDir {
               do {
-                try storageProvider.restoreFromBackup(backupDir: url)
+                try storageProvider.upsertFromBackup(backupDir: backupDir)
                 showAlert = true
                 showAlertContent = (
                   title: "Restored from backup",
-                  message: "\(url)"
+                  message: "\(backupDir.lastPathComponent)"
                 )
               } catch {
                 showAlert = true
