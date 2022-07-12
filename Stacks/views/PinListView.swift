@@ -126,12 +126,11 @@ struct PinListView: View {
         leading: HStack {
           // buttonProfilePhoto()
           menuCloudKitSync()
-          menuSaveRestore()
         },
         trailing: HStack {
           buttonSearch()
           menuOrder()
-          menuThreeDots()
+          menuEllpisis()
         }
       )
 
@@ -147,10 +146,7 @@ struct PinListView: View {
       .sheet(isPresented: $showDocumentPicker) {
         if let backupsDir = try? Backup.backupsDir() {
           DocumentPicker(
-            forOpeningContentTypes: [
-              // .directory,
-              .folder,
-            ],
+            forOpeningContentTypes: [.folder],
             allowsMultipleSelection: false,
             directoryURL: backupsDir
           ) { urls in
@@ -160,13 +156,13 @@ struct PinListView: View {
                 try storageProvider.upsertFromBackup(backupDir: backupDir)
                 showAlert = true
                 showAlertContent = (
-                  title: "Restored from backup",
+                  title: "Loaded from backup",
                   message: "\(backupDir.lastPathComponent)"
                 )
               } catch {
                 showAlert = true
                 showAlertContent = (
-                  title: "Failed to restore from backup",
+                  title: "Failed to load from backup",
                   message: "\(error)"
                 )
               }
@@ -316,34 +312,6 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func menuSaveRestore() -> some View {
-    Menu {
-      Button("Save to backup") {
-        do {
-          let (alreadyExists, backupDir) = try storageProvider.saveToBackup()
-          showAlert = true
-          showAlertContent = (
-            title: alreadyExists ? "Backup already exists" : "Saved to backup",
-            message: "\(backupDir.lastPathComponent)"
-          )
-        } catch {
-          showAlert = true
-          showAlertContent = (
-            title: "Failed to save backup",
-            message: "\(error)"
-          )
-        }
-      }
-      Button("Restore from backup") {
-        showDocumentPicker = true
-      }
-    } label: {
-      Image(systemName: "folder")
-        .font(.body)
-    }
-  }
-
-  @ViewBuilder
   func buttonSearch() -> some View {
     // Keyboard management
     //  - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
@@ -402,17 +370,57 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func menuThreeDots() -> some View {
+  func menuEllpisis() -> some View {
     Menu {
+      buttonsDupesOnly()
+      Divider()
+      buttonsBackupSaveLoad()
+    } label: {
+      Image(systemName: "ellipsis")
+        .font(.body)
+    }
+  }
+
+  @ViewBuilder
+  func buttonsDupesOnly() -> some View {
+    Group {
       Button(action: {
         self.dupesOnly = !self.dupesOnly
       }) {
         Label("Dupes only", systemImage: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
           .font(.body)
       }
-    } label: {
-      Image(systemName: "ellipsis")
-        .font(.body)
+    }
+  }
+
+  @ViewBuilder
+  func buttonsBackupSaveLoad() -> some View {
+    Group {
+      Button(action: {
+        do {
+          let (alreadyExists, backupDir) = try storageProvider.saveToBackup()
+          showAlert = true
+          showAlertContent = (
+            title: alreadyExists ? "Backup already exists" : "Saved to backup",
+            message: "\(backupDir.lastPathComponent)"
+          )
+        } catch {
+          showAlert = true
+          showAlertContent = (
+            title: "Failed to save backup",
+            message: "\(error)"
+          )
+        }
+      }) {
+        Label("Save to backup", systemImage: "folder")
+          .font(.body)
+      }
+      Button(action: {
+        showDocumentPicker = true
+      }) {
+        Label("Load from backup", systemImage: "folder.badge.plus")
+          .font(.body)
+      }
     }
   }
 
