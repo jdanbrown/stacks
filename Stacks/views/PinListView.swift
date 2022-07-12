@@ -131,7 +131,7 @@ struct PinListView: View {
         trailing: HStack {
           buttonSearch()
           menuOrder()
-          buttonDupesOnlyToggle()
+          menuThreeDots()
         }
       )
 
@@ -344,16 +344,6 @@ struct PinListView: View {
   }
 
   @ViewBuilder
-  func buttonDupesOnlyToggle() -> some View {
-    Button(action: {
-      self.dupesOnly = !self.dupesOnly
-    }) {
-      Image(systemName: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
-        .font(.body)
-    }
-  }
-
-  @ViewBuilder
   func buttonSearch() -> some View {
     // Keyboard management
     //  - https://www.hackingwithswift.com/quick-start/swiftui/what-is-the-focusstate-property-wrapper
@@ -407,6 +397,21 @@ struct PinListView: View {
       }
     } label: {
       Image(systemName: self.order.iconName())
+        .font(.body)
+    }
+  }
+
+  @ViewBuilder
+  func menuThreeDots() -> some View {
+    Menu {
+      Button(action: {
+        self.dupesOnly = !self.dupesOnly
+      }) {
+        Label("Dupes only", systemImage: !self.dupesOnly ? "doc.on.doc" : "doc.on.doc.fill")
+          .font(.body)
+      }
+    } label: {
+      Image(systemName: "ellipsis")
         .font(.body)
     }
   }
