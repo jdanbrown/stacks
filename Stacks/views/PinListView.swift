@@ -284,13 +284,17 @@ struct PinListView: View {
   @ViewBuilder
   func menuCloudKitSync() -> some View {
     Menu {
-      Button("Status") {
+      Button(action: {
         showingPopoverForCloudKitSyncMonitor = true
+      }) {
+        Label("iCloud status", systemImage: "info.circle")
       }
-      Button("Fetch Pinboard") {
+      Button(action: {
         Task {
           await self.pinsModelPinboard.fetchAsync()
         }
+      }) {
+        Label("Fetch Pinboard", systemImage: "tray.and.arrow.down")
       }
     } label: {
       Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
