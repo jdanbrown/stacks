@@ -44,6 +44,11 @@ class PinsModel: ObservableObject {
       .max() ?? Date.zero
   }
 
+  func upsert(_ pin: Pin) {
+    log.info("pin[\(pin)]")
+    batchUpsert([pin])
+  }
+
   // Do a simplistic fetch-and-write for every pin in the batch
   //  - Performance won't matter after we drop Pinboard/Firestore because nothing will do giant batch upserts anymore
   //  - And it seems to run fast enough in practice anyway
@@ -58,23 +63,27 @@ class PinsModel: ObservableObject {
       let viewContext = self.storageProvider.viewContext
       log.info("pins[\(pins.count)]")
       for pin in pins {
-        if let corePin = self._fetchCorePin(url: pin.url) {
-          self._update(corePin, pin)
-        } else {
-          self._insert(viewContext, pin)
-        }
+        self._upsert(viewContext, pin)
         self.storageProvider.save(context: viewContext)
       }
       log.info("Done: pins[\(pins.count)]")
     }
   }
 
-  private func _fetchCorePin(url: String) -> CorePin? {
+  private func _upsert(_ context: NSManagedObjectContext, _ pin: Pin) {
+    if let corePin = self._fetchCorePin(context, url: pin.url) {
+      self._update(corePin, pin)
+    } else {
+      self._insert(context, pin)
+    }
+  }
+
+  private func _fetchCorePin(_ context: NSManagedObjectContext, url: String) -> CorePin? {
     let req = CorePin.fetchRequest()
     req.predicate = NSPredicate(format: "%K = %@", #keyPath(CorePin.url), url)
     do {
       log.info("Fetching req[\(req)]")
-      let corePins = try self.storageProvider.viewContext.fetch(req)
+      let corePins = try context.fetch(req)
       if corePins.count == 0 {
         log.info("Fetched no corePins")
         return nil

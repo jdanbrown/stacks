@@ -245,7 +245,11 @@ struct PinListView: View {
         onLongPress: {
           log.info("OnTapAndLongPressGesture.onLongPress")
           self.navigation.push(
-            PinEditView(pin: pin, dismiss: {})
+            PinEditView(
+              pin: pin,
+              pinsModel: pinsModel,
+              onSave: { storageProvider.fetchPinsFromCoreData() } // Fetch 5/3 on PinEditView save
+            )
           )
         },
         // TODO Add state+binding to visually indicate the row is being pressed (like Hack.app)
@@ -341,16 +345,6 @@ struct PinListView: View {
     }
   }
 
-  // @ViewBuilder
-  // func buttonFilterReset() -> some View {
-  //   Button(action: {
-  //     self.tagFilter = nil
-  //   }) {
-  //     Image(systemName: "xmark")
-  //       .font(.body)
-  //   }
-  // }
-
   @ViewBuilder
   func menuOrder() -> some View {
     Menu {
@@ -436,7 +430,7 @@ struct PinListView: View {
             //  - Else the subsequent showAlert() silently does nothing
             Task {
               do {
-                let (alreadyExists, autosaveBackupDir) = try storageProvider.deleteAllState()
+                let (_, autosaveBackupDir) = try storageProvider.deleteAllState()
                 showAlert(title: "Deleted all state", message: "Previous state saved as backup: \(autosaveBackupDir.lastPathComponent)")
               } catch {
                 showAlert(title: "Failed to delete state", message: "\(error)")

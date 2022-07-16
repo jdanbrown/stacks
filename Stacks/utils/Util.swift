@@ -73,6 +73,11 @@ extension Array {
   }
 }
 
+extension Array where Element == Bool {
+  func any() -> Bool { contains { $0 } }
+  func all() -> Bool { allSatisfy { $0 } }
+}
+
 extension Array where Element: Hashable {
   // Preserves order
   func unique() -> Array<Element> {

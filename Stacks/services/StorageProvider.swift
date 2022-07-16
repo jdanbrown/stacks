@@ -172,7 +172,7 @@ class StorageProvider {
       viewContext.delete(corePin)
     }
     save(context: viewContext)
-    self.fetchPinsFromCoreData() // Fetch new empty state from the persistent store
+    self.fetchPinsFromCoreData() // Fetch 4/3 to reset to new empty state in the persistent store
   }
 
   // TODO Revisit after deleting Pinboard/Firestore -- we don't need it anywhere yet

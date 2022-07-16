@@ -2,31 +2,84 @@ import SwiftUI
 
 struct PinEditView: View {
 
-  let pin: Pin
-  let dismiss: () -> ()
+  @Environment(\.presentationMode) var presentationMode
 
-  // TODO Throwaway editable fields to use until we move our data model to CloudKit
-  @State var url: String
-  @State var title: String
-  @State var tags: [String]
-  @State var notes: String
-  @State var isRead: Bool
+  let pin: Pin
+  let pinsModel: PinsModel
+  let onSave: () -> ()
+
+  @State var _isStateInitialized = false
+  @State var url: String = ""
+  @State var title: String = ""
+  @State var tags: [String] = []
+  @State var notes: String = ""
+  @State var isRead: Bool = false
 
   // Navigation
   @StateObject var navigation: AutoNavigationLinkModel = AutoNavigationLinkModel()
 
-  init(pin: Pin, dismiss: @escaping () -> ()) {
-
+  init(pin: Pin, pinsModel: PinsModel, onSave: @escaping () -> ()) {
     self.pin = pin
-    self.dismiss = dismiss
+    self.pinsModel = pinsModel
+    self.onSave = onSave
+  }
 
-    // TODO Throwaway editable fields to use until we move our data model to CloudKit
-    _url    = State(initialValue: pin.url)
-    _title  = State(initialValue: pin.title)
-    _tags   = State(initialValue: pin.tags)
-    _notes  = State(initialValue: pin.notes)
-    _isRead = State(initialValue: pin.isRead)
+  func initStateTo(pin: Pin) {
+    if !_isStateInitialized {
+      log.info("pin[\(pin)]")
+      setStateTo(pin: pin)
+      _isStateInitialized = true
+    }
+  }
 
+  func setStateTo(pin: Pin) {
+    log.info("pin[\(pin)]")
+    url    = pin.url
+    title  = pin.title
+    tags   = pin.tags
+    notes  = pin.notes
+    isRead = pin.isRead
+  }
+
+  func hasChanges() -> Bool {
+    return pin != editedPin()
+  }
+
+  func editedPin(modifiedAt: Date? = nil) -> Pin {
+    return Pin(
+      url:                   self.url,
+      tombstone:             pin.tombstone,
+      title:                 self.title,
+      tags:                  self.tags,
+      notes:                 self.notes,
+      createdAt:             pin.createdAt,
+      modifiedAt:            modifiedAt ?? pin.modifiedAt,
+      accessedAt:            pin.accessedAt,
+      isRead:                self.isRead,
+      progressPageScroll:    pin.progressPageScroll,
+      progressPageScrollMax: pin.progressPageScrollMax,
+      progressPdfPage:       pin.progressPdfPage,
+      progressPdfPageMax:    pin.progressPdfPageMax
+    )
+  }
+
+  func undoChanges() {
+    log.info()
+    setStateTo(pin: pin)
+    assert(!hasChanges()) // This will fail if we forget to add new editable fields here
+  }
+
+  func saveChanges() {
+    log.info()
+    // Save
+    pinsModel.upsert(editedPin(
+      // Bump modifiedAt to now
+      modifiedAt: Date()
+    ))
+    // Dismiss PinEditView
+    self.presentationMode.wrappedValue.dismiss()
+    // Let parent know to re-fetch
+    onSave()
   }
 
   var body: some View {
@@ -35,54 +88,6 @@ struct PinEditView: View {
       Form {
         // TODO Why a bunch of vertical space here?
 
-        // Text("Edit")
-        //   .background(Color.gray.opacity(0))
-
-        // Section {
-        //   HStack {
-        //     Spacer()
-        //     Text("Edit")
-        //     Spacer()
-        //     // Button(action: { dismiss() }) {
-        //     //   // Image(systemName: "xmark")
-        //     //   Text("Done")
-        //     // }
-        //   }
-        // }
-
-        // Section(
-        //   header: HStack {
-        //     Spacer()
-        //     Text("Edit")
-        //     Spacer()
-        //     // Button(action: { dismiss() }) {
-        //     //   // Image(systemName: "xmark")
-        //     //   Text("Done")
-        //     // }
-        //   }
-        // ) {
-
-        // Problem: Can't figure out how to stack multiple multi-line TextEditor's in the same view
-        //  - e.g. .fixedSize(horizontal: false, vertical: true) stops working with >1 TextEditor
-        //  - e.g. Adding .frame(maxHeight: 10000) doesn't help
-        //  - e.g. Adding .lineLimit(nil) doesn't help
-        //  - Tip: add .border(.black) to debug frame size
-
-        // In pinbot I used single-line TextField's for everything except notes, where I used a multi-line TextEditor
-        //  - I don't think I like single-line... and this doesn't solve the multi-line issues with TextEditor anyway
-        // Section {
-        //   Group {
-        //     TextField("a", text: .constant(url))
-        //     TextField("b", text: .constant(title))
-        //     TextField("c", text: .constant(tags.joined(separator: " ")))
-        //     TextEditor(text: .constant(notes))
-        //       .fixedSize(horizontal: false, vertical: true)
-        //       .lineLimit(nil)
-        //       .frame(maxHeight: 10000)
-        //   }
-        // }
-
-        // Alternate approach: Pushpin shows text fields that you tap to edit in their own full-sized screen
         Section {
           Picker("isRead", selection: $isRead) {
             Text("Unread").tag(false)
@@ -146,8 +151,37 @@ struct PinEditView: View {
         }
 
       }
+
+        // NOTE We want to get called on init, but this also gets called when a pushed view pops back to us
+        //  - e.g. init triggers onAppear -> push TitleEditView -> pop -> triggers onAppear again (erp!)
+        //  - Solution: Indirect through initStateTo so it can guard on a var
+        .onAppear {
+          initStateTo(pin: pin)
+        }
+
         .navigationTitle("Edit")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(hasChanges())
+        .navigationBarItems(
+          leading: Group {
+            if hasChanges() {
+              Button {
+                undoChanges()
+              } label: {
+                Text("Undo")
+              }
+            }
+          },
+          trailing: Group {
+            if hasChanges() {
+              Button {
+                saveChanges()
+              } label: {
+                Text("Done").bold()
+              }
+            }
+          }
+        )
     }
   }
 
@@ -195,9 +229,9 @@ struct NotesEditView: View {
 //   static var previews: some View {
 //     let pins = Pin.previewPins
 //     Group {
-//       NavWrap { PinEditView(pin: pins[0], dismiss: {}) }
+//       NavWrap { PinEditView(pin: pins[0]) }
 //       ForEach(pins[0..<3]) { pin in
-//         PinEditView(pin: pin, dismiss: {})
+//         PinEditView(pin: pin)
 //       }
 //     }
 //       .previewLayout(.sizeThatFits)
