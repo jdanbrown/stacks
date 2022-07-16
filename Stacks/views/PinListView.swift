@@ -26,8 +26,8 @@ struct PinListView: View {
   @State private var searchFilter: String? = nil
   @FocusState private var searchFilterIsFocused: Bool // TODO The precense of this @FocusState var started crashing previews (why?)
 
-  @State private var showAlert = false
-  @State private var showAlertContent = (title: "", message: "")
+  @State private var showAlertBool = false
+  @State private var showAlertAlert = Alert(title: Text(""))
 
   @State private var showingPopoverForCloudKitSyncMonitor = false
 
@@ -135,11 +135,8 @@ struct PinListView: View {
       )
 
       // Generic alerts
-      .alert(isPresented: $showAlert) {
-        Alert(
-          title: Text(showAlertContent.title),
-          message: Text(showAlertContent.message)
-        )
+      .alert(isPresented: $showAlertBool) {
+        showAlertAlert
       }
 
       // Document picker
@@ -154,41 +151,43 @@ struct PinListView: View {
             if backupDir.deletingLastPathComponent() == backupsDir {
               do {
                 try storageProvider.upsertFromBackup(backupDir: backupDir)
-                showAlert = true
-                showAlertContent = (
-                  title: "Loaded from backup",
-                  message: "\(backupDir.lastPathComponent)"
-                )
+                showAlert(title: "Loaded from backup", message: "\(backupDir.lastPathComponent)")
               } catch {
-                showAlert = true
-                showAlertContent = (
-                  title: "Failed to load from backup",
-                  message: "\(error)"
-                )
+                showAlert(title: "Failed to load from backup", message: "\(error)")
               }
             } else {
               let _ = {
                 showDocumentPicker = false
-                showAlert = true
-                showAlertContent = (
-                  title: "Invalid backup dir",
-                  message: "Must be a child of backupsDir[\(backupsDir)]"
-                )
+                showAlert(title: "Invalid backup dir", message: "Must be a child of backupsDir[\(backupsDir)]")
               }()
             }
           }
         } else {
           let _ = {
             showDocumentPicker = false
-            showAlert = true
-            showAlertContent = (
-              title: "Failed to open iCloud Drive directory",
-              message: ""
-            )
+            showAlert(title: "Failed to open iCloud Drive directory", message: "")
           }()
         }
       }
 
+  }
+
+  func showAlert(title: String, message: String) {
+    showAlertBool = true
+    showAlertAlert = Alert(
+      title: Text(title),
+      message: Text(message)
+    )
+  }
+
+  func showAlertPrimarySecondary(title: String, message: String, primaryButton: Alert.Button, secondaryButton: Alert.Button) {
+    showAlertBool = true
+    showAlertAlert = Alert(
+      title: Text(title),
+      message: Text(message),
+      primaryButton: primaryButton,
+      secondaryButton: secondaryButton
+    )
   }
 
   @ViewBuilder
@@ -379,6 +378,8 @@ struct PinListView: View {
       buttonsDupesOnly()
       Divider()
       buttonsBackupSaveLoad()
+      Divider()
+      buttonsDeleteAllState()
     } label: {
       Image(systemName: "ellipsis")
         .font(.body)
@@ -403,17 +404,12 @@ struct PinListView: View {
       Button(action: {
         do {
           let (alreadyExists, backupDir) = try storageProvider.saveToBackup()
-          showAlert = true
-          showAlertContent = (
+          showAlert(
             title: alreadyExists ? "Backup already exists" : "Saved to backup",
             message: "\(backupDir.lastPathComponent)"
           )
         } catch {
-          showAlert = true
-          showAlertContent = (
-            title: "Failed to save backup",
-            message: "\(error)"
-          )
+          showAlert(title: "Failed to save backup", message: "\(error)")
         }
       }) {
         Label("Save to Backup", systemImage: "folder")
@@ -423,6 +419,34 @@ struct PinListView: View {
         showDocumentPicker = true
       }) {
         Label("Load from Backup", systemImage: "folder.badge.plus")
+          .font(.body)
+      }
+    }
+  }
+
+  @ViewBuilder
+  func buttonsDeleteAllState() -> some View {
+    Group {
+      Button(action: {
+        showAlertPrimarySecondary(
+          title: "Delete all state?",
+          message: "A backup will be automatically saved first",
+          primaryButton: .destructive(Text("Delete")) {
+            // HACK Task so that we can set state for the subsequent Alert from within the current Alert
+            //  - Else the subsequent showAlert() silently does nothing
+            Task {
+              do {
+                let (alreadyExists, autosaveBackupDir) = try storageProvider.deleteAllState()
+                showAlert(title: "Deleted all state", message: "Previous state saved as backup: \(autosaveBackupDir.lastPathComponent)")
+              } catch {
+                showAlert(title: "Failed to delete state", message: "\(error)")
+              }
+            }
+          },
+          secondaryButton: .cancel()
+        )
+      }) {
+        Label("Delete all state...", systemImage: "trash")
           .font(.body)
       }
     }

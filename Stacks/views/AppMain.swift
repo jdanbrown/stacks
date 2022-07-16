@@ -63,7 +63,7 @@ struct AppMain: App {
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
     // Pins publishersA for Pinboard + Firestore
-    let pinsPublishers = [
+    let pinsPublishers: [Published<[Pin]>.Publisher] = [
       pinsModelFirestore.$pins,
       pinsModelPinboard.$pins,
     ]

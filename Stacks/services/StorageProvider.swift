@@ -156,12 +156,23 @@ class StorageProvider {
   }
 
   func upsertPins(_ pins: [Pin]) {
+    log.info("pins[\(pins.count)]")
     self.pinsModel!.batchUpsert(pins) // TODO Restore
     // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: true))) // XXX Dev
     // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
     // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
     // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
     self.fetchPinsFromCoreData() // Fetch 3/3 from Pinboard/Firestore
+  }
+
+  func deleteAllPins() {
+    let corePins = self.pinsModel!.corePins
+    log.info("corePins[\(corePins.count)]")
+    for corePin in corePins {
+      viewContext.delete(corePin)
+    }
+    save(context: viewContext)
+    self.fetchPinsFromCoreData() // Fetch new empty state from the persistent store
   }
 
   // TODO Revisit after deleting Pinboard/Firestore -- we don't need it anywhere yet
@@ -215,14 +226,7 @@ class StorageProvider {
   }
 
   func saveToBackup() throws -> (alreadyExists: Bool, backupDir: URL) {
-    // Use a deterministic name for the backup
-    //  - Else autosave-before-restore will create a mess of extraneous backups when switching back and forth
-    //  - e.g. "Backups/modified[2022-07-09T05-12-43]-pins[1093]/"
-    let backupName = String(
-      format: "%@ (%d pins)",
-      pinsModel!.maxTimestamp.format("yyyyMMdd HHmmss.SSS"), // (Avoid ':', not allowed on hfs)
-      pinsModel!.numPins
-    )
+    let backupName = Backup.backupName(pinsModel: pinsModel!)
     let backupDir = try Backup.backupsDir()
       .appendingPathComponent(backupName)
     if FileManager.default.fileExists(atPath: backupDir.path) {
@@ -239,7 +243,7 @@ class StorageProvider {
   //  - If you need to clean out existing data, manually delete the app + reset the CloudKit env, then call this
   //  - Cleaning out existing data is tricky because of CloudKit, and we don't really need it, so I stopped trying to make it work
   func upsertFromBackup(backupDir: URL) throws {
-    // Auto-save before restore
+    // Autosave before restore
     //  - Else we'll *lose* any active data that isn't in the version we're about to restore
     //  - This assumes saved backups are named deterministically, else this will create a mess of extraneous backups
     //    when switching back and forth
@@ -250,6 +254,18 @@ class StorageProvider {
     // Upsert
     log.info("Upserting: pins[\(pins.count)] from backupDir[\(backupDir)]")
     upsertPins(pins)
+  }
+
+  func deleteAllState() throws -> (alreadyExists: Bool, backupDir: URL) {
+    // Autosave before delete
+    //  - Always be recoverable
+    let (alreadyExists, autosaveBackupDir) = try saveToBackup()
+    log.info("Autosave: alreadyExists[\(alreadyExists)], autosaveBackupDir[\(autosaveBackupDir)]")
+    // Delete all state
+    log.info("Wiping all state")
+    deleteAllPins()
+    // Return the autosave
+    return (alreadyExists: alreadyExists, backupDir: autosaveBackupDir)
   }
 
   // Mock for previews

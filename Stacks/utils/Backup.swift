@@ -27,6 +27,18 @@ class Backup {
     return pins
   }
 
+  static func backupName(pinsModel: PinsModel) -> String {
+    // Use a deterministic name for the backup
+    //  - Else autosave-before-restore will create a mess of extraneous backups when switching back and forth
+    //  - e.g. "Backups/modified[2022-07-09T05-12-43]-pins[1093]/"
+    let maxTimestamp = pinsModel.maxTimestamp
+    return String(
+      format: "%@ (%d pins)",
+      maxTimestamp == Date.zero ? "Empty" : maxTimestamp.format("yyyyMMdd HHmmss.SSS"), // (Avoid ':', not allowed on hfs)
+      pinsModel.numPins
+    )
+  }
+
   static func backupsDir() throws -> URL {
     guard let iCloudDriveDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
       throw SimpleError("Failed to open iCloud Drive directory")
