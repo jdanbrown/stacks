@@ -27,6 +27,9 @@
 		B72509BF275F2E4200858384 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509BE275F2E4200858384 /* RootView.swift */; };
 		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
 		B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B727DDF027A517E100FF3242 /* PinEditView.swift */; };
+		B72AB0EE2883C53C00E0289E /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB0ED2883C53C00E0289E /* ShareViewController.swift */; };
+		B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B72AB0EB2883C53C00E0289E /* StacksShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B72AB0FB2883D03E00E0289E /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB0FA2883D03E00E0289E /* XCGLogger */; };
 		B74E88A02844828600DFF9FD /* PinDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E889F2844828600DFF9FD /* PinDiff.swift */; };
 		B74E88A22844910C00DFF9FD /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E88A12844910C00DFF9FD /* PinsModel.swift */; };
 		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
@@ -53,6 +56,30 @@
 		B7EF27D5287D203D008448AA /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27D4287D203D008448AA /* Backup.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B72AB0F32883C53C00E0289E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B75B4693275B3FC700923DE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B72AB0EA2883C53C00E0289E;
+			remoteInfo = StacksShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B72AB0F62883C53C00E0289E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		B704D669284327FB00C7C874 /* PinsModelPinboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModelPinboard.swift; sourceTree = "<group>"; };
 		B704D66B284334DE00C7C874 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
@@ -72,6 +99,9 @@
 		B72509C2275F2E8E00858384 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B72509C927607F0E00858384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B727DDF027A517E100FF3242 /* PinEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEditView.swift; sourceTree = "<group>"; };
+		B72AB0EB2883C53C00E0289E /* StacksShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StacksShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B72AB0ED2883C53C00E0289E /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		B72AB0F22883C53C00E0289E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B74E889F2844828600DFF9FD /* PinDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDiff.swift; sourceTree = "<group>"; };
 		B74E88A12844910C00DFF9FD /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
 		B75B469B275B3FC700923DE1 /* Stacks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stacks.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +124,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B72AB0E82883C53C00E0289E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72AB0FB2883D03E00E0289E /* XCGLogger in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B75B4698275B3FC700923DE1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -123,6 +161,15 @@
 				B71EC968279D2B1400CE9472 /* SizeReader.swift */,
 			);
 			path = FlexView;
+			sourceTree = "<group>";
+		};
+		B72AB0EC2883C53C00E0289E /* StacksShare */ = {
+			isa = PBXGroup;
+			children = (
+				B72AB0ED2883C53C00E0289E /* ShareViewController.swift */,
+				B72AB0F22883C53C00E0289E /* Info.plist */,
+			);
+			path = StacksShare;
 			sourceTree = "<group>";
 		};
 		B74E88A32848697100DFF9FD /* views */ = {
@@ -194,6 +241,7 @@
 			children = (
 				B7A732922817C4930011FACE /* GoogleService-Info.plist */,
 				B75B469D275B3FC700923DE1 /* Stacks */,
+				B72AB0EC2883C53C00E0289E /* StacksShare */,
 				B75B469C275B3FC700923DE1 /* Products */,
 				B7856B97277457A200A87DDA /* Frameworks */,
 			);
@@ -203,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				B75B469B275B3FC700923DE1 /* Stacks.app */,
+				B72AB0EB2883C53C00E0289E /* StacksShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -281,6 +330,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B72AB0EA2883C53C00E0289E /* StacksShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B72AB0F92883C53C00E0289E /* Build configuration list for PBXNativeTarget "StacksShare" */;
+			buildPhases = (
+				B72AB0E72883C53C00E0289E /* Sources */,
+				B72AB0E82883C53C00E0289E /* Frameworks */,
+				B72AB0E92883C53C00E0289E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StacksShare;
+			packageProductDependencies = (
+				B72AB0FA2883D03E00E0289E /* XCGLogger */,
+			);
+			productName = StacksShare;
+			productReference = B72AB0EB2883C53C00E0289E /* StacksShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B75B469A275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B75B46BF275B3FC900923DE1 /* Build configuration list for PBXNativeTarget "Stacks" */;
@@ -288,10 +357,12 @@
 				B75B4697275B3FC700923DE1 /* Sources */,
 				B75B4698275B3FC700923DE1 /* Frameworks */,
 				B75B4699275B3FC700923DE1 /* Resources */,
+				B72AB0F62883C53C00E0289E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B72AB0F42883C53C00E0289E /* PBXTargetDependency */,
 			);
 			name = Stacks;
 			packageProductDependencies = (
@@ -317,9 +388,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1310;
+				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1310;
 				TargetAttributes = {
+					B72AB0EA2883C53C00E0289E = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					B75B469A275B3FC700923DE1 = {
 						CreatedOnToolsVersion = 13.1;
 					};
@@ -346,11 +420,19 @@
 			projectRoot = "";
 			targets = (
 				B75B469A275B3FC700923DE1 /* Stacks */,
+				B72AB0EA2883C53C00E0289E /* StacksShare */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B72AB0E92883C53C00E0289E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B75B4699275B3FC700923DE1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -365,6 +447,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B72AB0E72883C53C00E0289E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72AB0EE2883C53C00E0289E /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B75B4697275B3FC700923DE1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -403,7 +493,67 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B72AB0F42883C53C00E0289E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B72AB0EA2883C53C00E0289E /* StacksShare */;
+			targetProxy = B72AB0F32883C53C00E0289E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		B72AB0F72883C53C00E0289E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6S8S88RYPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StacksShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = StacksShare;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.stacks.StacksShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B72AB0F82883C53C00E0289E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6S8S88RYPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StacksShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = StacksShare;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.stacks.StacksShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B75B46BD275B3FC900923DE1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -523,6 +673,7 @@
 		B75B46C0275B3FC900923DE1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
@@ -555,6 +706,7 @@
 		B75B46C1275B3FC900923DE1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
@@ -587,6 +739,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B72AB0F92883C53C00E0289E /* Build configuration list for PBXNativeTarget "StacksShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B72AB0F72883C53C00E0289E /* Debug */,
+				B72AB0F82883C53C00E0289E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B75B4696275B3FC700923DE1 /* Build configuration list for PBXProject "Stacks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -665,6 +826,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
+		};
+		B72AB0FA2883D03E00E0289E /* XCGLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = XCGLogger;
 		};
 		B75B46C9275B493D00923DE1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
