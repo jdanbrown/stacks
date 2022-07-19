@@ -4,11 +4,13 @@ import SwiftUI
 import XCGLogger
 
 @main
-struct AppMain: App {
+class AppMain: App {
 
   let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
   let storageProvider: StorageProvider
+
+  let pinsPublishers: [Published<[Pin]>.Publisher]
 
   let firestore: FirestoreService
   let auth: AuthService
@@ -18,24 +20,14 @@ struct AppMain: App {
 
   let pinsModel: PinsModel
 
-  private var cancellables: [Cancellable] = [] // Must retain all .sink return values else they get deinit-ed and silently .cancel-ed!
+  var cancellables = Set<AnyCancellable>()
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
   //  - https://developer.apple.com/forums/thread/653737 -- if you need an AppDelegate
-  init() {
+  required init() {
 
-    // Logging
-    //  - https://github.com/DaveWoodCom/XCGLogger
-    log.setup(
-      level: .debug,
-      showThreadName: true,
-      showLevel: true,
-      showFileNames: true,
-      showLineNumbers: true
-    )
-    log.formatters = [CustomLogFormatter()]
-    log.logAppDetails()
+    initLogging()
 
     self.cloudKitSyncMonitor = CloudKitSyncMonitor()
     self.cloudKitSyncMonitor.start()
@@ -63,19 +55,20 @@ struct AppMain: App {
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
     // Pins publishersA for Pinboard + Firestore
-    let pinsPublishers: [Published<[Pin]>.Publisher] = [
+    self.pinsPublishers = [
       pinsModelFirestore.$pins,
       pinsModelPinboard.$pins,
     ]
 
     // StorageProvider for CloudKit + Core Data
     //  - Touch to init (lazy static let)
-    self.storageProvider = StorageProvider(pinsPublishers: pinsPublishers)
+    self.storageProvider = StorageProvider(cloudKitSyncMonitor: cloudKitSyncMonitor)
+    self.storageProvider.start()
 
     // PinsModel (Core Data)
     let pinsModel = PinsModel(storageProvider: storageProvider)
     storageProvider.pinsModel = pinsModel // HACK Cyclic dependency
-    storageProvider.fetchPinsFromCoreData() // Fetch 1/3 from Core Data
+    storageProvider.fetchPinsFromCoreData() // Fetch 1/3 from Core Data (before CloudKit sync)
 
     // Set fields
     self.auth = auth
@@ -86,9 +79,26 @@ struct AppMain: App {
 
   }
 
+  // XXX after we remove Pinboard/Firestore
+  func upsertPinsFromPinsPublishers() {
+    log.info("pinsPublishers[\(pinsPublishers)]")
+    pinsPublishers.forEach { $0
+      .receive(on: RunLoop.main)
+      .sink { pins in self.storageProvider.upsertPins(pins) }
+      .store(in: &cancellables)
+    }
+  }
+
   func initAsync() async {
     log.info()
-    await pinsModelPinboard.fetchAsync() // Fetch pinboard pins once at startup (http get)
+
+    // Can't do this in init() because can't pass self before init is complete
+    self.storageProvider.onCloudKitImportComplete!
+      .sink { _ in self.upsertPinsFromPinsPublishers() }
+      .store(in: &cancellables)
+
+    // Fetch pinboard pins once at startup (http get)
+    await pinsModelPinboard.fetchAsync()
   }
 
   // https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app

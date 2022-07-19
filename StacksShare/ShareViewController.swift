@@ -19,10 +19,14 @@ class ShareNavigationController: UINavigationController {
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+    initShareExtension()
+
     self.setViewControllers(
       [ShareViewController()],
       animated: false
     )
+
   }
 
 }
@@ -65,17 +69,28 @@ class ShareViewController: UIViewController {
   }
 
   func showSwiftUIView(_ url: URL) {
-    let swiftUIView = ShareView(url: url)
-    let hc = UIHostingController(rootView: swiftUIView)
-    self.addChild(hc)
-    self.view.addSubview(hc.view)
-    hc.didMove(toParent: self)
-    hc.view.backgroundColor = UIColor.white
-    hc.view.translatesAutoresizingMaskIntoConstraints = false
-    hc.view.heightAnchor  .constraint(equalTo: self.view.heightAnchor)  .isActive = true
-    hc.view.leftAnchor    .constraint(equalTo: self.view.leftAnchor)    .isActive = true
-    hc.view.rightAnchor   .constraint(equalTo: self.view.rightAnchor)   .isActive = true
-    hc.view.centerYAnchor .constraint(equalTo: self.view.centerYAnchor) .isActive = true
+
+    // Create model + fetch (async)
+    let shareModel = ShareModel()
+    shareModel.fetch(url: url) { corePin in
+
+      // Create view (after async fetch)
+      let swiftUIView = ShareView(
+        cloudKitSyncMonitor: shareModel.cloudKitSyncMonitor,
+        corePin: corePin
+      )
+      let hc = UIHostingController(rootView: swiftUIView)
+      self.addChild(hc)
+      self.view.addSubview(hc.view)
+      hc.didMove(toParent: self)
+      hc.view.backgroundColor = UIColor.white
+      hc.view.translatesAutoresizingMaskIntoConstraints = false
+      hc.view.heightAnchor  .constraint(equalTo: self.view.heightAnchor)  .isActive = true
+      hc.view.leftAnchor    .constraint(equalTo: self.view.leftAnchor)    .isActive = true
+      hc.view.rightAnchor   .constraint(equalTo: self.view.rightAnchor)   .isActive = true
+      hc.view.centerYAnchor .constraint(equalTo: self.view.centerYAnchor) .isActive = true
+
+    }
   }
 
 }

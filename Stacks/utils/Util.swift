@@ -7,6 +7,7 @@ import XCGLogger
 
 //
 // Logging
+//  - https://github.com/DaveWoodCom/XCGLogger
 //
 
 let log = XCGLogger.default
@@ -38,6 +39,21 @@ class CustomLogFormatter: LogFormatterProtocol, CustomDebugStringConvertible {
   var debugDescription: String {
     return "\(self)"
   }
+}
+
+
+func initLogging() {
+  // Docs
+  //  - https://github.com/DaveWoodCom/XCGLogger
+  log.setup(
+    level: .debug,
+    showThreadName: true,
+    showLevel: true,
+    showFileNames: true,
+    showLineNumbers: true
+  )
+  log.formatters = [CustomLogFormatter()]
+  log.logAppDetails()
 }
 
 //

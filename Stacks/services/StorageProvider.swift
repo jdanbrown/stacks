@@ -15,20 +15,23 @@ import CoreData
 //  - https://schwiftyui.com/swiftui/using-cloudkit-in-swiftui
 class StorageProvider {
 
+  let cloudKitSyncMonitor: CloudKitSyncMonitor
+  var onCloudKitImportComplete: Future<Void, Never>?
+
   let persistentContainer: NSPersistentCloudKitContainer
   var viewContext: NSManagedObjectContext { return persistentContainer.viewContext }
 
   var awaitingFirstCloudKitImport: Bool = true
 
-  let pinsPublishers: [Published<[Pin]>.Publisher]
   var pinsModel: PinsModel? = nil
 
   var cancellables = Set<AnyCancellable>()
 
-  init(pinsPublishers: [Published<[Pin]>.Publisher], preview: Bool = false) {
+  init(cloudKitSyncMonitor: CloudKitSyncMonitor, preview: Bool = false) {
     log.info()
 
-    self.pinsPublishers = pinsPublishers
+    // Set fields
+    self.cloudKitSyncMonitor = cloudKitSyncMonitor
 
     // Make NSPersistentCloudKitContainer with name of .xcdatamodeld
     //  - Practical Core Data (p18)
@@ -41,24 +44,32 @@ class StorageProvider {
       persistentContainer.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
     }
 
+  }
+
+  func start() {
+    log.info()
+
     // Listen to notifications from the CloudKit sync
     //  - Based on: https://github.com/ggruen/CloudKitSyncMonitor/blob/1.1.1/Sources/CloudKitSyncMonitor/SyncMonitor.swift#L404
-    NotificationCenter.default
-      .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
-      .sink(receiveValue: { notification in
-        if let ckEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
-          log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)]")
-          if (ckEvent.type == .import && ckEvent.succeeded) {
-            DispatchQueue.main.async {
-              // HACK Adding refreshAllObjects() for good measure, in case container->context sync is a source of inconsistency/races
-              log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
-              self.viewContext.refreshAllObjects()
-              self.onCloudKitImport()
+    onCloudKitImportComplete = Future<Void, Never>() { promise in
+      NotificationCenter.default
+        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
+        .sink(receiveValue: { notification in
+          if let ckEvent = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+            log.info("NSPersistentCloudKitContainer.eventChangedNotification: ckEvent[\(ckEvent)]")
+            // if (ckEvent.type == .import && ckEvent.succeeded) {...} // XXX Doesn't wait for export + better to encapsulate in cloudKitSyncMonitor
+            if self.cloudKitSyncMonitor.syncStateSummary == .succeeded {
+              DispatchQueue.main.async {
+                // HACK Adding refreshAllObjects() for good measure, in case container->context sync is a source of inconsistency/races
+                log.info("Forcing sync container->context: viewContext.refreshAllObjects()")
+                self.viewContext.refreshAllObjects()
+                self.onCloudKitImport(promise)
+              }
             }
           }
-        }
-      })
-      .store(in: &cancellables)
+        })
+        .store(in: &self.cancellables)
+    }
 
     // Load Core Data stores
     //  - Practical Core Data (p18, p35)
@@ -112,11 +123,11 @@ class StorageProvider {
 
   }
 
-  func onCloudKitImport() {
+  func onCloudKitImport(_ promise: Future<Void, Never>.Promise) {
     log.info("awaitingFirstCloudKitImport[\(awaitingFirstCloudKitImport)]")
     if awaitingFirstCloudKitImport {
-      fetchPinsFromCoreData() // Fetch 2/3 from Cloud Kit
-      upsertPinsFromPinsPublishers()
+      fetchPinsFromCoreData() // Fetch 2/3 from Cloud Kit (after CloudKit sync)
+      promise(.success(()))
     }
     awaitingFirstCloudKitImport = false
   }
@@ -143,18 +154,6 @@ class StorageProvider {
     }
   }
 
-  // XXX after we remove Pinboard/Firestore
-  func upsertPinsFromPinsPublishers() {
-    log.info("pinsPublishers[\(pinsPublishers)]")
-    pinsPublishers.forEach { $0
-      .receive(on: RunLoop.main)
-      .sink { pins in
-        self.upsertPins(pins)
-      }
-      .store(in: &cancellables)
-    }
-  }
-
   func upsertPins(_ pins: [Pin]) {
     log.info("pins[\(pins.count)]")
     self.pinsModel!.batchUpsert(pins) // TODO Restore
@@ -162,7 +161,7 @@ class StorageProvider {
     // self.pinsModel!.batchUpsert(Array(pins.sorted(key: { $0.createdAt }, desc: false)[..<min(2000, pins.count)])) // XXX Dev
     // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("stratechery.com") }) // XXX Dev
     // self.pinsModel!.batchUpsert(pins.filter { $0.url.contains("mikedp.com") }) // XXX Dev
-    self.fetchPinsFromCoreData() // Fetch 3/3 from Pinboard/Firestore
+    self.fetchPinsFromCoreData() // Fetch 3/3 from Pinboard/Firestore (on each new upsert)
   }
 
   func deleteAllPins() {
@@ -270,7 +269,7 @@ class StorageProvider {
 
   // Mock for previews
   static var preview: StorageProvider = {
-    let storageProvider = StorageProvider(pinsPublishers: [], preview: true)
+    let storageProvider = StorageProvider(cloudKitSyncMonitor: CloudKitSyncMonitor(), preview: true)
 
     let pin0 = CorePin(context: storageProvider.persistentContainer.viewContext)
     pin0.url = "http://foo.one"

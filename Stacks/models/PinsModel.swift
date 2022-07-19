@@ -71,14 +71,14 @@ class PinsModel: ObservableObject {
   }
 
   private func _upsert(_ context: NSManagedObjectContext, _ pin: Pin) {
-    if let corePin = self._fetchCorePin(context, url: pin.url) {
+    if let corePin = self.fetchCorePin(context, url: pin.url) {
       self._update(corePin, pin)
     } else {
       self._insert(context, pin)
     }
   }
 
-  private func _fetchCorePin(_ context: NSManagedObjectContext, url: String) -> CorePin? {
+  func fetchCorePin(_ context: NSManagedObjectContext, url: String) -> CorePin? {
     let req = CorePin.fetchRequest()
     req.predicate = NSPredicate(format: "%K = %@", #keyPath(CorePin.url), url)
     do {

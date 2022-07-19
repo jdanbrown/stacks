@@ -108,6 +108,7 @@
 		B704D669284327FB00C7C874 /* PinsModelPinboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModelPinboard.swift; sourceTree = "<group>"; };
 		B704D66B284334DE00C7C874 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 		B704D66D2843379400C7C874 /* PINBOARD_API_TOKEN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINBOARD_API_TOKEN.swift; sourceTree = "<group>"; };
+		B708A7702886812B00F4043F /* StacksShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StacksShare.entitlements; sourceTree = "<group>"; };
 		B70C4E8A2793E7AB0010E119 /* personal */ = {isa = PBXFileReference; lastKnownFileType = folder; name = personal; path = "../../../stacks/Stacks/Preview Content/personal"; sourceTree = "<group>"; };
 		B70C4E8C2793F6B70010E119 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
 		B70C4E9427953EE70010E119 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
@@ -195,6 +196,7 @@
 		B72AB0EC2883C53C00E0289E /* StacksShare */ = {
 			isa = PBXGroup;
 			children = (
+				B708A7702886812B00F4043F /* StacksShare.entitlements */,
 				B72AB0F22883C53C00E0289E /* Info.plist */,
 				B72AB0ED2883C53C00E0289E /* ShareViewController.swift */,
 				B72AB1182884AE9600E0289E /* ShareView.swift */,
@@ -560,6 +562,7 @@
 		B72AB0F72883C53C00E0289E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = StacksShare/StacksShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1658209008;
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
@@ -586,6 +589,7 @@
 		B72AB0F82883C53C00E0289E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = StacksShare/StacksShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1658209008;
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
