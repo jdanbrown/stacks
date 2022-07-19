@@ -1,49 +1,49 @@
-import CoreData
-import Firebase
-import FirebaseFirestoreSwift
 import SwiftUI
 import XCGLogger
 
-extension CorePin {
+// XXX For fromFirestorePin, which is currently only used by previewPins
+//
+// Codable enabled by `import FirebaseFirestoreSwift`
+//  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
+//  - [XXX Defunct comment?]
+struct FirestorePin: Codable, Equatable {
 
-  var tagsList: [String] {
-    // TODO Cache
-    return Tags.decode(tags ?? "")
-  }
+  let schemaVersion: String
+  let url: String
+  let title: String
+  let tags: [String]
+  let notes: String
+  let createdAt: Date
+  let modifiedAt: Date
+  let accessedAt: Date
+  let isRead: Bool
+  let progressPageScroll: Int = 0
+  let progressPageScrollMax: Int = 0
+  let progressPdfPage: Int = 0
+  let progressPdfPageMax: Int = 0
 
-  func toPin() -> Pin {
-    return Pin(
-      url: self.url ?? "[null-url]",
-      tombstone: self.tombstone,
-      title: self.title ?? "[null-title]",
-      tags: Tags.decode(self.tags ?? "[null-tags]"),
-      notes: self.notes ?? "[null-notes]",
-      createdAt: self.createdAt ?? Date.zero,
-      modifiedAt: self.modifiedAt ?? Date.zero,
-      accessedAt: self.accessedAt ?? Date.zero, // TODO Rename accessedAt -> openedAt after we delete Firestore (else confusing json compat)
-      isRead: self.isRead,
-      progressPageScroll: 0, // TODO
-      progressPageScrollMax: 0, // TODO
-      progressPdfPage: 0, // TODO
-      progressPdfPageMax: 0 // TODO
-    )
-  }
-
-  // Override NSManagedObject.description to not include newlines
-  //  - Else log filtering in xcode is impossible, because you don't get complete lines
-  override public var description: String {
-    return super.description.replacingOccurrences(of: #"\s*\n\s*"#, with: " ", options: [.regularExpression])
+  enum CodingKeys: String, CodingKey {
+    case schemaVersion = "schema_version"
+    case url
+    case title
+    case tags
+    case notes
+    case createdAt = "created_at"
+    case modifiedAt = "modified_at"
+    case accessedAt = "accessed_at"
+    case isRead = "is_read"
+    case progressPageScroll = "progress_page_scroll"
+    case progressPageScrollMax = "progress_page_scroll_max"
+    case progressPdfPage = "progress_pdf_page"
+    case progressPdfPageMax = "progress_pdf_page_max"
   }
 
 }
 
-// Codable enabled by `import FirebaseFirestoreSwift`
-//  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
 struct Pin: Codable, Identifiable, Equatable {
 
   var id: String { return url }
 
-  let schemaVersion: String = "v1" // XXX Safe to remove after we remove Fireestore
   let url: String // NOTE When we need it: URL.absoluteString -> String
   let tombstone: Bool
   let title: String
@@ -68,7 +68,6 @@ struct Pin: Codable, Identifiable, Equatable {
   // let progressAudioTimeMax: Int
 
   enum CodingKeys: String, CodingKey {
-    case schemaVersion = "schema_version"
     case url
     case tombstone
     case title
@@ -84,9 +83,30 @@ struct Pin: Codable, Identifiable, Equatable {
     case progressPdfPageMax = "progress_pdf_page_max"
   }
 
+  // XXX Currently only used by previewPins
+  static func fromFirestorePin(_ pin: FirestorePin) -> Pin {
+    return Pin(
+      url:                   pin.url,
+      tombstone:             false,
+      title:                 pin.title,
+      tags:                  pin.tags,
+      notes:                 pin.notes,
+      createdAt:             pin.createdAt,
+      modifiedAt:            pin.modifiedAt,
+      accessedAt:            pin.accessedAt,
+      isRead:                pin.isRead,
+      progressPageScroll:    pin.progressPageScroll,
+      progressPageScrollMax: pin.progressPageScrollMax,
+      progressPdfPage:       pin.progressPdfPage,
+      progressPdfPageMax:    pin.progressPdfPageMax
+    )
+  }
+
   // lazy because static [https://docs.swift.org/swift-book/LanguageGuide/Properties.html]
   static let previewPins: [Pin] = {
-    let pins: [Pin] = loadPreviewJson("personal/preview-pins.json")
+    // TODO Regenerate preview-pins.json so we can get rid of FirestorePin here
+    let firestorePins: [FirestorePin] = loadPreviewJson("personal/preview-pins.json")
+    let pins = firestorePins.map(Pin.fromFirestorePin)
     return pins.sorted(key: { $0.createdAt }, desc: true)
   }()
 

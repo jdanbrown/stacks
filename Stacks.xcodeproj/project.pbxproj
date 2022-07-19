@@ -30,6 +30,38 @@
 		B72AB0EE2883C53C00E0289E /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB0ED2883C53C00E0289E /* ShareViewController.swift */; };
 		B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B72AB0EB2883C53C00E0289E /* StacksShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B72AB0FB2883D03E00E0289E /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB0FA2883D03E00E0289E /* XCGLogger */; };
+		B72AB1042884AA7B00E0289E /* StacksLib.h in Headers */ = {isa = PBXBuildFile; fileRef = B72AB1032884AA7B00E0289E /* StacksLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B72AB1072884AA7B00E0289E /* StacksLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72AB1012884AA7B00E0289E /* StacksLib.framework */; };
+		B72AB1082884AA7B00E0289E /* StacksLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B72AB1012884AA7B00E0289E /* StacksLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B72AB10D2884AABF00E0289E /* StacksLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72AB1012884AA7B00E0289E /* StacksLib.framework */; };
+		B72AB10E2884AABF00E0289E /* StacksLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B72AB1012884AA7B00E0289E /* StacksLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B72AB1132884AAD600E0289E /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB1122884AAD600E0289E /* XCGLogger */; };
+		B72AB1152884AADB00E0289E /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB1142884AADB00E0289E /* OrderedCollections */; };
+		B72AB1172884AAF800E0289E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72AB1162884AAF800E0289E /* CloudKit.framework */; };
+		B72AB1192884AE9600E0289E /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB1182884AE9600E0289E /* ShareView.swift */; };
+		B72AB11B2884AEEA00E0289E /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB11A2884AEEA00E0289E /* OrderedCollections */; };
+		B72AB11C2884AEEF00E0289E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A7328B2817B5650011FACE /* CloudKit.framework */; };
+		B72AB11D2884AF6E00E0289E /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509AB275DE50D00858384 /* Pin.swift */; };
+		B72AB11E2884AF7C00E0289E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B711EC5F27686C86005223A2 /* Util.swift */; };
+		B72AB1202884AFA200E0289E /* CorePin+Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB11F2884AFA200E0289E /* CorePin+Pin.swift */; };
+		B72AB1222884AFE300E0289E /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70C4E8C2793F6B70010E119 /* PinView.swift */; };
+		B72AB1232884AFEC00E0289E /* FlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC964279D2B0100CE9472 /* FlexView.swift */; };
+		B72AB1242884AFEF00E0289E /* _FlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC966279D2B0B00CE9472 /* _FlexView.swift */; };
+		B72AB1252884AFF200E0289E /* SizeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EC968279D2B1400CE9472 /* SizeReader.swift */; };
+		B72AB1262884B00000E0289E /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76DCDA8287692FF0049EB14 /* CloudKitSyncMonitor.swift */; };
+		B72AB1272884B00400E0289E /* NSPersistentContainer+CoreDataBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27CF28793613008448AA /* NSPersistentContainer+CoreDataBackup.swift */; };
+		B72AB1282884B01100E0289E /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27D2287A988C008448AA /* DocumentPicker.swift */; };
+		B72AB12A2884B01700E0289E /* AutoNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79A4E1F27E8368300E7483B /* AutoNavigationLink.swift */; };
+		B72AB12B2884B03300E0289E /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E88A12844910C00DFF9FD /* PinsModel.swift */; };
+		B72AB12C2884B03700E0289E /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF27D4287D203D008448AA /* Backup.swift */; };
+		B72AB12D2884B04300E0289E /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A732902817BBCF0011FACE /* StorageProvider.swift */; };
+		B72AB12E2884B05300E0289E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B7A7328D2817B7AA0011FACE /* Model.xcdatamodeld */; };
+		B72AB12F2884B06E00E0289E /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = B704D66B284334DE00C7C874 /* Tags.swift */; };
+		B72AB1302884B07400E0289E /* PinDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E889F2844828600DFF9FD /* PinDiff.swift */; };
+		B72AB1312884B07700E0289E /* CorePin+Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB11F2884AFA200E0289E /* CorePin+Pin.swift */; };
+		B72AB1322884B08600E0289E /* PinEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B727DDF027A517E100FF3242 /* PinEditView.swift */; };
+		B72AB1332884B09A00E0289E /* personal in Resources */ = {isa = PBXBuildFile; fileRef = B70C4E8A2793E7AB0010E119 /* personal */; };
+		B72AB1342884B09F00E0289E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75B46A5275B3FC900923DE1 /* Preview Assets.xcassets */; };
 		B74E88A02844828600DFF9FD /* PinDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E889F2844828600DFF9FD /* PinDiff.swift */; };
 		B74E88A22844910C00DFF9FD /* PinsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E88A12844910C00DFF9FD /* PinsModel.swift */; };
 		B75B469F275B3FC700923DE1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B469E275B3FC700923DE1 /* AppMain.swift */; };
@@ -64,6 +96,20 @@
 			remoteGlobalIDString = B72AB0EA2883C53C00E0289E;
 			remoteInfo = StacksShare;
 		};
+		B72AB1052884AA7B00E0289E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B75B4693275B3FC700923DE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B72AB1002884AA7B00E0289E;
+			remoteInfo = StacksLib;
+		};
+		B72AB10F2884AABF00E0289E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B75B4693275B3FC700923DE1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B72AB1002884AA7B00E0289E;
+			remoteInfo = StacksLib;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +122,28 @@
 				B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72AB10C2884AA7B00E0289E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B72AB1082884AA7B00E0289E /* StacksLib.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72AB1112884AABF00E0289E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B72AB10E2884AABF00E0289E /* StacksLib.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -102,6 +170,11 @@
 		B72AB0EB2883C53C00E0289E /* StacksShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StacksShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B72AB0ED2883C53C00E0289E /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		B72AB0F22883C53C00E0289E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B72AB1012884AA7B00E0289E /* StacksLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StacksLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B72AB1032884AA7B00E0289E /* StacksLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StacksLib.h; sourceTree = "<group>"; };
+		B72AB1162884AAF800E0289E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		B72AB1182884AE9600E0289E /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		B72AB11F2884AFA200E0289E /* CorePin+Pin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CorePin+Pin.swift"; sourceTree = "<group>"; };
 		B74E889F2844828600DFF9FD /* PinDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinDiff.swift; sourceTree = "<group>"; };
 		B74E88A12844910C00DFF9FD /* PinsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsModel.swift; sourceTree = "<group>"; };
 		B75B469B275B3FC700923DE1 /* Stacks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stacks.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +202,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				B72AB0FB2883D03E00E0289E /* XCGLogger in Frameworks */,
+				B72AB11C2884AEEF00E0289E /* CloudKit.framework in Frameworks */,
+				B72AB10D2884AABF00E0289E /* StacksLib.framework in Frameworks */,
+				B72AB11B2884AEEA00E0289E /* OrderedCollections in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72AB0FE2884AA7B00E0289E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72AB1172884AAF800E0289E /* CloudKit.framework in Frameworks */,
+				B72AB1152884AADB00E0289E /* OrderedCollections in Frameworks */,
+				B72AB1132884AAD600E0289E /* XCGLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +229,7 @@
 				B72509B5275DF43C00858384 /* GoogleSignIn in Frameworks */,
 				B75B46CC275B493D00923DE1 /* FirebaseAuth in Frameworks */,
 				B7A7328C2817B5650011FACE /* CloudKit.framework in Frameworks */,
+				B72AB1072884AA7B00E0289E /* StacksLib.framework in Frameworks */,
 				B75B46CE275B493D00923DE1 /* FirebaseFirestore in Frameworks */,
 				B7856B9D277457AB00A87DDA /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				B711EC652769BD7E005223A2 /* XCGLogger in Frameworks */,
@@ -166,10 +253,19 @@
 		B72AB0EC2883C53C00E0289E /* StacksShare */ = {
 			isa = PBXGroup;
 			children = (
-				B72AB0ED2883C53C00E0289E /* ShareViewController.swift */,
 				B72AB0F22883C53C00E0289E /* Info.plist */,
+				B72AB0ED2883C53C00E0289E /* ShareViewController.swift */,
+				B72AB1182884AE9600E0289E /* ShareView.swift */,
 			);
 			path = StacksShare;
+			sourceTree = "<group>";
+		};
+		B72AB1022884AA7B00E0289E /* StacksLib */ = {
+			isa = PBXGroup;
+			children = (
+				B72AB1032884AA7B00E0289E /* StacksLib.h */,
+			);
+			path = StacksLib;
 			sourceTree = "<group>";
 		};
 		B74E88A32848697100DFF9FD /* views */ = {
@@ -201,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				B72509AB275DE50D00858384 /* Pin.swift */,
+				B72AB11F2884AFA200E0289E /* CorePin+Pin.swift */,
 				B74E889F2844828600DFF9FD /* PinDiff.swift */,
 				B704D66B284334DE00C7C874 /* Tags.swift */,
 				B7856B9527704C3400A87DDA /* User.swift */,
@@ -242,6 +339,7 @@
 				B7A732922817C4930011FACE /* GoogleService-Info.plist */,
 				B75B469D275B3FC700923DE1 /* Stacks */,
 				B72AB0EC2883C53C00E0289E /* StacksShare */,
+				B72AB1022884AA7B00E0289E /* StacksLib */,
 				B75B469C275B3FC700923DE1 /* Products */,
 				B7856B97277457A200A87DDA /* Frameworks */,
 			);
@@ -252,6 +350,7 @@
 			children = (
 				B75B469B275B3FC700923DE1 /* Stacks.app */,
 				B72AB0EB2883C53C00E0289E /* StacksShare.appex */,
+				B72AB1012884AA7B00E0289E /* StacksLib.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -295,6 +394,7 @@
 		B7856B97277457A200A87DDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B72AB1162884AAF800E0289E /* CloudKit.framework */,
 				B7A7328B2817B5650011FACE /* CloudKit.framework */,
 			);
 			name = Frameworks;
@@ -329,6 +429,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		B72AB0FC2884AA7B00E0289E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72AB1042884AA7B00E0289E /* StacksLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		B72AB0EA2883C53C00E0289E /* StacksShare */ = {
 			isa = PBXNativeTarget;
@@ -337,18 +448,43 @@
 				B72AB0E72883C53C00E0289E /* Sources */,
 				B72AB0E82883C53C00E0289E /* Frameworks */,
 				B72AB0E92883C53C00E0289E /* Resources */,
+				B72AB1112884AABF00E0289E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B72AB1102884AABF00E0289E /* PBXTargetDependency */,
+			);
+			name = StacksShare;
+			packageProductDependencies = (
+				B72AB0FA2883D03E00E0289E /* XCGLogger */,
+				B72AB11A2884AEEA00E0289E /* OrderedCollections */,
+			);
+			productName = StacksShare;
+			productReference = B72AB0EB2883C53C00E0289E /* StacksShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		B72AB1002884AA7B00E0289E /* StacksLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B72AB1092884AA7B00E0289E /* Build configuration list for PBXNativeTarget "StacksLib" */;
+			buildPhases = (
+				B72AB0FC2884AA7B00E0289E /* Headers */,
+				B72AB0FD2884AA7B00E0289E /* Sources */,
+				B72AB0FE2884AA7B00E0289E /* Frameworks */,
+				B72AB0FF2884AA7B00E0289E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = StacksShare;
+			name = StacksLib;
 			packageProductDependencies = (
-				B72AB0FA2883D03E00E0289E /* XCGLogger */,
+				B72AB1122884AAD600E0289E /* XCGLogger */,
+				B72AB1142884AADB00E0289E /* OrderedCollections */,
 			);
-			productName = StacksShare;
-			productReference = B72AB0EB2883C53C00E0289E /* StacksShare.appex */;
-			productType = "com.apple.product-type.app-extension";
+			productName = StacksLib;
+			productReference = B72AB1012884AA7B00E0289E /* StacksLib.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		B75B469A275B3FC700923DE1 /* Stacks */ = {
 			isa = PBXNativeTarget;
@@ -358,11 +494,13 @@
 				B75B4698275B3FC700923DE1 /* Frameworks */,
 				B75B4699275B3FC700923DE1 /* Resources */,
 				B72AB0F62883C53C00E0289E /* Embed App Extensions */,
+				B72AB10C2884AA7B00E0289E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				B72AB0F42883C53C00E0289E /* PBXTargetDependency */,
+				B72AB1062884AA7B00E0289E /* PBXTargetDependency */,
 			);
 			name = Stacks;
 			packageProductDependencies = (
@@ -394,6 +532,9 @@
 					B72AB0EA2883C53C00E0289E = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
+					B72AB1002884AA7B00E0289E = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					B75B469A275B3FC700923DE1 = {
 						CreatedOnToolsVersion = 13.1;
 					};
@@ -421,12 +562,22 @@
 			targets = (
 				B75B469A275B3FC700923DE1 /* Stacks */,
 				B72AB0EA2883C53C00E0289E /* StacksShare */,
+				B72AB1002884AA7B00E0289E /* StacksLib */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B72AB0E92883C53C00E0289E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72AB1342884B09F00E0289E /* Preview Assets.xcassets in Resources */,
+				B72AB1332884B09A00E0289E /* personal in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72AB0FF2884AA7B00E0289E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -451,7 +602,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72AB1222884AFE300E0289E /* PinView.swift in Sources */,
+				B72AB12C2884B03700E0289E /* Backup.swift in Sources */,
+				B72AB12B2884B03300E0289E /* PinsModel.swift in Sources */,
+				B72AB1282884B01100E0289E /* DocumentPicker.swift in Sources */,
+				B72AB1322884B08600E0289E /* PinEditView.swift in Sources */,
+				B72AB12D2884B04300E0289E /* StorageProvider.swift in Sources */,
+				B72AB1252884AFF200E0289E /* SizeReader.swift in Sources */,
+				B72AB1232884AFEC00E0289E /* FlexView.swift in Sources */,
+				B72AB1312884B07700E0289E /* CorePin+Pin.swift in Sources */,
+				B72AB11D2884AF6E00E0289E /* Pin.swift in Sources */,
+				B72AB1192884AE9600E0289E /* ShareView.swift in Sources */,
+				B72AB12A2884B01700E0289E /* AutoNavigationLink.swift in Sources */,
+				B72AB1302884B07400E0289E /* PinDiff.swift in Sources */,
+				B72AB12F2884B06E00E0289E /* Tags.swift in Sources */,
+				B72AB1242884AFEF00E0289E /* _FlexView.swift in Sources */,
+				B72AB12E2884B05300E0289E /* Model.xcdatamodeld in Sources */,
+				B72AB1272884B00400E0289E /* NSPersistentContainer+CoreDataBackup.swift in Sources */,
 				B72AB0EE2883C53C00E0289E /* ShareViewController.swift in Sources */,
+				B72AB11E2884AF7C00E0289E /* Util.swift in Sources */,
+				B72AB1262884B00000E0289E /* CloudKitSyncMonitor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72AB0FD2884AA7B00E0289E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +636,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72AB1202884AFA200E0289E /* CorePin+Pin.swift in Sources */,
 				B79A4E2027E8368300E7483B /* AutoNavigationLink.swift in Sources */,
 				B7777A3A279616B600372937 /* ReaderView.swift in Sources */,
 				B704D66C284334DE00C7C874 /* Tags.swift in Sources */,
@@ -498,6 +676,16 @@
 			isa = PBXTargetDependency;
 			target = B72AB0EA2883C53C00E0289E /* StacksShare */;
 			targetProxy = B72AB0F32883C53C00E0289E /* PBXContainerItemProxy */;
+		};
+		B72AB1062884AA7B00E0289E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B72AB1002884AA7B00E0289E /* StacksLib */;
+			targetProxy = B72AB1052884AA7B00E0289E /* PBXContainerItemProxy */;
+		};
+		B72AB1102884AABF00E0289E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B72AB1002884AA7B00E0289E /* StacksLib */;
+			targetProxy = B72AB10F2884AABF00E0289E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -551,6 +739,70 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B72AB10A2884AA7B00E0289E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 6S8S88RYPG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksLib;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B72AB10B2884AA7B00E0289E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 6S8S88RYPG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jdanbrown.StacksLib;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -690,6 +942,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -723,6 +976,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -744,6 +998,15 @@
 			buildConfigurations = (
 				B72AB0F72883C53C00E0289E /* Debug */,
 				B72AB0F82883C53C00E0289E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B72AB1092884AA7B00E0289E /* Build configuration list for PBXNativeTarget "StacksLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B72AB10A2884AA7B00E0289E /* Debug */,
+				B72AB10B2884AA7B00E0289E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -831,6 +1094,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;
 			productName = XCGLogger;
+		};
+		B72AB1122884AAD600E0289E /* XCGLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B711EC632769BD7D005223A2 /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = XCGLogger;
+		};
+		B72AB1142884AADB00E0289E /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		B72AB11A2884AEEA00E0289E /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		B75B46C9275B493D00923DE1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

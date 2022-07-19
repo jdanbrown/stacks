@@ -1,4 +1,4 @@
-import Down
+// import Down
 // import MarkdownUI
 import SwiftUI
 
@@ -19,18 +19,18 @@ struct HTML: UIViewRepresentable {
   }
 }
 
-// HACK Guessing...
-//  - https://github.com/johnxnguyen/Down/blob/master/Sources/Down/Views/DownView.swift
-struct DownViewView: UIViewRepresentable {
-  let frame: CGRect
-  let markdownString: String
-  func makeUIView(context: Context) -> WKWebView {
-    return try! DownView(frame: frame, markdownString: markdownString)
-  }
-  func updateUIView(_ uiView: WKWebView, context: Context) {
-    // uiView.loadHTMLString(markdown, baseURL: nil)
-  }
-}
+// // HACK Guessing...
+// //  - https://github.com/johnxnguyen/Down/blob/master/Sources/Down/Views/DownView.swift
+// struct DownViewView: UIViewRepresentable {
+//   let frame: CGRect
+//   let markdownString: String
+//   func makeUIView(context: Context) -> WKWebView {
+//     return try! DownView(frame: frame, markdownString: markdownString)
+//   }
+//   func updateUIView(_ uiView: WKWebView, context: Context) {
+//     // uiView.loadHTMLString(markdown, baseURL: nil)
+//   }
+// }
 
 // Font styles
 //  - https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/typography

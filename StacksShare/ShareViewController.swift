@@ -79,22 +79,3 @@ class ShareViewController: UIViewController {
   }
 
 }
-
-struct ShareView: View {
-
-  let url: URL
-
-  @State var text = "Hello!"
-
-  var body: some View {
-    HStack {
-      Image(systemName: "globe")
-      Text(text)
-    }
-      .font(.title)
-      .onAppear {
-        text = url.absoluteString
-      }
-  }
-
-}
