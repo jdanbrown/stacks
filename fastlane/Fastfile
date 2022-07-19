@@ -15,9 +15,14 @@ platform :ios do
 
   desc 'Firebase: Distribute beta'
   lane :firebase_distribute_beta do
-    increment_build_number(
-      build_number: Time.now.to_i
-    )
+
+    # Bump build number
+    # - Must be unique for each new build
+    build_number = Time.now.to_i
+    increment_build_number_in_xcodeproj(build_number: build_number.to_s, target: 'Stacks')
+    increment_build_number_in_xcodeproj(build_number: build_number.to_s, target: 'StacksShare')
+
+    # Build
     build_app(
       scheme: 'Stacks',
       archive_path: './build/Stacks.xcarchive',
@@ -27,6 +32,8 @@ platform :ios do
       # - https://github.com/fastlane/fastlane/issues/12044
       export_options: {iCloudContainerEnvironment: 'Development'}
     )
+
+    # Upload
     firebase_app_distribution(
       app: '1:649977413874:ios:e5c13f240795a955a4106b',
       testers: 'jdanbrown@gmail.com',
@@ -34,6 +41,7 @@ platform :ios do
       firebase_cli_path: '/usr/local/bin/firebase',
       ipa_path: './build/Stacks/Stacks.ipa'
     )
+
   end
 
 end
