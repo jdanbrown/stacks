@@ -377,6 +377,27 @@ extension NSManagedObject {
 // swiftui
 //
 
+// https://stackoverflow.com/questions/69892283/create-a-share-sheet-in-ios-15-with-swiftui
+//  - TODO(ios16): Replace with ShareLink [https://stackoverflow.com/a/72680839]
+struct ActivityView: UIViewControllerRepresentable {
+
+  let activityItems: [Any]
+  let applicationActivities: [UIActivity]?
+
+  func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
+    return UIActivityViewController(
+      activityItems: activityItems,
+      applicationActivities: applicationActivities
+    )
+  }
+
+  func updateUIViewController(
+    _ uiViewController: UIActivityViewController,
+    context: UIViewControllerRepresentableContext<ActivityView>
+  ) {}
+
+}
+
 // Wrap non-Nav views with a Nav so we can Nav in xcode previews
 //  - HACK Also, unwrap your Nav to workaround xcode previews not letting you focus any views inside a NavigationView
 struct NavWrap<Content: View>: View {

@@ -5,6 +5,8 @@ struct ReaderView: View {
   let pin: Pin
   @StateObject var webViewModel: WebViewModel = WebViewModel()
 
+  @State var shareItem: ShareItem<URL>?
+
   var body: some View {
     ZStack(alignment: .top) {
       WebView(model: webViewModel)
@@ -15,9 +17,42 @@ struct ReaderView: View {
           .frame(height: 1) // Match height of Divider
       }
     }
+
+      // Nav bar
       .navigationTitle(webViewModel.url?.host ?? "")
+      .navigationBarItems(
+        trailing: HStack {
+          buttonShare()
+        }
+      )
+
+      // Share sheet
+      //  - TODO(ios16): Change full height -> half height using .presentationDetents
+      //    - https://stackoverflow.com/questions/56700752/swiftui-half-modal
+      .sheet(item: $shareItem) { shareItem in
+        ActivityView(activityItems: [shareItem.item], applicationActivities: nil)
+      }
+
   }
 
+  @ViewBuilder
+  func buttonShare() -> some View {
+    Button {
+      if let url = webViewModel.url {
+        shareItem = ShareItem(item: url)
+      } else {
+        log.warning("Skipping share, no url: webViewModel.url[\(opt: webViewModel.url)]")
+      }
+    } label: {
+      Image(systemName: "square.and.arrow.up")
+    }
+  }
+
+}
+
+struct ShareItem<X: Hashable>: Identifiable {
+  let item: X
+  var id: X { return item }
 }
 
 struct ReaderView_Previews: PreviewProvider {
