@@ -74,8 +74,16 @@ class ShareViewController: UIViewController {
     let shareModel = ShareModel()
     shareModel.fetch(url: url) { corePin in
 
+      if corePin == nil {
+        // TODO Add new pin
+        //  - Create new CorePin(url) in ShareViewController
+        //  - Pass into ShareView
+        //  - Don't .save() the context until done (else we'll accumulate un-done pins)
+      }
+
       // Create view (after async fetch)
       let swiftUIView = ShareView(
+        pinsModel: shareModel.pinsModel,
         cloudKitSyncMonitor: shareModel.cloudKitSyncMonitor,
         corePin: corePin
       )

@@ -5,7 +5,7 @@ struct ReaderView: View {
   let pin: Pin
   @StateObject var webViewModel: WebViewModel = WebViewModel()
 
-  @State var shareItem: ShareItem<URL>?
+  @State var shareItem: ShareItem?
 
   var body: some View {
     ZStack(alignment: .top) {
@@ -50,9 +50,9 @@ struct ReaderView: View {
 
 }
 
-struct ShareItem<X: Hashable>: Identifiable {
-  let item: X
-  var id: X { return item }
+struct ShareItem: Identifiable {
+  let item: Any
+  let id = UUID() // Unique id per instance so that .sheet() always shows again
 }
 
 struct ReaderView_Previews: PreviewProvider {

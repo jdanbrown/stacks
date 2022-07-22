@@ -59,37 +59,37 @@ class ShareModel {
 
 struct ShareView: View {
 
+  @ObservedObject var pinsModel: PinsModel
   @ObservedObject var cloudKitSyncMonitor: CloudKitSyncMonitor
   let corePin: CorePin?
   var pin: Pin? { return corePin?.toPin() }
 
   var body: some View {
     VStack {
-      Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
-        .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
-        .font(.body)
-      Image(systemName: "globe")
-      Text("ohai hai")
+
+      // XXX Dev: To observe cloudkit sync
+      // Image(systemName: cloudKitSyncMonitor.syncStateSummary.symbolName)
+      //   .foregroundColor(cloudKitSyncMonitor.syncStateSummary.symbolColor)
+      //   .font(.body)
+
       if let pin = pin {
-        Text(pin.url)
-        // mockPinView()
-        realPinView(pin)
+
+        // realPinView(Pin.previewPins.first!) // Mock pin
+        // PinView(pin: pin, navigationPushTag: { tag in () }) // Real pin
+        PinEditView(
+          pin: pin,
+          pinsModel: pinsModel,
+          onSave: { pinsModel.storageProvider.fetchPinsFromCoreData() } // Fetch 6/3 on PinEditView save
+        )
+
       } else {
+        // TODO Add new pin
+        //  - Create new CorePin(url) in ShareViewController
+        //  - Pass into ShareView
+        //  - Don't .save() the context until done (else we'll accumulate un-done pins)
         Text("pin=nil")
       }
     }
-      .font(.title)
   }
-
-  @ViewBuilder
-  func realPinView(_ pin: Pin) -> some View {
-    PinView(pin: pin, navigationPushTag: { tag in () })
-  }
-
-  // @ViewBuilder
-  // func mockPinView() -> some View {
-  //   let pin = Pin.previewPins.first!
-  //   realPinView(pin)
-  // }
 
 }

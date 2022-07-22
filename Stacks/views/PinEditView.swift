@@ -18,12 +18,6 @@ struct PinEditView: View {
   // Navigation
   @StateObject var navigation: AutoNavigationLinkModel = AutoNavigationLinkModel()
 
-  init(pin: Pin, pinsModel: PinsModel, onSave: @escaping () -> ()) {
-    self.pin = pin
-    self.pinsModel = pinsModel
-    self.onSave = onSave
-  }
-
   func initStateTo(pin: Pin) {
     if !_isStateInitialized {
       log.info("pin[\(pin)]")
@@ -182,6 +176,7 @@ struct PinEditView: View {
             }
           }
         )
+
     }
   }
 
