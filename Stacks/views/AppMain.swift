@@ -42,7 +42,7 @@ class AppMain: App {
 
     // Pins publishers for Pinboard
     self.pinsPublishers = [
-      // pinsModelPinboard.$pins,
+      pinsModelPinboard.$pins,
     ]
 
     // StorageProvider for CloudKit + Core Data
