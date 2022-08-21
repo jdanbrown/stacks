@@ -19,6 +19,8 @@ class Backup {
   static func load(_ backupDir: URL) throws -> [Pin] {
     log.info("Loading from backupDir[\(backupDir)]")
 
+    // FIXME This fails with "No such file or directory" if the file hasn't synced to local fs from icloud
+    //  - See notes + fix in PinListView (the caller)
     let pinsURL = backupDir.appendingPathComponent("pins.json")
     let pinsJson = try String(contentsOf: pinsURL, encoding: .utf8)
     let pins: [Pin] = try fromJson(pinsJson)

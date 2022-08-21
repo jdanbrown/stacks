@@ -146,7 +146,17 @@ struct PinListView: View {
                 try storageProvider.upsertFromBackup(backupDir: backupDir)
                 showAlert(title: "Loaded from backup", message: "\(backupDir.lastPathComponent)")
               } catch {
-                showAlert(title: "Failed to load from backup", message: "\(error)")
+                // FIXME This fails with "No such file or directory" if the file hasn't synced to local fs from icloud
+                //  - Low leverage to fix, so I gave up after a brief ~10m of googling -- elaborated the error msg instead
+                //  - Details: "Stacks: Docs" -> "Troubleshooting"
+                showAlert(
+                  title: "Failed to load from backup",
+                  message: [
+                    "NOTE: This can happen when the local file isn't synced from iCloud. ",
+                    "Open Files.app to manually sync the pins.json file and try again.\n\n",
+                    "\(error)",
+                  ].joined()
+                )
               }
             } else {
               let _ = {
