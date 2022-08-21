@@ -444,11 +444,11 @@
 			);
 			mainGroup = B75B4692275B3FC700923DE1;
 			packageReferences = (
-				B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */,
 				B72509B3275DF43B00858384 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */,
-				B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */,
-				B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */,
+				B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */,
+				B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -564,7 +564,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = StacksShare/StacksShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1658209008;
+				CURRENT_PROJECT_VERSION = 1658469259;
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StacksShare/Info.plist;
@@ -591,7 +591,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = StacksShare/StacksShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1658209008;
+				CURRENT_PROJECT_VERSION = 1658469259;
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = StacksShare/Info.plist;
@@ -737,7 +737,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1658209008;
+				CURRENT_PROJECT_VERSION = 1658469259;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -771,7 +771,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stacks/Stacks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1658209008;
+				CURRENT_PROJECT_VERSION = 1658469259;
 				DEVELOPMENT_ASSET_PATHS = "\"Stacks/Preview Content\"";
 				DEVELOPMENT_TEAM = 6S8S88RYPG;
 				ENABLE_PREVIEWS = YES;
@@ -846,7 +846,7 @@
 				minimumVersion = 6.0.0;
 			};
 		};
-		B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
+		B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger.git";
 			requirement = {
@@ -854,7 +854,7 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -862,7 +862,7 @@
 				minimumVersion = 8.10.0;
 			};
 		};
-		B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+		B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -885,52 +885,52 @@
 		};
 		B72AB11A2884AEEA00E0289E /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */;
 			productName = OrderedCollections;
 		};
 		B72AB166288673DF00E0289E /* XCGLogger */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */;
 			productName = XCGLogger;
 		};
 		B72AB168288673EE00E0289E /* XCGLogger */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */;
 			productName = XCGLogger;
 		};
 		B75B46C9275B493D00923DE1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAnalytics;
 		};
 		B75B46CB275B493D00923DE1 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseAuth;
 		};
 		B75B46CD275B493D00923DE1 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = FirebaseFirestore;
 		};
 		B76DCDAB2877E57B0049EB14 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */;
 			productName = OrderedCollections;
 		};
 		B7856B98277457A200A87DDA /* FirebaseAuthCombine-Community */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = "FirebaseAuthCombine-Community";
 		};
 		B7856B9A277457A200A87DDA /* FirebaseFirestoreCombine-Community */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = "FirebaseFirestoreCombine-Community";
 		};
 		B7856B9C277457AB00A87DDA /* FirebaseFirestoreSwift-Beta */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = B75B46C8275B493D00923DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
 			productName = "FirebaseFirestoreSwift-Beta";
 		};
 /* End XCSwiftPackageProductDependency section */
