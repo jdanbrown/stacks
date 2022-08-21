@@ -1,5 +1,4 @@
 import Combine
-import Firebase
 import SwiftUI
 import XCGLogger
 
@@ -11,10 +10,6 @@ class AppMain: App {
   let storageProvider: StorageProvider
 
   let pinsPublishers: [Published<[Pin]>.Publisher]
-
-  let firestore: FirestoreService
-  let auth: AuthService
-  let pinsModelFirestore: PinsModelFirestore
 
   let pinsModelPinboard: PinsModelPinboard
 
@@ -42,22 +37,12 @@ class AppMain: App {
     //    - https://stackoverflow.com/questions/59138880/nspersistentcloudkitcontainer-how-to-check-if-data-is-synced-to-cloudkit
     self.hasICloud = FileManager.default.ubiquityIdentityToken != nil
 
-    // Firestore
-    //  - Must call configure() before AuthService()
-    //    - https://peterfriese.dev/swiftui-new-app-lifecycle-firebase/
-    //    - https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/
-    FirebaseApp.configure()
-    let firestore = FirestoreService()
-    let auth = AuthService()
-    let pinsModelFirestore = PinsModelFirestore(auth: auth, firestore: firestore)
-
     // Pinboard
     let pinsModelPinboard = PinsModelPinboard(apiToken: PINBOARD_API_TOKEN)
 
-    // Pins publishersA for Pinboard + Firestore
+    // Pins publishers for Pinboard
     self.pinsPublishers = [
-      pinsModelFirestore.$pins,
-      pinsModelPinboard.$pins,
+      // pinsModelPinboard.$pins,
     ]
 
     // StorageProvider for CloudKit + Core Data
@@ -71,15 +56,12 @@ class AppMain: App {
     storageProvider.fetchPinsFromCoreData() // Fetch 1/3 from Core Data (before CloudKit sync)
 
     // Set fields
-    self.auth = auth
-    self.firestore = firestore
-    self.pinsModelFirestore = pinsModelFirestore
     self.pinsModelPinboard = pinsModelPinboard
     self.pinsModel = pinsModel
 
   }
 
-  // XXX after we remove Pinboard/Firestore
+  // XXX after we remove Pinboard
   func upsertPinsFromPinsPublishers() {
     log.info("pinsPublishers[\(pinsPublishers)]")
     pinsPublishers.forEach { $0
@@ -107,7 +89,6 @@ class AppMain: App {
       storageProvider: storageProvider,
       cloudKitSyncMonitor: cloudKitSyncMonitor,
       hasICloud: hasICloud,
-      auth: auth,
       pinsModel: pinsModel,
       pinsModelPinboard: pinsModelPinboard,
       initAsync: initAsync
@@ -122,7 +103,6 @@ struct AppScene: Scene {
   let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
 
-  @ObservedObject var auth: AuthService
   @ObservedObject var pinsModel: PinsModel
   let pinsModelPinboard: PinsModelPinboard
 
@@ -142,16 +122,15 @@ struct AppScene: Scene {
           storageProvider: storageProvider,
           cloudKitSyncMonitor: cloudKitSyncMonitor,
           hasICloud: hasICloud,
-          authState: auth.authState,
-          login: auth.login,
-          logout: auth.logout,
+          authState: .LoggedIn, // Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
+          login: {},            // Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
+          logout: {},           // Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
           pinsModel: pinsModel,
           pinsModelPinboard: pinsModelPinboard
         )
       }
         .environment(\.managedObjectContext, storageProvider.viewContext)
         .task { await initAsync() }
-        .onOpenURL { auth.onOpenURL($0) }
     }
       .onChange(of: scenePhase) { phase in
         log.info("onChange: scenephase[\(phase)]")

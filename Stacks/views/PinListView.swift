@@ -7,7 +7,6 @@ struct PinListView: View {
   @ObservedObject var cloudKitSyncMonitor: CloudKitSyncMonitor
 
   var logout: () async -> ()
-  var user: User
   // var pins: [Pin]
   @ObservedObject var pinsModel: PinsModel
   let pinsModelPinboard: PinsModelPinboard
@@ -37,14 +36,12 @@ struct PinListView: View {
     storageProvider: StorageProvider,
     cloudKitSyncMonitor: CloudKitSyncMonitor,
     logout: @escaping () async -> (),
-    user: User,
     pinsModel: PinsModel,
     pinsModelPinboard: PinsModelPinboard
   ) {
     self.storageProvider = storageProvider
     self.cloudKitSyncMonitor = cloudKitSyncMonitor
     self.logout = logout
-    self.user = user
     self.pinsModel = pinsModel
     self.pinsModelPinboard = pinsModelPinboard
   }
@@ -53,7 +50,6 @@ struct PinListView: View {
     storageProvider: StorageProvider,
     cloudKitSyncMonitor: CloudKitSyncMonitor,
     logout: @escaping () async -> (),
-    user: User,
     pinsModel: PinsModel,
     pinsModelPinboard: PinsModelPinboard,
     tagFilter: String?
@@ -62,7 +58,6 @@ struct PinListView: View {
       storageProvider: storageProvider,
       cloudKitSyncMonitor: cloudKitSyncMonitor,
       logout: logout,
-      user: user,
       pinsModel: pinsModel,
       pinsModelPinboard: pinsModelPinboard
     )
@@ -74,7 +69,6 @@ struct PinListView: View {
       storageProvider: storageProvider,
       cloudKitSyncMonitor: cloudKitSyncMonitor,
       logout: logout,
-      user: user,
       pinsModel: pinsModel,
       pinsModelPinboard: pinsModelPinboard,
       tagFilter: tagFilter
@@ -124,7 +118,6 @@ struct PinListView: View {
       .navigationBarTitleDisplayMode(.inline)
       .navigationBarItems(
         leading: HStack {
-          // buttonProfilePhoto()
           menuCloudKitSync()
         },
         trailing: HStack {
@@ -260,28 +253,6 @@ struct PinListView: View {
         longPressMinimumDuration: 0.1
       ))
 
-  }
-
-  @ViewBuilder
-  func buttonProfilePhoto() -> some View {
-    Button { Task { await logout() }} label: {
-      if let photoURL = user.photoURL {
-        AsyncImage(url: photoURL) { image in
-          image
-            .resizable()
-            .scaledToFit()
-            .clipShape(Circle())
-        } placeholder: {
-          ProgressView()
-        }
-          .frame(height: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
-      } else {
-        VStack(alignment: .leading) {
-          Text("Logout")
-          Text("\(user.email ?? "[no email?]")")
-        }
-      }
-    }
   }
 
   @ViewBuilder
@@ -528,12 +499,11 @@ struct PinListView: View {
 // struct PinListView_Previews: PreviewProvider {
 //   static var previews: some View {
 //     let logout: () async -> () = {}
-//     let user = User.previewUser0
 //     let pins = Pin.previewPins
 //     // HACK Split in two to workaround xcode previews not letting you focus views inside a NavigationView
 //     // HACK Wrap each in ZStack to avoid FocusState crashing previews
 //     //  - https://stackoverflow.com/questions/70430440/why-focusstate-crashing-swiftui-preview
-//     ZStack { NavWrap { PinListView(logout: logout, user: user, pins: pins) } }
-//     ZStack { PinListView(logout: logout, user: user, pins: pins) }
+//     ZStack { NavWrap { PinListView(logout: logout, pins: pins) } }
+//     ZStack { PinListView(logout: logout, pins: pins) }
 //   }
 // }

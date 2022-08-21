@@ -1,6 +1,3 @@
-# firebase
-GoogleService-Info.plist
-
 # fastlane
 build/
 fastlane/report.xml

@@ -2,10 +2,6 @@ import SwiftUI
 import XCGLogger
 
 // XXX For fromFirestorePin, which is currently only used by previewPins
-//
-// Codable enabled by `import FirebaseFirestoreSwift`
-//  - https://peterfriese.dev/firestore-codable-the-comprehensive-guide/
-//  - [XXX Defunct comment?]
 struct FirestorePin: Codable, Equatable {
 
   let schemaVersion: String

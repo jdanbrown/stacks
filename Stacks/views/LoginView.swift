@@ -7,7 +7,7 @@ struct LoginView: View {
   var body: some View {
     VStack {
       Button { Task { await login() }} label: {
-        Text("Login with Google")
+        Text("Login with ???")
       }
     }
   }

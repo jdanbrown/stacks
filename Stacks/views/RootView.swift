@@ -5,6 +5,7 @@ struct RootView: View {
   let storageProvider: StorageProvider
   let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
+  // Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
   var authState: AuthState
   var login: () async -> ()
   var logout: () async -> ()
@@ -16,18 +17,17 @@ struct RootView: View {
       if !hasICloud {
         Text("Please log into iCloud (in the Settings app), and then restart this app")
       } else {
-        switch authState {
+        switch authState { // Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
           case .Loading:
             ProgressView()
           case .LoggedOut:
             LoginView(login: login)
-          case .LoggedIn(let user):
+          case .LoggedIn:
             NavWrap {
               PinListView(
                 storageProvider: storageProvider,
                 cloudKitSyncMonitor: cloudKitSyncMonitor,
                 logout: logout,
-                user: user,
                 pinsModel: pinsModel,
                 pinsModelPinboard: pinsModelPinboard
               )
@@ -39,10 +39,16 @@ struct RootView: View {
 
 }
 
+// Used in Firebase auth, keeping for a bit in case it's a helpful to repurpose
+enum AuthState {
+  case Loading
+  case LoggedOut
+  case LoggedIn
+}
+
 // TODO Update for Core Data
 // struct RootView_Previews: PreviewProvider {
 //   static var previews: some View {
-//     let user = User.previewUser0
 //     let pins = Pin.previewPins
 //     Group {
 //       RootView(hasICloud: false, authState: .Loading, login: {}, logout: {}, pins: pins)
@@ -51,7 +57,7 @@ struct RootView: View {
 //     }
 //       .previewLayout(.sizeThatFits)
 //     Group {
-//       RootView(hasICloud: true, authState: .LoggedIn(user), login: {}, logout: {}, pins: pins)
+//       RootView(hasICloud: true, authState: .LoggedIn, login: {}, logout: {}, pins: pins)
 //     }
 //       .previewLayout(.device)
 //   }
