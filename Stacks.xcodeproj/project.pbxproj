@@ -409,8 +409,8 @@
 			mainGroup = B75B4692275B3FC700923DE1;
 			packageReferences = (
 				B70C4E91279403530010E119 /* XCRemoteSwiftPackageReference "Down" */,
-				B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */,
-				B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */,
+				B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */,
 			);
 			productRefGroup = B75B469C275B3FC700923DE1 /* Products */;
 			projectDirPath = "";
@@ -527,7 +527,7 @@
 				INFOPLIST_FILE = StacksShare/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = StacksShare;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -554,7 +554,7 @@
 				INFOPLIST_FILE = StacksShare/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = StacksShare;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -621,7 +621,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -676,7 +676,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -706,7 +706,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -740,7 +740,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -795,7 +795,7 @@
 				minimumVersion = 0.11.0;
 			};
 		};
-		B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */ = {
+		B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger.git";
 			requirement = {
@@ -803,7 +803,7 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
+		B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -821,22 +821,22 @@
 		};
 		B72AB11A2884AEEA00E0289E /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
 		};
 		B72AB166288673DF00E0289E /* XCGLogger */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */;
+			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */;
 			productName = XCGLogger;
 		};
 		B72AB168288673EE00E0289E /* XCGLogger */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger.git" */;
+			package = B72AB165288673DF00E0289E /* XCRemoteSwiftPackageReference "XCGLogger" */;
 			productName = XCGLogger;
 		};
 		B76DCDAB2877E57B0049EB14 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = B76DCDAA2877E57B0049EB14 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
