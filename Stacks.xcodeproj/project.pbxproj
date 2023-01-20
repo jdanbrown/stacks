@@ -23,7 +23,7 @@
 		B72509C3275F2E8E00858384 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72509C2275F2E8E00858384 /* LoginView.swift */; };
 		B727DDF127A517E100FF3242 /* PinEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B727DDF027A517E100FF3242 /* PinEditView.swift */; };
 		B72AB0EE2883C53C00E0289E /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB0ED2883C53C00E0289E /* ShareViewController.swift */; };
-		B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B72AB0EB2883C53C00E0289E /* StacksShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B72AB0EB2883C53C00E0289E /* StacksShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B72AB1192884AE9600E0289E /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72AB1182884AE9600E0289E /* ShareView.swift */; };
 		B72AB11B2884AEEA00E0289E /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B72AB11A2884AEEA00E0289E /* OrderedCollections */; };
 		B72AB11C2884AEEF00E0289E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7A7328B2817B5650011FACE /* CloudKit.framework */; };
@@ -79,15 +79,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B72AB0F62883C53C00E0289E /* Embed App Extensions */ = {
+		B72AB0F62883C53C00E0289E /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed App Extensions */,
+				B72AB0F52883C53C00E0289E /* StacksShare.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -363,7 +363,7 @@
 				B75B4697275B3FC700923DE1 /* Sources */,
 				B75B4698275B3FC700923DE1 /* Frameworks */,
 				B75B4699275B3FC700923DE1 /* Resources */,
-				B72AB0F62883C53C00E0289E /* Embed App Extensions */,
+				B72AB0F62883C53C00E0289E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -388,7 +388,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					B72AB0EA2883C53C00E0289E = {
 						CreatedOnToolsVersion = 13.4.1;
