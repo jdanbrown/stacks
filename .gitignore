@@ -10,3 +10,6 @@ Stacks/Preview Content/personal/preview-pins.json
 
 # TODO Make settings to store these (e.g. PINBOARD_API_TOKEN)
 secrets/
+
+# js
+node_modules/
