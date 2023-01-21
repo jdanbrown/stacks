@@ -59,6 +59,10 @@ router.get('/update', (req, rep) => {
           <!--  - src url: https://www.jsdelivr.com/package/npm/lodash -->
           <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 
+          <!-- Docs: https://api.jquery.com/ -->
+          <!--  - src url: https://releases.jquery.com/ -->
+          <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
         </head>
         <body>
 
@@ -186,6 +190,16 @@ router.get('/update', (req, rep) => {
             }
 
           </script>
+
+          <style>
+            #tags-list {
+              padding: 2em 0em;
+            }
+            .tag {
+              display: inline-flex;
+              padding-right: 2ex;
+            }
+          </style>
 
           <!-- Debug -->
           <!--
@@ -346,11 +360,14 @@ router.get('/update', (req, rep) => {
               _.assign(window, {tags}); // Debug
 
               // Tags list
-              document.getElementById('tags-list').style.whiteSpace = 'pre'
-              document.getElementById('tags-list').textContent = [
-                tags.length + ' tags:',
-                tags.map(([x, n]) => '- (' + n + ') ' + x).join('\\n'),
-              ].join('\\n');
+              // document.getElementById('tags-list').style.whiteSpace = 'pre'
+              // document.getElementById('tags-list').textContent = [
+              //   tags.length + ' tags:',
+              //   tags.map(([x, n]) => '- (' + n + ') ' + x).join('\\n'),
+              // ].join('\\n');
+              $('#tags-list').append(
+                tags.map(([tag, n]) => $('<div class="tag">').text(tag))
+              );
 
             }
 
