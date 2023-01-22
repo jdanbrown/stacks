@@ -5,7 +5,9 @@
 ```sh
 # Copy CLOUDKIT_API_TOKEN from:
 # - https://icloud.developer.apple.com/dashboard/database/teams/6S8S88RYPG/containers/iCloud.org.jdanbrown.stacks/environments/DEVELOPMENT/tokens
-CLOUDKIT_API_TOKEN=... CLOUDKIT_ENVIRONMENT=development npx @google-cloud/functions-framework --target=bookmarklet
+
+# Watch fs for changes and re-run on save
+nodemon --verbose -x 'CLOUDKIT_API_TOKEN=... CLOUDKIT_ENVIRONMENT=development npx @google-cloud/functions-framework --target=bookmarklet'
 ```
 
 # Deploy cloud function (manual)

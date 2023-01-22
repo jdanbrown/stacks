@@ -38,8 +38,6 @@ const ckConfigContainer = {
 const app = express();
 exports.bookmarklet = app; // Entrypoint (name is configured in the Cloud Functions deploy)
 
-// Mimic pinboard bookmarklet's request schema:
-//  - https://pinboard.in/howto/
 app.get('/', (req, rep) => {
   try {
 
@@ -272,14 +270,14 @@ app.get('/', (req, rep) => {
               showAuth({userIdentity, ckError: null});
               container.whenUserSignsOut()
                 .then(onSignout);
-              showBody(query);
+              showBody({user: userIdentity, query});
             }
             function onSignout(ckError) {
               showAuth({userIdentity: null, ckError}); // ckError might be null
               container.whenUserSignsIn()
                 .then(onSignin)
                 .catch(onSignout);
-              showBody(null);
+              showBody({user: null, query: null});
             }
             function showAuth({userIdentity, ckError}) {
               console.log('[showAuth]', {userIdentity, ckError});
@@ -301,13 +299,25 @@ app.get('/', (req, rep) => {
               onSignout(null);
             }
 
-            async function showBody(query) {
-              console.log('[showBody]', {query});
-
-              if (query === null) {
+            async function showBody({user, query}) {
+              console.log('[showBody]', {user, query});
+              // If not logged in, show empty body here and let auth show the signin button
+              if (user === null) {
                 document.getElementById('pin-editor').textContent = '';
                 return;
+              } else {
+                // If query.url, show the pin editor
+                if (query.url) {
+                  await showPinEditor(query);
+                }
+                // Always show all pins/tags
+                await showPinsAndTags(query);
               }
+            }
+
+            // Mimic pinboard's bookmarklet request schema:
+            //  - https://pinboard.in/howto/
+            async function showPinEditor(query) {
 
               // Query the requested pin
               //  - Query the requested pin sync (to populate form) + all pins async (to populate tags for autocomplete)
@@ -337,6 +347,12 @@ app.get('/', (req, rep) => {
               [Cancel] [Save]
               List of all tags (horizontal paragraph flow w/ line wrapping)
               */
+
+            }
+
+            // Inspired by pinboard's home page
+            //  - https://pinboard.in/
+            async function showPinsAndTags(query) {
 
               // Query all pins
               const pins = recordsToFields(await queryRecordsAll(privateDB, {
