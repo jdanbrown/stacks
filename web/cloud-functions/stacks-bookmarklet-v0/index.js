@@ -36,12 +36,11 @@ const ckConfigContainer = {
 //  - https://medium.com/google-cloud/express-routing-with-google-cloud-functions-36fb55885c68
 //  - https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes
 const app = express();
-const router = express.Router();
-exports.bookmarklet = router; // Entrypoint (name is configured in the Cloud Functions deploy)
+exports.bookmarklet = app; // Entrypoint (name is configured in the Cloud Functions deploy)
 
 // Mimic pinboard bookmarklet's request schema:
 //  - https://pinboard.in/howto/
-router.get('/update', (req, rep) => {
+app.get('/', (req, rep) => {
   try {
 
     rep.send(`
@@ -212,6 +211,7 @@ router.get('/update', (req, rep) => {
             - req.url: ${req.url}
             - req.baseUrl: ${req.baseUrl}
             - req.originalUrl: ${req.originalUrl}
+            - json(req.route): ${json(req.route)}
             - json(req.query): ${json(req.query)}
             - json(req.params): ${json(req.params)}
             - json(req.body): ${json(req.body)}
@@ -219,7 +219,7 @@ router.get('/update', (req, rep) => {
             - req.query.title: ${req.query.title}
             - req.query.description: ${req.query.description}
           </pre>
-          -->
+          <!-- -->
 
           <!-- Body -->
           <div>
