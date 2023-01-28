@@ -60,6 +60,15 @@ app.get('/', (req, rep) => {
           <!--  - src url: https://releases.jquery.com/ -->
           <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 
+          <!-- Docs: https://pieroxy.net/blog/pages/lz-string/index.html -->
+          <!--  - src url: https://cdnjs.com/libraries/lz-string -->
+          <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script> -->
+
+          <!-- Docs: https://localforage.github.io/localForage/ -->
+          <!--  - More docs: https://github.com/localForage/localForage -->
+          <!--  - src url: https://cdnjs.com/libraries/localforage -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+
         </head>
         <body>
 
@@ -160,7 +169,7 @@ app.get('/', (req, rep) => {
                 }
                 const batchRecords = _.sortBy(rep.records, x => x.fields[sortByAscending].value);
                 allRecords.push(...batchRecords);
-                lastSortByValue = batchRecords.slice(-1)[0].fields[sortByAscending].value;
+                lastSortByValue = !_.isEmpty(batchRecords) && _.last(batchRecords).fields[sortByAscending].value;
                 console.log('[queryRecordsAll] Got records', {batch, lastSortByValue, batchRecords, allRecords});
                 if (rep.records.length < resultsLimit) {
                   assert(!rep.moreComing, 'Expected no more results, got: rep.moreComing[' + rep.moreComing + ']');
@@ -335,7 +344,7 @@ app.get('/', (req, rep) => {
 
               // Query the requested pin
               //  - Query the requested pin sync (to populate form) + all pins async (to populate tags for autocomplete)
-              const pin = recordToFields(only(
+              const _pinRecord = only(
                 await queryRecords(privateDB, {
                   recordType: 'CD_CorePin',
                   filterBy: [{
@@ -344,9 +353,10 @@ app.get('/', (req, rep) => {
                     fieldValue: { value: urlQuery.url },
                   }],
                 })
-              ));
-              console.log('[main]', {pin});
-              _.assign(window, {pin}); // Debug
+              );
+              const pin = recordToFields(_pinRecord);
+              console.log('[main]', {pin, _pinRecord});
+              _.assign(window, {pin, _pinRecord}); // Debug
 
               // Pin editor
               document.getElementById('pin-editor').style.whiteSpace = 'pre'
@@ -366,6 +376,28 @@ app.get('/', (req, rep) => {
 
             }
 
+            async function queryAllPins() {
+              // Read cache
+              const cacheKey = 'cache_queryAllPins';
+              const cachedPins = await localforage.getItem(cacheKey) || [];
+              console.log('[queryAllPins]', {cacheKey, cachedPins});
+              // Query
+              const sortByAscending = 'CD_modifiedAt';
+              const lastSortByValue = _.isEmpty(cachedPins) ? null : _.last(cachedPins)[sortByAscending];
+              console.log('[queryAllPins]', {lastSortByValue});
+              const _pinsRecords = await queryRecordsAll(privateDB, {
+                recordType: 'CD_CorePin',
+                sortByAscending, // Old to new, so that local caching can do incremental watermarking
+                lastSortByValue, // Query only records newer than local cache
+              });
+              const pins = cachedPins.concat(recordsToFields(_pinsRecords));
+              // Write cache
+              await localforage.setItem(cacheKey, pins);
+              // Done
+              console.log('[queryAllPins]', {pins, _pinsRecords});
+              return [pins, _pinsRecords];
+            }
+
             // Inspired by pinboard's home page
             //  - https://pinboard.in/
             async function showPinsAndTags(
@@ -373,24 +405,9 @@ app.get('/', (req, rep) => {
             ) {
 
               // Query all pins
-              const pins = recordsToFields(
-                await queryRecordsAll(privateDB, {
-                  recordType: 'CD_CorePin',
-                  sortByAscending: 'CD_modifiedAt', // Old to new, so that localStorage watermarking is incremental
-                  // TODO TODO Watermarking
-                  // lastSortByValue: 1674250986000, // XXX Dev (2023-01-20T21:43:06.000Z)
-                  // lastSortByValue: 1661100432370, // XXX Dev
-                  // lastSortByValue: 1661100436904 - 1, // XXX Dev
-                  // lastSortByValue: 1674286118000, // This works (3 pins)
-                  // lastSortByValue: 1674286118000 - 1, // This works (2 pins)
-                  // lastSortByValue: undefined, // This works (1366 pins)
-                  // lastSortByValue: 1653550194000, // From pins[350]
-                  // lastSortByValue: 1661100434817, // 15x
-                  // lastSortByValue: 1596439435000, // page=1, records[103] -> 1262 pins
-                })
-              );
-              console.log('[main]', {pins});
-              _.assign(window, {pins}); // Debug
+              const [pins, _pinsRecords] = await queryAllPins();
+              console.log('[main]', {pins, _pinsRecords});
+              _.assign(window, {pins, _pinsRecords}); // Debug
 
               // Extract tags from all pins
               const tags = _(pins)
