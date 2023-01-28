@@ -74,6 +74,12 @@ app.get('/', (req, rep) => {
             window.json       = x => JSON.stringify(x);
             window.jsonPretty = x => JSON.stringify(x, null, 2);
 
+            function assert(condition, msg) {
+              if (!condition) {
+                throw new Error('Assertion failed: ' + msg);
+              }
+            }
+
             function only(xs) {
               if (xs.length != 1) {
                 console.error('[only] Expected 1 element, got ' + xs.length, {xs});
@@ -118,24 +124,22 @@ app.get('/', (req, rep) => {
             //    and then the second response was always 0 records (using functions-framework 3.1.3)
             //  - So I gave up on that approach and instead do pagination manually to allow querying >200 records
             //  - Docs
+            //    - https://developer.apple.com/documentation/cloudkitjs/cloudkit/query
             //    - https://developer.apple.com/documentation/cloudkitjs/cloudkit/database/1628596-performquery
             //    - https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/CloudKitWebServicesReference/PropertyMetrics.html#//apple_ref/doc/uid/TP40015240-CH23
-            async function queryRecordsAll(db, {req, sortBy}) {
-              if (req.sortBy) {
-                throw new Error('Attribute not allowed: req.sortBy[' + json(req.sortBy) + ']');
-              }
-              console.log('[queryRecordsAll] Sending req', {req, sortBy});
-              const records = [];
-              var lastSortByValue = null;
-              var pageNum = 1;
+            async function queryRecordsAll(db, {recordType, sortByAscending, lastSortByValue}) {
+              console.log('[queryRecordsAll] Start', {recordType, sortByAscending, lastSortByValue});
+              const resultsLimit = 200;
+              var allRecords = [];
+              var batch = 1;
               while (true) {
                 // https://developer.apple.com/documentation/cloudkitjs/cloudkit/database/1628596-performquery
                 //  - Max resultsLimit is 200 (which is also the default)
                 const rep = await performQuery(db, {
-                  ...req,
+                  recordType,
                   sortBy: {
-                    fieldName: sortBy,
-                    ascending: false, // Most recent first for timestamps, and :shrug: for anything else
+                    fieldName: sortByAscending,
+                    ascending: true,
                   },
                   filterBy: lastSortByValue && {
                     // Docs
@@ -143,25 +147,30 @@ app.get('/', (req, rep) => {
                     //  - https://developer.apple.com/documentation/cloudkitjs/cloudkit/queryfiltercomparator
                     //  - https://developer.apple.com/documentation/cloudkit/ckquery
                     //  - https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/CloudKitWebServicesReference/QueryingRecords.html#//apple_ref/doc/uid/TP40015240-CH5
-                    fieldName: sortBy,
-                    comparator: 'LESS_THAN',
+                    fieldName: sortByAscending,
+                    comparator: 'GREATER_THAN',
                     fieldValue: { value: lastSortByValue },
                   },
+                }, {
+                  resultsLimit,
                 });
-                console.log('[queryRecordsAll] Got rep', {records: rep.records, rep});
+                console.log('[queryRecordsAll] Got rep', {batch, records: rep.records, rep});
                 if (rep.hasErrors) {
                   throw rep.errors[0];
                 }
-                if (rep.records.length === 0) {
+                const batchRecords = _.sortBy(rep.records, x => x.fields[sortByAscending].value);
+                allRecords.push(...batchRecords);
+                lastSortByValue = batchRecords.slice(-1)[0].fields[sortByAscending].value;
+                console.log('[queryRecordsAll] Got records', {batch, lastSortByValue, batchRecords, allRecords});
+                if (rep.records.length < resultsLimit) {
+                  assert(!rep.moreComing, 'Expected no more results, got: rep.moreComing[' + rep.moreComing + ']');
                   break;
                 }
-                records.push(...rep.records);
-                lastSortByValue = rep.records.slice(-1)[0].fields[sortBy].value;
-                console.log('[queryRecordsAll] Got page ' + pageNum, {lastSortByValue, records});
-                pageNum += 1;
+                batch += 1;
               }
-              console.log('[queryRecordsAll] Done', {records});
-              return records;
+              assert(_.isEqual(allRecords, _.sortBy(allRecords, x => x.fields[sortByAscending].value)));
+              console.log('[queryRecordsAll] Done', {allRecords});
+              return allRecords;
             }
 
             // Returns null if deleted=true
@@ -189,12 +198,16 @@ app.get('/', (req, rep) => {
           </script>
 
           <style>
-            #tags-list {
+            #tags-list,
+            #pins-list {
               padding: 2em 0em;
             }
             .tag {
               display: inline-flex;
               padding-right: 2ex;
+            }
+            .pin {
+              white-space: pre;
             }
           </style>
 
@@ -227,6 +240,7 @@ app.get('/', (req, rep) => {
             <div id="apple-auth-error" style="background: #fcc"></div>
             <div id="pin-editor"></div>
             <div id="tags-list"></div>
+            <div id="pins-list"></div>
           </div>
 
           <!-- Main -->
@@ -321,14 +335,16 @@ app.get('/', (req, rep) => {
 
               // Query the requested pin
               //  - Query the requested pin sync (to populate form) + all pins async (to populate tags for autocomplete)
-              const pin = recordToFields(only(await queryRecords(privateDB, {
-                recordType: 'CD_CorePin',
-                filterBy: [{
-                  fieldName: 'CD_url',
-                  comparator: 'EQUALS',
-                  fieldValue: { value: query.url },
-                }],
-              })));
+              const pin = recordToFields(only(
+                await queryRecords(privateDB, {
+                  recordType: 'CD_CorePin',
+                  filterBy: [{
+                    fieldName: 'CD_url',
+                    comparator: 'EQUALS',
+                    fieldValue: { value: query.url },
+                  }],
+                })
+              ));
               console.log('[main]', {pin});
               _.assign(window, {pin}); // Debug
 
@@ -355,12 +371,22 @@ app.get('/', (req, rep) => {
             async function showPinsAndTags(query) {
 
               // Query all pins
-              const pins = recordsToFields(await queryRecordsAll(privateDB, {
-                sortBy: 'CD_modifiedAt',
-                req: {
+              const pins = recordsToFields(
+                await queryRecordsAll(privateDB, {
                   recordType: 'CD_CorePin',
-                },
-              }));
+                  sortByAscending: 'CD_modifiedAt', // Old to new, so that localStorage watermarking is incremental
+                  // TODO TODO Watermarking
+                  // lastSortByValue: 1674250986000, // XXX Dev (2023-01-20T21:43:06.000Z)
+                  // lastSortByValue: 1661100432370, // XXX Dev
+                  // lastSortByValue: 1661100436904 - 1, // XXX Dev
+                  // lastSortByValue: 1674286118000, // This works (3 pins)
+                  // lastSortByValue: 1674286118000 - 1, // This works (2 pins)
+                  // lastSortByValue: undefined, // This works (1366 pins)
+                  // lastSortByValue: 1653550194000, // From pins[350]
+                  // lastSortByValue: 1661100434817, // 15x
+                  // lastSortByValue: 1596439435000, // page=1, records[103] -> 1262 pins
+                })
+              );
               console.log('[main]', {pins});
               _.assign(window, {pins}); // Debug
 
@@ -376,13 +402,19 @@ app.get('/', (req, rep) => {
               _.assign(window, {tags}); // Debug
 
               // Tags list
-              // document.getElementById('tags-list').style.whiteSpace = 'pre'
-              // document.getElementById('tags-list').textContent = [
-              //   tags.length + ' tags:',
-              //   tags.map(([x, n]) => '- (' + n + ') ' + x).join('\\n'),
-              // ].join('\\n');
               $('#tags-list').append(
                 tags.map(([tag, n]) => $('<div class="tag">').text(tag))
+              );
+
+              // Pins list
+              $('#pins-list').append(
+                _(pins)
+                .reverse()
+                .map(pin => $('<div class="pin">').text(jsonPretty({
+                  modifiedAt: new Date(pin.CD_modifiedAt).toISOString(),
+                  ...pin,
+                })))
+                .value()
               );
 
             }
