@@ -249,7 +249,7 @@ app.get('/', (req, rep) => {
 
             // Params
             const ckConfigContainer = ${json(ckConfigContainer)};
-            const query = ${json(req.query)};
+            const urlQuery = ${json(req.query)};
 
             // Init
             CloudKit.configure({
@@ -284,14 +284,14 @@ app.get('/', (req, rep) => {
               showAuth({userIdentity, ckError: null});
               container.whenUserSignsOut()
                 .then(onSignout);
-              showBody({user: userIdentity, query});
+              showBody({user: userIdentity, urlQuery});
             }
             function onSignout(ckError) {
               showAuth({userIdentity: null, ckError}); // ckError might be null
               container.whenUserSignsIn()
                 .then(onSignin)
                 .catch(onSignout);
-              showBody({user: null, query: null});
+              showBody({user: null, urlQuery: null});
             }
             function showAuth({userIdentity, ckError}) {
               console.log('[showAuth]', {userIdentity, ckError});
@@ -313,25 +313,25 @@ app.get('/', (req, rep) => {
               onSignout(null);
             }
 
-            async function showBody({user, query}) {
-              console.log('[showBody]', {user, query});
+            async function showBody({user, urlQuery}) {
+              console.log('[showBody]', {user, urlQuery});
               // If not logged in, show empty body here and let auth show the signin button
               if (user === null) {
                 document.getElementById('pin-editor').textContent = '';
                 return;
               } else {
-                // If query.url, show the pin editor
-                if (query.url) {
-                  await showPinEditor(query);
+                // If urlQuery.url, show the pin editor
+                if (urlQuery.url) {
+                  await showPinEditor(urlQuery);
                 }
                 // Always show all pins/tags
-                await showPinsAndTags(query);
+                await showPinsAndTags(urlQuery);
               }
             }
 
             // Mimic pinboard's bookmarklet request schema:
             //  - https://pinboard.in/howto/
-            async function showPinEditor(query) {
+            async function showPinEditor(urlQuery) {
 
               // Query the requested pin
               //  - Query the requested pin sync (to populate form) + all pins async (to populate tags for autocomplete)
@@ -341,7 +341,7 @@ app.get('/', (req, rep) => {
                   filterBy: [{
                     fieldName: 'CD_url',
                     comparator: 'EQUALS',
-                    fieldValue: { value: query.url },
+                    fieldValue: { value: urlQuery.url },
                   }],
                 })
               ));
@@ -368,7 +368,9 @@ app.get('/', (req, rep) => {
 
             // Inspired by pinboard's home page
             //  - https://pinboard.in/
-            async function showPinsAndTags(query) {
+            async function showPinsAndTags(
+              urlQuery, // Not currently used
+            ) {
 
               // Query all pins
               const pins = recordsToFields(
