@@ -5,6 +5,10 @@ fastlane/report.xml
 # xcode
 xcuserdata/
 
+# xcode: Manual symlink to generated source in *.build dir
+# - NOTE Make additional links to subdirs (e.g. DerivedSources) so they aren't ignored by IDEs (e.g. vscode)
+Stacks.build
+
 # xcode: Ignore preview files that might contain personal data
 Stacks/Preview Content/personal/preview-pins.json
 
