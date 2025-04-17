@@ -3,7 +3,7 @@ import SwiftUI
 import XCGLogger
 
 @main
-class AppMain: App {
+struct AppMain: App {
 
   let cloudKitSyncMonitor: CloudKitSyncMonitor
   let hasICloud: Bool
@@ -15,12 +15,13 @@ class AppMain: App {
 
   let pinsModel: PinsModel
 
-  var cancellables = Set<AnyCancellable>()
+  // For uses of .store(in: &cancellables) below
+  var cancellables = MutableWrapper(Set<AnyCancellable>())
 
   // SwiftUI init() is the new UIKit AppDelegate application:didFinishLaunchWithOptions:
   //  - https://medium.com/swlh/bye-bye-appdelegate-swiftui-app-life-cycle-58dde4a42d0f
   //  - https://developer.apple.com/forums/thread/653737 -- if you need an AppDelegate
-  required init() {
+  init() {
 
     initLogging()
 
@@ -67,7 +68,7 @@ class AppMain: App {
     pinsPublishers.forEach { $0
       .receive(on: RunLoop.main)
       .sink { pins in self.storageProvider.upsertPins(pins) }
-      .store(in: &cancellables)
+      .store(in: &cancellables.value)
     }
   }
 
@@ -77,7 +78,7 @@ class AppMain: App {
     // Can't do this in init() because can't pass self before init is complete
     self.storageProvider.onCloudKitImportComplete!
       .sink { _ in self.upsertPinsFromPinsPublishers() }
-      .store(in: &cancellables)
+      .store(in: &cancellables.value)
 
     // Fetch pinboard pins once at startup (http get)
     await pinsModelPinboard.fetchAsync()

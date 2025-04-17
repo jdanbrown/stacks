@@ -60,6 +60,15 @@ func initLogging() {
 // swift
 //
 
+// When you need a mutable reference inside a struct (which must be immutable)
+final class MutableWrapper<T> {
+  var value: T
+
+  init(_ value: T) {
+    self.value = value
+  }
+}
+
 // https://stackoverflow.com/questions/31443645/simplest-way-to-throw-an-error-exception-with-a-custom-message-in-swift
 struct SimpleError: Error {
   let message: String
